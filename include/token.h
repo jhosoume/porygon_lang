@@ -4,6 +4,4 @@
 #include "token_type.h"
 
 
-
-
 #endif

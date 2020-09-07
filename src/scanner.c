@@ -13,9 +13,9 @@ extern char* yytext;
 extern int yyleng;
 
 int main(void) {
-  int ntoken;
+  enum token_type ntoken;
   while((ntoken = yylex())) {
-      printf("%d\n", ntoken);
+      printf("%s\n", token_string(ntoken));
 
   }
 

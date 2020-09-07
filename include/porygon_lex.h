@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 6 "src/porygon_lex.h"
+#line 6 "include/porygon_lex.h"
 
-#line 8 "src/porygon_lex.h"
+#line 8 "include/porygon_lex.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -470,6 +470,6 @@ extern int yylex (void);
 #line 38 "src/porygon_lex.l"
 
 
-#line 474 "src/porygon_lex.h"
+#line 474 "include/porygon_lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

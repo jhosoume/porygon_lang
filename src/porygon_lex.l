@@ -11,7 +11,7 @@
 %option nounput
 
 /* Define output files. Headers and C files are create in src directory */
-%option outfile="src/porygon_lex.c" header-file="src/porygon_lex.h"
+%option outfile="src/porygon_lex.c" header-file="include/porygon_lex.h"
 
 DIGIT [0-9]
 LETTER [a-zA-Z]
