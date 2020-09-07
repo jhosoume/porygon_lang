@@ -22,7 +22,6 @@ LETTER [a-zA-Z]
 %x COMMENT
 
 %{
-#include "scanner.h"
 #include "token_type.h"
 #include "token.h"
 
@@ -34,7 +33,7 @@ extern int column_num;
 
 %%
 
-. { printf("%s", yytext); }
+. { return ERR_UNKNOWN_TOKEN; }
 
 %%
 

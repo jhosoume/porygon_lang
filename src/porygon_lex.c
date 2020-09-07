@@ -473,7 +473,6 @@ char *yytext;
 /* http://westes.github.io/flex/manual/Start-Conditions.html */
 
 #line 25 "src/porygon_lex.l"
-#include "scanner.h"
 #include "token_type.h"
 #include "token.h"
 
@@ -481,8 +480,8 @@ char *yytext;
 extern int line_num;
 extern int column_num;
 
+#line 484 "src/porygon_lex.c"
 #line 485 "src/porygon_lex.c"
-#line 486 "src/porygon_lex.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -698,10 +697,10 @@ YY_DECL
 		}
 
 	{
-#line 35 "src/porygon_lex.l"
+#line 34 "src/porygon_lex.l"
 
 
-#line 705 "src/porygon_lex.c"
+#line 704 "src/porygon_lex.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -770,15 +769,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 37 "src/porygon_lex.l"
-{ printf("%s", yytext); }
+#line 36 "src/porygon_lex.l"
+{ return ERR_UNKNOWN_TOKEN; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "src/porygon_lex.l"
+#line 38 "src/porygon_lex.l"
 ECHO;
 	YY_BREAK
-#line 782 "src/porygon_lex.c"
+#line 781 "src/porygon_lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -1755,7 +1754,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "src/porygon_lex.l"
+#line 38 "src/porygon_lex.l"
 
 
 /*  */

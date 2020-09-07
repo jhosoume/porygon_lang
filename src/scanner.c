@@ -15,6 +15,7 @@ extern int yyleng;
 int main(void) {
   int ntoken;
   while((ntoken = yylex())) {
+      printf("%d\n", ntoken);
 
   }
 
