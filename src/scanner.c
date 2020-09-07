@@ -12,7 +12,7 @@ extern char* yytext;
 /* Length of the most recently matched token */
 extern int yyleng;
 
-int main(int argc, char** argv) {
+int main(void) {
   int ntoken;
   while((ntoken = yylex())) {
 

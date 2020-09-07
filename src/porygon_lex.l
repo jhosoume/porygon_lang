@@ -34,7 +34,7 @@ extern int column_num;
 
 %%
 
-. ;
+. { printf("%s", yytext); }
 
 %%
 

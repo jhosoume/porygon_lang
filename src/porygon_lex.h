@@ -467,7 +467,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 30 "src/porygon_lex.l"
+#line 39 "src/porygon_lex.l"
 
 
 #line 474 "src/porygon_lex.h"
