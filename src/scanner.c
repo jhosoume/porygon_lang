@@ -15,7 +15,7 @@ extern int yyleng;
 int main(void) {
   enum token_type ntoken;
   while((ntoken = yylex())) {
-      printf("%s\n", token_string(ntoken));
+      printf("<%s>: %s\n", token_string(ntoken), yytext);
 
   }
 

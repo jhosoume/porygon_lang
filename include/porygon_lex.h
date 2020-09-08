@@ -213,7 +213,8 @@ extern char *yytext;
 
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
-#define COMMENT 1
+#define COMMENTLINE 1
+#define COMMENTBLOCK 2
 
 #endif
 
@@ -467,9 +468,9 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 38 "src/porygon_lex.l"
+#line 122 "src/porygon_lex.l"
 
 
-#line 474 "include/porygon_lex.h"
+#line 475 "include/porygon_lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */
