@@ -1,25 +1,40 @@
 #include "scanner.h"
 
-/* Routine defined in porygon_lex.c */
-extern int yylex();
 
-/* Maintain the line number */
-extern int yylineno;
+/* Used by the scanner to identify line and column */
+int line_num = 1;
+int column_num = 1;
 
-/* Text of the most recently matched token */
-extern char* yytext;
-
-/* Length of the most recently matched token */
-extern int yyleng;
-
-int main(void) {
+void run_scanner(void) {
   enum token_type ntoken;
   struct token tok;
+  /* yylex function makes the tokenazation, 0 is returned when <EOF> */
   while((ntoken = yylex())) {
       tok = create_token(ntoken, yytext, line_num, column_num - yyleng);
+      /* Each token will be passed to BISON parser */
       print_token(tok);
-
   }
+}
 
+int deals_input(int argc, char** argv) {
+  /* Check if the file was feed in the command line */
+  if (argc == 2) {
+      printf("[START SCANNER] -> Input file from command line.\n");
+      /* Open file and directs it to flex */
+      yyin = fopen(argv[1], "r");
+      /* If file could not be opened */
+      if (yyin == NULL) {
+          fprintf(stderr, "[ERR] Could not open input file %s.\n", argv[1]);
+          return 1;
+      }
+  } else {/* In other cases, the input must be piped */
+      printf("[START SCANNER] -> Input file from pipe.\n");
+  }
   return 0;
+}
+
+void ends_scan(int argc) {
+  if (argc == 2) {
+      fclose(yyin);
+  }
 }

@@ -20,7 +20,7 @@ int main(void) {
     int one = 10 / 10;
     float another;
     float result;
-    another = 7.98; /* This should not appear */
+    another = 7.98; /* This comment should not appear */
 
     bool ttrue = !false;
 
