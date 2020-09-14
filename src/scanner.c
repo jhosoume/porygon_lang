@@ -19,7 +19,7 @@ void run_scanner(void) {
 int deals_input(int argc, char** argv) {
   /* Check if the file was feed in the command line */
   if (argc == 2) {
-      printf("[START SCANNER] -> Input file from command line.\n");
+      printf("[START SCANNER] -> Input file from command (argument).\n");
       /* Open file and directs it to flex */
       yyin = fopen(argv[1], "r");
       /* If file could not be opened */
