@@ -2,9 +2,15 @@
 
 int main(void) {
     /* Do some computations */
-    int one_var = 3;
-    float another;
-    another = 7;
+    int indx = 0;
+    table sample =
 
-    bool ttrue = true;
+    int list[] = {1, 2, 3, 4};
+    for (int num in list) {
+        write(num);
+    }
+
+    string valid = "A valid string can have multiple chars";
+
+    return 0;
 }

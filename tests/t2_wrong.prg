@@ -4,7 +4,7 @@
 int main(void) {
     char k = 'some very big char';
 
-    int thisisnotlegalintheClanguagebecauseitistolongandshouldnotbeconsideredanidentifier;
+
     float ________;
 
 }

@@ -30,7 +30,10 @@ LETTER [a-zA-Z]
 extern int line_num;
 extern int column_num;
 
+/* Getting auxiliary functions. They are described at the end of the current file. */
 static void update_pos(void);
+static enum token_type valid_char_const(void);
+static enum token_type valid_id(void);
 
 %}
 
@@ -111,11 +114,12 @@ static void update_pos(void);
 [\+\-]?{DIGIT}+"."{DIGIT}*  { update_pos(); return FLOATCONST; }
 
         /* Char or string constants */
-'(.)'                       { update_pos(); return CHAR_TYPE; }
-\"(.)\"                     { update_pos(); return STRING_TYPE; }
+        /* Reference: https://stackoverflow.com/questions/2039795/regular-expression-for-a-string-literal-in-flex-lex */
+'(\\.|[^\\'])+'             { update_pos(); return valid_char_const(); }
+\"(\\.|[^\\"])*\"           { update_pos(); return STRINGCONST; }
 
         /* Matching Identifiers */
-({LETTER}|"_")({LETTER}|{DIGIT}|"_")* { update_pos(); return IDENTIFIER; }
+({LETTER}|"_")({LETTER}|{DIGIT}|"_")* { update_pos(); return valid_id(); }
 
 
         /* Break line, tabs and whitespace are ignored, including

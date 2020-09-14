@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* Enumerates all the token types */
+/* Notice that it skips the 0: number that the yylex returns when stop */
 enum token_type {
     ERR_INVALID_ID        = -3,
     ERR_INVALID_CHARCONST = -2,
@@ -59,6 +61,15 @@ enum token_type {
     PIPE                  = 48 /* | */
 };
 
+/* Defines a token that will be returned by the scanner */
+struct token {
+    enum token_type tok_type;
+    const char * att_value;
+    int line;
+    int column;
+};
+
+/* Converts a token type to a string to make it printable. */
 const char* token_string(enum token_type tok_type);
 
 

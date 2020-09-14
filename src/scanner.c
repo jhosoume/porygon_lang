@@ -12,9 +12,6 @@ extern char* yytext;
 /* Length of the most recently matched token */
 extern int yyleng;
 
-int line_num = 1;
-int column_num = 1;
-
 int main(void) {
   enum token_type ntoken;
   while((ntoken = yylex())) {
