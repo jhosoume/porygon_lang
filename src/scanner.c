@@ -12,10 +12,13 @@ extern char* yytext;
 /* Length of the most recently matched token */
 extern int yyleng;
 
+int line_num = 1;
+int column_num = 1;
+
 int main(void) {
   enum token_type ntoken;
   while((ntoken = yylex())) {
-      printf("<%s>: %s\n", token_string(ntoken), yytext);
+      printf("<%s>: %s (l: %d, d: %d)\n", token_string(ntoken), yytext, line_num, column_num);
 
   }
 

@@ -7,6 +7,4 @@ int main(void) {
     another = 7;
 
     bool ttrue = true;
-
-    return 1;
 }

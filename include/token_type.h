@@ -56,6 +56,7 @@ enum token_type {
     SEMICOLON             = 45, /* ; */
     DEF_EQ                = 46, /* = */
     COMMA                 = 47, /* , */
+    PIPE                  = 48 /* | */
 };
 
 const char* token_string(enum token_type tok_type);

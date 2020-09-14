@@ -30,97 +30,136 @@ LETTER [a-zA-Z]
 extern int line_num;
 extern int column_num;
 
+static void update_pos(void);
+
 %}
 
 %%
 
         /* Geting comments, for that start conditions are used. Blocks can span
                             multiple lines. */
-"/*"                        { BEGIN(COMMENTBLOCK); }
-<COMMENTBLOCK>"*/"          { BEGIN(INITIAL); }
-<COMMENTBLOCK>\n            { ; }
-<COMMENTBLOCK>.             { ; }
+"/*"                        { update_pos(); BEGIN(COMMENTBLOCK); }
+<COMMENTBLOCK>"*/"          { update_pos(); BEGIN(INITIAL); }
+<COMMENTBLOCK>\n            { update_pos(); }
+<COMMENTBLOCK>.             { update_pos(); }
 
         /* Comment line finishes when a break line is inserted. */
-"//"                        { BEGIN(COMMENTLINE); }
-<COMMENTLINE>\n             { BEGIN(INITIAL); }
-<COMMENTLINE>.              { ; }
+"//"                        { update_pos(); BEGIN(COMMENTLINE); }
+<COMMENTLINE>\n             { update_pos(); BEGIN(INITIAL); }
+<COMMENTLINE>.              { update_pos(); }
 
 
         /* Key words are defined. They come before IDs and constants */
-"while"                     { return WHILE_KW; }
-"for"                       { return FOR_KW; }
-"in"                        { return IN_KW; }
-"if"                        { return IF_KW; }
-"else"                      { return ELSE_KW; }
-"return"                    { return RETURN_KW; }
-"read"                      { return READ_KW; }
-"write"                     { return WRITE_KW; }
+"while"                     { update_pos(); return WHILE_KW; }
+"for"                       { update_pos(); return FOR_KW; }
+"in"                        { update_pos(); return IN_KW; }
+"if"                        { update_pos(); return IF_KW; }
+"else"                      { update_pos(); return ELSE_KW; }
+"return"                    { update_pos(); return RETURN_KW; }
+"read"                      { update_pos(); return READ_KW; }
+"write"                     { update_pos(); return WRITE_KW; }
 
         /* Variable types */
-"char"                      { return CHAR_TYPE; }
-"string"                    { return STRING_TYPE; }
-"int"                       { return INT_TYPE; }
-"float"                     { return FLOAT_TYPE; }
-"table"                     { return TABLE_TYPE; }
-"bool"                      { return BOOL_TYPE; }
-"void"                      { return VOID_TYPE; }
+"char"                      { update_pos(); return CHAR_TYPE; }
+"string"                    { update_pos(); return STRING_TYPE; }
+"int"                       { update_pos(); return INT_TYPE; }
+"float"                     { update_pos(); return FLOAT_TYPE; }
+"table"                     { update_pos(); return TABLE_TYPE; }
+"bool"                      { update_pos(); return BOOL_TYPE; }
+"void"                      { update_pos(); return VOID_TYPE; }
 
         /* Definition of some operators */
-"+"                         { return ADD_OP; }
-"-"                         { return SUB_OP; }
-"*"                         { return MULT_OP; }
-"/"                         { return DIV_OP; }
-"%"                         { return REM_OP; }
+"+"                         { update_pos(); return ADD_OP; }
+"-"                         { update_pos(); return SUB_OP; }
+"*"                         { update_pos(); return MULT_OP; }
+"/"                         { update_pos(); return DIV_OP; }
+"%"                         { update_pos(); return REM_OP; }
 
-"!"                         { return NOT_OP; }
+"!"                         { update_pos(); return NOT_OP; }
 
-"<"                         { return LESSTHAN_OP; }
-"<="                        { return LESSEQUAL_OP; }
-">"                         { return GREATERTHAN_OP; }
-">="                        { return GREATEREQUAl_OP; }
-"!="                        { return NOTEQUAL_OP; }
-"=="                        { return COMPARISON_OP; }
+"<"                         { update_pos(); return LESSTHAN_OP; }
+"<="                        { update_pos(); return LESSEQUAL_OP; }
+">"                         { update_pos(); return GREATERTHAN_OP; }
+">="                        { update_pos(); return GREATEREQUAl_OP; }
+"!="                        { update_pos(); return NOTEQUAL_OP; }
+"=="                        { update_pos(); return COMPARISON_OP; }
 
-"||"                        { return OR_OP; }
-"&&"                        { return AND_OP; }
+"||"                        { update_pos(); return OR_OP; }
+"&&"                        { update_pos(); return AND_OP; }
 
         /* Some symbols to help syntax */
-"{"                         { return LBRACE; }
-"}"                         { return RBRACE; }
-"["                         { return LBRACKET; }
-"]"                         { return RBRACKET; }
-"("                         { return LPARENTHESES; }
-")"                         { return RPARENTHESES; }
-":"                         { return COLON; }
-";"                         { return SEMICOLON; }
+"{"                         { update_pos(); return LBRACE; }
+"}"                         { update_pos(); return RBRACE; }
+"["                         { update_pos(); return LBRACKET; }
+"]"                         { update_pos(); return RBRACKET; }
+"("                         { update_pos(); return LPARENTHESES; }
+")"                         { update_pos(); return RPARENTHESES; }
+":"                         { update_pos(); return COLON; }
+";"                         { update_pos(); return SEMICOLON; }
+"|"                         { update_pos(); return PIPE; }
 
-"="                         { return DEF_EQ; }
-","                         { return COMMA; }
+"="                         { update_pos(); return DEF_EQ; }
+","                         { update_pos(); return COMMA; }
 
 
         /* Boolean Constants */
-"true"                      { return TRUECONST; }
-"false"                     { return FALSECONST; }
+"true"                      { update_pos(); return TRUECONST; }
+"false"                     { update_pos(); return FALSECONST; }
 
         /* Numbers Constants */
-[\+\-]?{DIGIT}+             { return INTCONST; }
-[\+\-]?{DIGIT}+"."{DIGIT}*  { return FLOATCONST; }
+[\+\-]?{DIGIT}+             { update_pos(); return INTCONST; }
+[\+\-]?{DIGIT}+"."{DIGIT}*  { update_pos(); return FLOATCONST; }
 
         /* Char or string constants */
+'(.)'                       { update_pos(); return CHAR_TYPE; }
+\"(.)\"                     { update_pos(); return STRING_TYPE; }
 
         /* Matching Identifiers */
-({LETTER}|"_")({LETTER}|{DIGIT}|"_")* {return IDENTIFIER; }
+({LETTER}|"_")({LETTER}|{DIGIT}|"_")* { update_pos(); return IDENTIFIER; }
 
 
-        /* Break line, tabs and whitespace are ignored */
-[ \n\t]                     { ; }
+        /* Break line, tabs and whitespace are ignored, including
+           \f and \r for feed and carriege return and \v for vertical */
+[ \n\t\f\v\r]               { update_pos(); }
 
-.                           { return ERR_UNKNOWN_TOKEN; }
+.                           { update_pos(); return ERR_UNKNOWN_TOKEN; }
 
 %%
 
 /*  */
 int yywrap(void) {
 	return 1;
+}
+
+
+/* Verifies if the constant char, e.g. 'j', has only one char */
+static enum token_type valid_char_const(void) {
+    if (yyleng <= 3) {
+        return CHARCONST;
+        } else {
+        return ERR_INVALID_CHARCONST;
+    }
+}
+
+/* Verifies if the identifier is not bigger than 32 chars */
+static enum token_type valid_id(void) {
+    if (yyleng <= 32) {
+        return IDENTIFIER;
+    } else {
+        return ERR_INVALID_ID;
+    }
+}
+
+
+
+/* Updates line and columns that are being read */
+static void update_pos(void) {
+    for (int nletter = 0; nletter < yyleng; ++nletter) {
+        if (yytext[nletter] == '\n') {
+            column_num = 1;
+            line_num++;
+        } else {
+            column_num++;
+        }
+    }
 }
