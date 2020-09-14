@@ -1,11 +1,12 @@
 /* This is a sample incorrect (lexically) input Porygon File */
-/* Incorrect long definition of an identifier in line 7 */
 
 int main(void) {
+    /* Incorrect char constant (bigger than one character) in line 5 col 14 */
     char k = 'some very big char';
-
-
     float ________;
+    /* Incorrect long definition of an identifier in line 8 col 9*/
+    int thisisnotlegalintheClanguagebecauseitistolongandshouldnotbeconsidered
+anidentifier;
 
 }
 

@@ -1,6 +1,6 @@
 #include "token_type.h"
 
-const char* token_string(enum token_type tok_type) {
+const char* token_type_string(enum token_type tok_type) {
     switch(tok_type) {
         case(ERR_INVALID_ID): return "ERR_INVALID_ID";
         case(ERR_INVALID_CHARCONST): return "ERR_INVALID_CHARCONST";
@@ -52,6 +52,7 @@ const char* token_string(enum token_type tok_type) {
         case(SEMICOLON): return "SEMICOLON";
         case(DEF_EQ): return "DEF_EQ";
         case(COMMA): return "COMMA";
+        case(PIPE): return "PIPE";
         default: return "[Err] Unknown Token Type";
     }
 

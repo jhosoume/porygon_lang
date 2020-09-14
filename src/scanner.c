@@ -14,8 +14,10 @@ extern int yyleng;
 
 int main(void) {
   enum token_type ntoken;
+  struct token tok;
   while((ntoken = yylex())) {
-      printf("<%s>: %s (l: %d, d: %d)\n", token_string(ntoken), yytext, line_num, column_num);
+      tok = create_token(ntoken, yytext, line_num, column_num - yyleng);
+      print_token(tok);
 
   }
 
