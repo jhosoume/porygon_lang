@@ -8,7 +8,8 @@
 %option yylineno
 
 /* "suppress the appearance of unneeded routines in the generated scanner." */
-%option nounput
+%option noinput nounput
+%option never-interactive
 
 /* Define output files. Headers and C files are create in src directory */
 %option outfile="src/porygon_lex.c" header-file="include/porygon_lex.h"

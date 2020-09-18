@@ -1,5 +1,6 @@
 CC	     := gcc
-CFLAGS   := -std=c11 --pedantic -O3 -Wall -Wextra -Wpedantic
+# CFLAGS   := -std=c11 --pedantic -O3 -Wall -Wextra -Wpedantic
+CFLAGS   := -std=c11 --pedantic -Wall -Wextra -Wpedantic -g
 
 TARGET   := bin/scanner
 

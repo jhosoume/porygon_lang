@@ -37,4 +37,5 @@ void ends_scan(int argc) {
   if (argc == 2) {
       fclose(yyin);
   }
+  yylex_destroy();
 }
