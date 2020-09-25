@@ -12,7 +12,13 @@ void run_scanner(void) {
   while((ntoken = yylex())) {
       tok = create_token(ntoken, yytext, line_num, column_num - yyleng);
       /* Each token will be passed to BISON parser */
-      print_token(tok);
+      if (ntoken < 0) {
+          red_print();
+          print_token(tok);
+          reset_pcolor();
+      } else {
+          print_token(tok);
+      }
   }
 }
 

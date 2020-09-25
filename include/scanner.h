@@ -5,6 +5,7 @@
 #include "porygon_lex.h"
 #include "token.h"
 #include "token_type.h"
+#include "helpers.h"
 
 // extern int line_num;
 // extern int column_num;
