@@ -40,8 +40,10 @@ int deals_input(int argc, char** argv) {
 }
 
 void ends_scan(int argc) {
+  /* Close input files */
   if (argc == 2) {
       fclose(yyin);
   }
+  /* Halts flex and destroy buffers (leak solved) */
   yylex_destroy();
 }

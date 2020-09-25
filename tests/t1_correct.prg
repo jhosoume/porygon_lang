@@ -37,3 +37,5 @@ int main(void) {
 
     return 1;
 }
+/*
+    All this block is considered as a comment.
