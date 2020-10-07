@@ -10,6 +10,8 @@
 // extern int line_num;
 // extern int column_num;
 
+// All the externs defined below are specified in flex
+
 /* Routine defined in porygon_lex.c */
 extern int yylex();
 
