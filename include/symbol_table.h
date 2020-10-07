@@ -1,4 +1,5 @@
 #include "uthash.h"
+#include <stdbool.h>
 #include "token_type.h"
 
 struct st_entry {
@@ -14,6 +15,6 @@ struct st_entry *add_entry(struct st_entry *symbol_table,
                            enum token_type ttype,
                            int line, int col);
 
-void free(struct st_entry *symbol_table);
+void free_st(struct st_entry *symbol_table);
 
-void find(struct st_entry *symbol_table, const char *id);
+struct st_entry *find_id(struct st_entry *symbol_table, const char *id);

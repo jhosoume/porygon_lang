@@ -22,7 +22,7 @@ extern int yylineno;
 extern char* yytext;
 
 /* Length of the most recently matched token */
-extern int yyleng;
+// extern int yyleng;
 
 
 /* Main function to the scanner*/
