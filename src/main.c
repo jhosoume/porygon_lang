@@ -3,7 +3,7 @@
 
 #define test_st 1
 
-struct st_entry *symbol_t = NULL;
+struct st_entry *symbol_table = NULL;
 
 
 int main(int argc, char** argv) {
@@ -14,12 +14,14 @@ int main(int argc, char** argv) {
   /* Creating Symbol Table */
 
   #if test_st
-    add_entry(symbol_t, "testing", IDENTIFIER, 0, 0);
+    add_entry("testing", IDENTIFIER, 0, 0);
   #endif
 
 
   run_scanner();
   ends_scan(argc);
+
+  free_st();
 
   return 0;
 }
