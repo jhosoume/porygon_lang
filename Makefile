@@ -1,6 +1,6 @@
 CC	     := gcc
 # CFLAGS   := -std=c11 --pedantic -O3 -Wall -Wextra -Wpedantic
-CFLAGS   := -std=c11 --pedantic -Wall -Wextra -Wpedantic -g
+CFLAGS   := -std=c18 --pedantic -Wall -Wextra -Wpedantic -g
 
 TARGET   := bin/scanner
 
@@ -34,6 +34,10 @@ clean_all:
 
 flex:
 	@echo " Running FLEX..."
+	@echo " flex src/porygon_lex.l "; flex src/porygon_lex.l
+
+bison:
+	@echo " Running BISON..."
 	@echo " flex src/porygon_lex.l "; flex src/porygon_lex.l
 
 .PHONY: clean_all flex

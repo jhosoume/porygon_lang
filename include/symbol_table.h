@@ -18,4 +18,6 @@ void add_entry(const char *id,
 
 void free_st();
 
+void print_table();
+
 struct st_entry *find_id(const char *id);

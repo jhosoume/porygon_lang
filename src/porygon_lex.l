@@ -26,10 +26,14 @@ LETTER [a-zA-Z]
 %{
 #include "token_type.h"
 #include "token.h"
+#include "symbol_table.h"
 
-/* Integers to indicate line number and column*/
+/* Integers to indicate line number and column, both are defined in the scanner.h*/
 extern int line_num;
 extern int column_num;
+
+/* Get symbol table */
+extern struct st_entry *symbol_table;
 
 /* Getting auxiliary functions. They are described at the end of the current file. */
 static void update_pos(void);
@@ -107,8 +111,8 @@ static enum token_type valid_id(void);
 
 
         /* Boolean Constants */
-"true"                      { update_pos(); return TRUECONST; }
-"false"                     { update_pos(); return FALSECONST; }
+"true"                      { update_pos(); return BOOLEANCONST; }
+"false"                     { update_pos(); return BOOLEANCONST; }
 
         /* Numbers Constants */
 [\+\-]?{DIGIT}+             { update_pos(); return INTCONST; }

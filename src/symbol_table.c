@@ -15,16 +15,30 @@ void add_entry(const char *id, enum token_type ttype, int line, int col) {
 }
 
 void free_st() {
-  struct st_entry *entry, *tmp = NULL;
-  HASH_ITER(hh, symbol_table, entry, tmp) {
-    HASH_DEL(symbol_table, entry);
-    free(entry);
-  }
+    struct st_entry *entry, *tmp = NULL;
+    HASH_ITER(hh, symbol_table, entry, tmp) {
+        HASH_DEL(symbol_table, entry);
+        free(entry);
+    }
 }
 
 struct st_entry *find_id(const char *id) {
-  struct st_entry *entry = NULL;
-  HASH_FIND_STR(symbol_table, id, entry);
-  if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
-  return entry;
+    struct st_entry *entry = NULL;
+    HASH_FIND_STR(symbol_table, id, entry);
+    if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
+    return entry;
+}
+
+void print_table() {
+    struct st_entry *entry = NULL;
+    printf("-------------------------------------------------------------------------------------\n");
+    printf("                                    SYMBOL TABLE                                     \n");
+    printf("-------------------------------------------------------------------------------------\n");
+    for (entry = symbol_table; entry != NULL; entry = entry->hh.next) {
+        printf("Entry Name: %32s | ", entry->identifier);
+        printf("Line: %4d | ", entry->line);
+        printf("Column: %4d | ", entry->col);
+        printf("\n");
+    }
+    printf("-------------------------------------------------------------------------------------\n");
 }
