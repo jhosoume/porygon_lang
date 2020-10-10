@@ -87,7 +87,9 @@ extern struct st_entry *symbol_table;
 %type declaration_list
 %type declaration
 
-
+%{
+int yylex(void);
+%}
 
     /* Defines the starting type */
 %start declaration_list

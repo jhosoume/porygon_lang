@@ -6,7 +6,7 @@ int line_num = 1;
 int column_num = 1;
 
 void run_scanner(void) {
-    enum token_type ntoken;
+    enum yytokentype ntoken;
     struct token tok;
     /* yylex function makes the tokenazation, 0 is returned when <EOF> */
     while((ntoken = yylex())) {

@@ -1,7 +1,7 @@
 #include "token.h"
 
 /* Returns a token from the information provided. */
-struct token create_token(enum token_type tok_type, const char * value, int line, int col) {
+struct token create_token(enum yytokentype tok_type, const char * value, int line, int col) {
     struct token tok;
     tok.tok_type = tok_type;
     tok.att_value = value;

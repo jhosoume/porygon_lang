@@ -1,6 +1,6 @@
 #include "token_type.h"
 
-const char* token_type_string(enum token_type tok_type) {
+const char* token_type_string(enum yytokentype tok_type) {
     switch(tok_type) {
         case(ERR_INVALID_ID): return "ERR_INVALID_ID";
         case(ERR_INVALID_CHARCONST): return "ERR_INVALID_CHARCONST";
@@ -11,8 +11,8 @@ const char* token_type_string(enum token_type tok_type) {
         case(BOOLEANCONST): return "BOOLEANCONST";
         case(CHARCONST): return "CHARCONST";
         case(STRINGCONST): return "STRINGCONST";
-        case(TRUECONST): return "TRUECONST";
-        case(FALSECONST): return "FALSECONST";
+        // case(TRUECONST): return "TRUECONST";
+        // case(FALSECONST): return "FALSECONST";
         case(WHILE_KW): return "WHILE_KW";
         case(FOR_KW): return "FOR_KW";
         case(IN_KW): return "IN_KW";

@@ -5,7 +5,7 @@
    Availabe in GitHub https://troydhanson.github.io/uthash/userguide.html#_a_hash_in_c
 */
 
-void add_entry(const char *id, enum token_type ttype, int line, int col) {
+void add_entry(const char *id, enum yytokentype ttype, int line, int col) {
     struct st_entry *sample = (struct st_entry *) malloc(sizeof *sample);
     strcpy(sample->identifier, id);
     sample->ttype = ttype;

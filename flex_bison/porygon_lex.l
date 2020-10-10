@@ -37,8 +37,8 @@ extern struct st_entry *symbol_table;
 
 /* Getting auxiliary functions. They are described at the end of the current file. */
 static void update_pos(void);
-static enum token_type valid_char_const(void);
-static enum token_type valid_id(void);
+static enum yytokentype valid_char_const(void);
+static enum yytokentype valid_id(void);
 
 %}
 
@@ -142,7 +142,7 @@ int yywrap(void) {
 
 
 /* Verifies if the constant char, e.g. 'j', has only one char */
-static enum token_type valid_char_const(void) {
+static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         return CHARCONST;
         } else {
@@ -151,7 +151,7 @@ static enum token_type valid_char_const(void) {
 }
 
 /* Verifies if the identifier is not bigger than 32 chars */
-static enum token_type valid_id(void) {
+static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
         return IDENTIFIER;
     } else {

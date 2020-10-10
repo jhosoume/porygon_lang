@@ -34,10 +34,10 @@ clean_all:
 
 flex:
 	@echo " Running FLEX..."
-	@echo " flex src/porygon_lex.l "; flex src/porygon_lex.l
+	@echo " flex flex_bison/porygon_lex.l "; flex flex_bison/porygon_lex.l
 
 bison:
 	@echo " Running BISON..."
-	@echo " flex src/porygon_lex.l "; flex src/porygon_lex.l
+	@echo " bison -Wall flex_bison/porygon_syntax.y "; bison -Wall flex_bison/porygon_syntax.y
 
 .PHONY: clean_all flex

@@ -548,7 +548,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "src/porygon_lex.l"
+#line 1 "flex_bison/porygon_lex.l"
 /* Definitions of a scanner for the Porygon Lang */
 /* Options given by the manual https://westes.github.io/flex/manual */
 /* "[...] specifies that we are being careful." */
@@ -561,7 +561,7 @@ char *yytext;
 /* http://westes.github.io/flex/manual/Start-Conditions.html */
 
 
-#line 27 "src/porygon_lex.l"
+#line 27 "flex_bison/porygon_lex.l"
 #include "token_type.h"
 #include "token.h"
 #include "symbol_table.h"
@@ -575,8 +575,8 @@ extern struct st_entry *symbol_table;
 
 /* Getting auxiliary functions. They are described at the end of the current file. */
 static void update_pos(void);
-static enum token_type valid_char_const(void);
-static enum token_type valid_id(void);
+static enum yytokentype valid_char_const(void);
+static enum yytokentype valid_id(void);
 
 #line 582 "src/porygon_lex.c"
 #line 583 "src/porygon_lex.c"
@@ -796,10 +796,10 @@ YY_DECL
 		}
 
 	{
-#line 45 "src/porygon_lex.l"
+#line 45 "flex_bison/porygon_lex.l"
 
 
-#line 48 "src/porygon_lex.l"
+#line 48 "flex_bison/porygon_lex.l"
         /* Geting comments, for that start conditions are used. Blocks can span
                             multiple lines. */
 #line 806 "src/porygon_lex.c"
@@ -867,266 +867,266 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 50 "src/porygon_lex.l"
+#line 50 "flex_bison/porygon_lex.l"
 { update_pos(); BEGIN(COMMENTBLOCK); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 51 "src/porygon_lex.l"
+#line 51 "flex_bison/porygon_lex.l"
 { update_pos(); BEGIN(INITIAL); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 52 "src/porygon_lex.l"
+#line 52 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 53 "src/porygon_lex.l"
+#line 53 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 /* Comment line finishes when a break line is inserted. */
 case 5:
 YY_RULE_SETUP
-#line 56 "src/porygon_lex.l"
+#line 56 "flex_bison/porygon_lex.l"
 { update_pos(); BEGIN(COMMENTLINE); }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 57 "src/porygon_lex.l"
+#line 57 "flex_bison/porygon_lex.l"
 { update_pos(); BEGIN(INITIAL); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 58 "src/porygon_lex.l"
+#line 58 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 /* Key words are defined. They come before IDs and constants */
 case 8:
 YY_RULE_SETUP
-#line 62 "src/porygon_lex.l"
-{ update_pos(); print_table(); return WHILE_KW; }
+#line 62 "flex_bison/porygon_lex.l"
+{ update_pos(); return WHILE_KW; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 63 "src/porygon_lex.l"
+#line 63 "flex_bison/porygon_lex.l"
 { update_pos(); return FOR_KW; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 64 "src/porygon_lex.l"
+#line 64 "flex_bison/porygon_lex.l"
 { update_pos(); return IN_KW; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 65 "src/porygon_lex.l"
+#line 65 "flex_bison/porygon_lex.l"
 { update_pos(); return IF_KW; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 66 "src/porygon_lex.l"
+#line 66 "flex_bison/porygon_lex.l"
 { update_pos(); return ELSE_KW; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 67 "src/porygon_lex.l"
+#line 67 "flex_bison/porygon_lex.l"
 { update_pos(); return RETURN_KW; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 68 "src/porygon_lex.l"
+#line 68 "flex_bison/porygon_lex.l"
 { update_pos(); return READ_KW; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 69 "src/porygon_lex.l"
+#line 69 "flex_bison/porygon_lex.l"
 { update_pos(); return WRITE_KW; }
 	YY_BREAK
 /* Variable types */
 case 16:
 YY_RULE_SETUP
-#line 72 "src/porygon_lex.l"
+#line 72 "flex_bison/porygon_lex.l"
 { update_pos(); return CHAR_TYPE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 73 "src/porygon_lex.l"
+#line 73 "flex_bison/porygon_lex.l"
 { update_pos(); return STRING_TYPE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 74 "src/porygon_lex.l"
+#line 74 "flex_bison/porygon_lex.l"
 { update_pos(); return INT_TYPE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 75 "src/porygon_lex.l"
+#line 75 "flex_bison/porygon_lex.l"
 { update_pos(); return FLOAT_TYPE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 76 "src/porygon_lex.l"
+#line 76 "flex_bison/porygon_lex.l"
 { update_pos(); return TABLE_TYPE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 77 "src/porygon_lex.l"
+#line 77 "flex_bison/porygon_lex.l"
 { update_pos(); return BOOL_TYPE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 78 "src/porygon_lex.l"
+#line 78 "flex_bison/porygon_lex.l"
 { update_pos(); return VOID_TYPE; }
 	YY_BREAK
 /* Definition of some operators */
 case 23:
 YY_RULE_SETUP
-#line 81 "src/porygon_lex.l"
+#line 81 "flex_bison/porygon_lex.l"
 { update_pos(); return ADD_OP; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 82 "src/porygon_lex.l"
+#line 82 "flex_bison/porygon_lex.l"
 { update_pos(); return SUB_OP; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 83 "src/porygon_lex.l"
+#line 83 "flex_bison/porygon_lex.l"
 { update_pos(); return MULT_OP; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 84 "src/porygon_lex.l"
+#line 84 "flex_bison/porygon_lex.l"
 { update_pos(); return DIV_OP; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 85 "src/porygon_lex.l"
+#line 85 "flex_bison/porygon_lex.l"
 { update_pos(); return REM_OP; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 87 "src/porygon_lex.l"
+#line 87 "flex_bison/porygon_lex.l"
 { update_pos(); return NOT_OP; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 89 "src/porygon_lex.l"
+#line 89 "flex_bison/porygon_lex.l"
 { update_pos(); return LESSTHAN_OP; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 90 "src/porygon_lex.l"
+#line 90 "flex_bison/porygon_lex.l"
 { update_pos(); return LESSEQUAL_OP; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 91 "src/porygon_lex.l"
+#line 91 "flex_bison/porygon_lex.l"
 { update_pos(); return GREATERTHAN_OP; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 92 "src/porygon_lex.l"
+#line 92 "flex_bison/porygon_lex.l"
 { update_pos(); return GREATEREQUAl_OP; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 93 "src/porygon_lex.l"
+#line 93 "flex_bison/porygon_lex.l"
 { update_pos(); return NOTEQUAL_OP; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 94 "src/porygon_lex.l"
+#line 94 "flex_bison/porygon_lex.l"
 { update_pos(); return COMPARISON_OP; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 96 "src/porygon_lex.l"
+#line 96 "flex_bison/porygon_lex.l"
 { update_pos(); return OR_OP; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 97 "src/porygon_lex.l"
+#line 97 "flex_bison/porygon_lex.l"
 { update_pos(); return AND_OP; }
 	YY_BREAK
 /* Some symbols to help syntax */
 case 37:
 YY_RULE_SETUP
-#line 100 "src/porygon_lex.l"
+#line 100 "flex_bison/porygon_lex.l"
 { update_pos(); return LBRACE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 101 "src/porygon_lex.l"
+#line 101 "flex_bison/porygon_lex.l"
 { update_pos(); return RBRACE; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 102 "src/porygon_lex.l"
+#line 102 "flex_bison/porygon_lex.l"
 { update_pos(); return LBRACKET; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 103 "src/porygon_lex.l"
+#line 103 "flex_bison/porygon_lex.l"
 { update_pos(); return RBRACKET; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 104 "src/porygon_lex.l"
+#line 104 "flex_bison/porygon_lex.l"
 { update_pos(); return LPARENTHESES; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 105 "src/porygon_lex.l"
+#line 105 "flex_bison/porygon_lex.l"
 { update_pos(); return RPARENTHESES; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 106 "src/porygon_lex.l"
+#line 106 "flex_bison/porygon_lex.l"
 { update_pos(); return COLON; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 107 "src/porygon_lex.l"
+#line 107 "flex_bison/porygon_lex.l"
 { update_pos(); return SEMICOLON; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 108 "src/porygon_lex.l"
+#line 108 "flex_bison/porygon_lex.l"
 { update_pos(); return PIPE; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 110 "src/porygon_lex.l"
+#line 110 "flex_bison/porygon_lex.l"
 { update_pos(); return DEF_EQ; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 111 "src/porygon_lex.l"
+#line 111 "flex_bison/porygon_lex.l"
 { update_pos(); return COMMA; }
 	YY_BREAK
 /* Boolean Constants */
 case 48:
 YY_RULE_SETUP
-#line 115 "src/porygon_lex.l"
-{ update_pos(); return TRUECONST; }
+#line 115 "flex_bison/porygon_lex.l"
+{ update_pos(); return BOOLEANCONST; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 116 "src/porygon_lex.l"
-{ update_pos(); return FALSECONST; }
+#line 116 "flex_bison/porygon_lex.l"
+{ update_pos(); return BOOLEANCONST; }
 	YY_BREAK
 /* Numbers Constants */
 case 50:
 YY_RULE_SETUP
-#line 119 "src/porygon_lex.l"
+#line 119 "flex_bison/porygon_lex.l"
 { update_pos(); return INTCONST; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 120 "src/porygon_lex.l"
+#line 120 "flex_bison/porygon_lex.l"
 { update_pos(); return FLOATCONST; }
 	YY_BREAK
 /* Char or string constants */
@@ -1134,19 +1134,19 @@ YY_RULE_SETUP
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 124 "src/porygon_lex.l"
+#line 124 "flex_bison/porygon_lex.l"
 { update_pos(); return valid_char_const(); }
 	YY_BREAK
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 125 "src/porygon_lex.l"
+#line 125 "flex_bison/porygon_lex.l"
 { update_pos(); return STRINGCONST; }
 	YY_BREAK
 /* Matching Identifiers */
 case 54:
 YY_RULE_SETUP
-#line 128 "src/porygon_lex.l"
+#line 128 "flex_bison/porygon_lex.l"
 { update_pos(); return valid_id(); }
 	YY_BREAK
 /* Break line, tabs and whitespace are ignored, including
@@ -1154,17 +1154,17 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 133 "src/porygon_lex.l"
+#line 133 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 135 "src/porygon_lex.l"
+#line 135 "flex_bison/porygon_lex.l"
 { update_pos(); return ERR_UNKNOWN_TOKEN; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 137 "src/porygon_lex.l"
+#line 137 "flex_bison/porygon_lex.l"
 ECHO;
 	YY_BREAK
 #line 1171 "src/porygon_lex.c"
@@ -2146,7 +2146,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 137 "src/porygon_lex.l"
+#line 137 "flex_bison/porygon_lex.l"
 
 
 /*  */
@@ -2156,7 +2156,7 @@ int yywrap(void) {
 
 
 /* Verifies if the constant char, e.g. 'j', has only one char */
-static enum token_type valid_char_const(void) {
+static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         return CHARCONST;
         } else {
@@ -2165,7 +2165,7 @@ static enum token_type valid_char_const(void) {
 }
 
 /* Verifies if the identifier is not bigger than 32 chars */
-static enum token_type valid_id(void) {
+static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
         return IDENTIFIER;
     } else {
