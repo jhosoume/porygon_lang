@@ -1,6 +1,6 @@
 /* This is a sample correct (lexically) input Porygon File */
 
-int sample_function(void) {
+int sample_function() {
     return 93 + 72;
 }
 
@@ -9,12 +9,12 @@ float another_function(float p1, float p2, char c1 /* comment */) {
 }
 
 bool third_func(bool b) {
-    bool var = ((7 == 2) > 9);
+    bool var = 7 > 9;
     var = var && true;
-    return ((1 - 9) <= 10 ) || !false;
+    return  9 <= 10  || !false;
 }
 
-int main(void) {
+int main() {
     /* Do some computations */
     int one_var = 3;
     int one = 10 / 10;
@@ -24,7 +24,7 @@ int main(void) {
 
     bool ttrue = !false;
 
-    string input = read();
+    read(input);
 
     write("Running implicit conversion.");
 

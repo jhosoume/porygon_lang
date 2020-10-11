@@ -38,6 +38,6 @@ flex:
 
 bison:
 	@echo " Running BISON..."
-	@echo " bison -Wall flex_bison/porygon_syntax.y "; bison -Wall flex_bison/porygon_syntax.y
+	@echo " bison -Wall -Wconflicts-sr flex_bison/porygon_syntax.y "; bison -Wall flex_bison/porygon_syntax.y
 
 .PHONY: clean_all flex

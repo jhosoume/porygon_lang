@@ -1,8 +1,9 @@
+#include "parser.h"
 #include "scanner.h"
 #include "symbol_table.h"
 
 /* Helper to test the symbol table*/
-#define test_st 1
+#define test_st 0
 
 /* Global creation of a symbol table
    Since more than one component of the compiler is going to use the symbol
@@ -46,7 +47,8 @@ int main(int argc, char** argv) {
     #endif
 
     /* Scanner functions */
-    run_scanner();
+    // run_scanner();
+    yyparse();
     ends_scan(argc);
 
     free_st();
