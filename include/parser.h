@@ -105,13 +105,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "flex_bison/porygon_syntax.y"
+#line 26 "flex_bison/porygon_syntax.y"
 
     int integer_val;
     float float_val;
     const char *string_val;
 
-#line 115 "include/parser.h"
+    struct tree_node *tree_node;
+
+#line 117 "include/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -124,10 +126,10 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 /* "%code provides" blocks.  */
-#line 98 "flex_bison/porygon_syntax.y"
+#line 102 "flex_bison/porygon_syntax.y"
 
     void yyerror(char const *msg);
 
-#line 132 "include/parser.h"
+#line 134 "include/parser.h"
 
 #endif /* !YY_YY_INCLUDE_PARSER_H_INCLUDED  */

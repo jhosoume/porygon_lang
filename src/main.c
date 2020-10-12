@@ -43,6 +43,13 @@ int main(int argc, char** argv) {
         printf("Found identifier %s in line %d\n", entry->identifier, entry->line);
         reset_pcolor();
     }
+    entry->line = 999;
+    HASH_FIND_STR(symbol_table, "an_identifier", entry);
+    if (entry) {
+        red_print();
+        printf("Found identifier %s in line %d\n", entry->identifier, entry->line);
+        reset_pcolor();
+    }
     print_table();
     #endif
 
@@ -50,6 +57,7 @@ int main(int argc, char** argv) {
     // run_scanner();
     yyparse();
     ends_scan(argc);
+    print_table();
 
     free_st();
 

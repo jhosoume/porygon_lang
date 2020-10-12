@@ -27,6 +27,8 @@ LETTER [a-zA-Z]
 #include "token_type.h"
 #include "token.h"
 #include "symbol_table.h"
+#include "tree.h"
+#include "parser.h"
 
 /* Integers to indicate line number and column, both are defined in the scanner.h*/
 extern int line_num;
@@ -153,6 +155,7 @@ static enum yytokentype valid_char_const(void) {
 /* Verifies if the identifier is not bigger than 32 chars */
 static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
+        add_entry(yytext, IDENTIFIER, line_num, column_num - yyleng);
         return IDENTIFIER;
     } else {
         return ERR_INVALID_ID;

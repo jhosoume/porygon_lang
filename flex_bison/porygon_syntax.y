@@ -12,6 +12,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "tree.h"
+
 #include "helpers.h"
 
 extern struct st_entry *symbol_table;
@@ -25,6 +27,8 @@ extern int column_num;
     int integer_val;
     float float_val;
     const char *string_val;
+
+    struct tree_node *tree_node;
 }
 
 
@@ -43,57 +47,57 @@ extern int column_num;
 %token <string_val>     CHARCONST
 %token <string_val>     STRINGCONST
 
-%token WHILE_KW               /* while */
-%token FOR_KW                 /* for */
-%token IN_KW                  /* in */
-%token IF_KW                  /* if */
-%token ELSE_KW                /* else */
-%token RETURN_KW              /* return */
-%token READ_KW                /* read */
-%token WRITE_KW               /* write */
-%token CHAR_TYPE              /* char */
-%token INT_TYPE               /* int */
-%token FLOAT_TYPE             /* float */
-%token STRING_TYPE            /* string */
-%token TABLE_TYPE             /* table */
-%token BOOL_TYPE              /* bool */
-%token VOID_TYPE              /* void */
-%token ADD_OP                 /* + */
-%token SUB_OP                 /* - */
-%token MULT_OP                /* * */
-%token DIV_OP                 /* / */
-%token REM_OP                 /* % */
-%token NOT_OP                 /* ! */
-%token LESSTHAN_OP            /* < */
-%token LESSEQUAL_OP           /* <= */
-%token GREATERTHAN_OP         /* > */
-%token GREATEREQUAl_OP        /* >= */
-%token NOTEQUAL_OP            /* != */
-%token COMPARISON_OP          /* == */
-%token OR_OP                  /* || */
-%token AND_OP                 /* && */
-%token LBRACE                 /* { */
-%token RBRACE                 /* } */
-%token LBRACKET               /* [ */
-%token RBRACKET               /* ] */
-%token LPARENTHESES           /* ( */
-%token RPARENTHESES           /* ) */
-%token COLON                  /* : */
-%token SEMICOLON              /* ; */
-%token DEF_EQ                 /* = */
-%token COMMA                  /* , */
-%token PIPE                   /* | */
+%token <tree_node> WHILE_KW               /* while */
+%token <tree_node> FOR_KW                 /* for */
+%token <tree_node> IN_KW                  /* in */
+%token <tree_node> IF_KW                  /* if */
+%token <tree_node> ELSE_KW                /* else */
+%token <tree_node> RETURN_KW              /* return */
+%token <tree_node> READ_KW                /* read */
+%token <tree_node> WRITE_KW               /* write */
+%token <tree_node> CHAR_TYPE              /* char */
+%token <tree_node> INT_TYPE               /* int */
+%token <tree_node> FLOAT_TYPE             /* float */
+%token <tree_node> STRING_TYPE            /* string */
+%token <tree_node> TABLE_TYPE             /* table */
+%token <tree_node> BOOL_TYPE              /* bool */
+%token <tree_node> VOID_TYPE              /* void */
+%token <tree_node> ADD_OP                 /* + */
+%token <tree_node> SUB_OP                 /* - */
+%token <tree_node> MULT_OP                /* * */
+%token <tree_node> DIV_OP                 /* / */
+%token <tree_node> REM_OP                 /* % */
+%token <tree_node> NOT_OP                 /* ! */
+%token <tree_node> LESSTHAN_OP            /* < */
+%token <tree_node> LESSEQUAL_OP           /* <= */
+%token <tree_node> GREATERTHAN_OP         /* > */
+%token <tree_node> GREATEREQUAl_OP        /* >= */
+%token <tree_node> NOTEQUAL_OP            /* != */
+%token <tree_node> COMPARISON_OP          /* == */
+%token <tree_node> OR_OP                  /* || */
+%token <tree_node> AND_OP                 /* && */
+%token <tree_node> LBRACE                 /* { */
+%token <tree_node> RBRACE                 /* } */
+%token <tree_node> LBRACKET               /* [ */
+%token <tree_node> RBRACKET               /* ] */
+%token <tree_node> LPARENTHESES           /* ( */
+%token <tree_node> RPARENTHESES           /* ) */
+%token <tree_node> COLON                  /* : */
+%token <tree_node> SEMICOLON              /* ; */
+%token <tree_node> DEF_EQ                 /* = */
+%token <tree_node> COMMA                  /* , */
+%token <tree_node> PIPE                   /* | */
 
 %token ERR_INVALID_ID
 %token ERR_INVALID_CHARCONST
 %token ERR_UNKNOWN_TOKEN
 
-%type declarationList declaration varDeclaration functDeclaration varSimpleDeclaration
-%type logicalOrExp arrayDeclaration arrayDefinition tableDeclaration tableDefinition
-%type typeSpecifier constList stringList columnContent typeSpecifier parameterList
-%type compoundStmt parameterDeclaration statementList statement expression iterationStmt conditionalStmt
-%type returnStmt ifStmt elseStmt logicalAndExp equalityExp relationExp sumExp multExp unaryExp mutable baseValue
-%type functCall args argList constant
+%type <tree_node> declarationList declaration varDeclaration functDeclaration varSimpleDeclaration
+%type <tree_node> logicalOrExp arrayDeclaration arrayDefinition tableDeclaration tableDefinition
+%type <tree_node> typeSpecifier constList stringList columnContent parameterList
+%type <tree_node> compoundStmt parameterDeclaration statementList statement expression iterationStmt conditionalStmt
+%type <tree_node> returnStmt ifStmt elseStmt logicalAndExp equalityExp relationExp sumExp multExp unaryExp mutable baseValue
+%type <tree_node> functCall args argList constant lexerror
 
 %code provides {
     void yyerror(char const *msg);
@@ -110,6 +114,7 @@ int yylex(void);
 declarationList
     : declaration                                   {printf("Found declaration.\n");}
     | declarationList declaration                   {printf("Found recursive declaration.\n");}
+    | lexerror
     ;
 
 declaration
@@ -269,6 +274,7 @@ unaryExp
 
 baseValue
     : LPARENTHESES expression RPARENTHESES          {printf("[baseValue] Expr in parentheses\n");}
+    | lexerror
     | constant                                      {printf("[baseValue] Constant\n");}
     | functCall                                     {printf("[baseValue] Function Call\n");}
     | mutable                                       {printf("[baseValue] Mutable\n");}
@@ -304,12 +310,30 @@ constant
     ;
 
 typeSpecifier
-    : CHAR_TYPE                                      {printf("CHAR_TYPE\n");}
-    | INT_TYPE                                    {printf("INT_TYPE\n");}
-    | FLOAT_TYPE                                  {printf("FLOAT_TYPE\n");}
+    : CHAR_TYPE                                     {printf("CHAR_TYPE\n");}
+    | INT_TYPE                                      {printf("INT_TYPE\n");}
+    | FLOAT_TYPE                                    {printf("FLOAT_TYPE\n");}
     | BOOL_TYPE                                     {printf("BOOL_TYPE\n");}
     | STRING_TYPE                                   {printf("STRING_TYPE\n");}
-    | VOID_TYPE                                   {printf("VOID_TYPE\n");}
+    | VOID_TYPE                                     {printf("VOID_TYPE\n");}
+    ;
+
+lexerror
+    : ERR_INVALID_ID                                {
+                                                        red_print();
+                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, column_num);
+                                                        reset_pcolor();
+                                                    }
+    | ERR_INVALID_CHARCONST                         {
+                                                        red_print();
+                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, column_num);
+                                                        reset_pcolor();
+                                                    }
+    | ERR_UNKNOWN_TOKEN                             {
+                                                        red_print();
+                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, column_num);
+                                                        reset_pcolor();
+                                                    }
     ;
 
 %%

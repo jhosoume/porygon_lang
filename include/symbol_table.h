@@ -12,6 +12,10 @@ struct st_entry {
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };
 
+void force_add_entry(const char *id,
+               enum yytokentype ttype,
+               int line, int col);
+
 void add_entry(const char *id,
                enum yytokentype ttype,
                int line, int col);
