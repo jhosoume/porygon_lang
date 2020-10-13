@@ -339,7 +339,5 @@ lexerror
 %%
 
 void yyerror(char const *msg) {
-    red_print();
-    printf("[ERR] (Line: %d, Column: %d) Found error %s\n", line_num, column_num, msg);
-    reset_pcolor();
+    fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found error %s\n", line_num, column_num, msg);
 }

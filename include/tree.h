@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 struct tree_node {
@@ -20,5 +21,13 @@ struct node_list {
 
 struct node_list *initialize_list();
 void push_list(struct node_list *main_node, struct tree_node *node);
+struct tree_node *create_node(struct node_list *list, const char *name, int num_leaves);
+void add_leaf(struct tree_node *root, struct tree_node *leaf, int leaf_indx);
+void print_node(struct tree_node *node);
+void print_list(struct node_list *list);
+void print_tree(struct tree_node *root);
+void print_tree_rec(struct tree_node *root, int depth);
+void free_node(struct tree_node *node);
+void free_list(struct node_list *list);
 
 #endif

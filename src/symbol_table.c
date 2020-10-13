@@ -33,8 +33,16 @@ void free_st() {
 struct st_entry *find_id(const char *id) {
     struct st_entry *entry = NULL;
     HASH_FIND_STR(symbol_table, id, entry);
+    // if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
+    return entry;
+}
+
+struct st_entry *find_id_verbose(const char *id) {
+    struct st_entry *entry = NULL;
+    HASH_FIND_STR(symbol_table, id, entry);
     if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
     return entry;
+
 }
 
 void print_table() {
