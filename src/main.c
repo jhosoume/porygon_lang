@@ -5,7 +5,7 @@
 
 /* Helper to test the symbol table*/
 #define test_st 0
-#define test_tree 1
+#define test_tree 0
 
 /* Global creation of a symbol table
    Since more than one component of the compiler is going to use the symbol

@@ -124,201 +124,436 @@ program
     ;
 
 declarationList
-    : declaration                                   {printf("Found declaration.\n");}
-    | declarationList declaration                   {printf("Found recursive declaration.\n");}
+    : declaration                                   {$$ = $1;}
+    | declarationList declaration                   {
+                                                        struct tree_node *node = create_node(ast_tree_list, "declarationList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
     | lexerror
     ;
 
 declaration
-    : varDeclaration SEMICOLON                      {printf("Found varDeclaration\n");}
-    | functDeclaration                              {printf("Found functDelcaration\n");}
+    : varDeclaration SEMICOLON                      {$$ = $1;}
+    | functDeclaration                              {$$ = $1;}
     ;
 
 varDeclaration
-    : varSimpleDeclaration                          {printf("Found varSimpleDeclaration\n");}
-    | varSimpleDeclaration DEF_EQ logicalOrExp      {printf("Found varSimpleDeclaration with Definition\n");}
-    | arrayDeclaration                              {printf("Found arrayDeclaration\n");}
-    | arrayDeclaration DEF_EQ arrayDefinition       {printf("Found arrayDeclaration with Definition\n");}
-    | tableDeclaration                              {printf("Found tableDeclaration\n");}
-    | tableDeclaration DEF_EQ tableDefinition       {printf("Found tableDeclaration with Definition\n");}
+    : varSimpleDeclaration                          {$$ = $1;}
+    | varSimpleDeclaration DEF_EQ logicalOrExp      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "varDeclaration", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | arrayDeclaration                              {$$ = $1;}
+    | arrayDeclaration DEF_EQ arrayDefinition       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclarationDefinition", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | tableDeclaration                              {$$ = $1;}
+    | tableDeclaration DEF_EQ tableDefinition       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "tableDeclarationDefinition", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 
 varSimpleDeclaration
-    : typeSpecifier IDENTIFIER                      {printf("[varSimpleDec] Found type specifier and ID\n");}
+    : typeSpecifier IDENTIFIER                      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "varSimpleDeclaration", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 arrayDeclaration
-    : typeSpecifier IDENTIFIER LBRACKET RBRACKET    {printf("[arrayDec] Found ARR type specifier and ID []\n");}
+    : typeSpecifier IDENTIFIER LBRACKET RBRACKET    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclaration", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 arrayDefinition
-    : LBRACE constList RBRACE                     {printf("Found ARR DEF { }\n");}
+    : LBRACE constList RBRACE                     {$$ = $2;}
     ;
 
 tableDeclaration
-    : TABLE_TYPE typeSpecifier IDENTIFIER LBRACKET RBRACKET {printf("Found table type with type specification ID[]\n");}
+    : TABLE_TYPE typeSpecifier IDENTIFIER LBRACKET RBRACKET {
+                                                                struct tree_node *node = create_node(ast_tree_list, "tableDeclaration", 2);
+                                                                add_leaf(node, $2, 0);
+                                                                add_leaf(node, $3, 1);
+                                                                $$ = node;
+                                                            }
     ;
 
 tableDefinition
-    : PIPE LPARENTHESES stringList RPARENTHESES COLON columnContent PIPE {printf("Table definition with PIPES\n");}
+    : PIPE LPARENTHESES stringList RPARENTHESES COLON columnContent PIPE {
+                                                                            struct tree_node *node = create_node(ast_tree_list, "tableDefinition", 2);
+                                                                            add_leaf(node, $3, 0);
+                                                                            add_leaf(node, $6, 1);
+                                                                            $$ = node;
+                                                                         }
     ;
 
 constList
-    : constant                                      {printf("Found a constant\n");}
-    | constList COMMA constant                        {printf("Found a recursive constant list\n");}
+    : constant                                      {$$ = $1;}
+    | constList COMMA constant                      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "constList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+
+                                                    }
     ;
 
 stringList
-    : STRINGCONST                                   {printf("Found a string constant\n");}
-    | stringList COMMA STRINGCONST                       {printf("Found a recursive definition of string\n");}
+    : STRINGCONST                                   {$$ = $1;}
+    | stringList COMMA STRINGCONST                  {
+                                                        struct tree_node *node = create_node(ast_tree_list, "stringList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 columnContent
-    : LPARENTHESES constList RPARENTHESES           {printf("Found a definition of column\n");}
-    | columnContent COMMA LPARENTHESES constList RPARENTHESES {printf("Found a multiple column definition.\n");}
+    : LPARENTHESES constList RPARENTHESES           {$$ = $2;}
+    | columnContent COMMA LPARENTHESES constList RPARENTHESES {
+                                                                struct tree_node *node = create_node(ast_tree_list, "columnContent", 2);
+                                                                add_leaf(node, $1, 0);
+                                                                add_leaf(node, $4, 1);
+                                                                $$ = node;
+                                                              }
     ;
 
 functDeclaration
-    : typeSpecifier IDENTIFIER LPARENTHESES parameterList RPARENTHESES compoundStmt {printf("Found a complete function delcaration.\n");}
-    | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {printf("Found a no parameters function delcaration.\n");}
+    : typeSpecifier IDENTIFIER LPARENTHESES parameterList RPARENTHESES compoundStmt {
+                                                                                        struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 4);
+                                                                                        add_leaf(node, $1, 0);
+                                                                                        add_leaf(node, $2, 1);
+                                                                                        add_leaf(node, $4, 2);
+                                                                                        add_leaf(node, $6, 3);
+                                                                                        $$ = node;
+                                                                                    }
+    | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
+                                                                            struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 3);
+                                                                            add_leaf(node, $1, 0);
+                                                                            add_leaf(node, $2, 1);
+                                                                            add_leaf(node, $5, 2);
+                                                                            $$ = node;
+                                                                      }
     ;
 
 parameterList
-    : parameterDeclaration                          {printf("Found a parameter declaration\n");}
-    | parameterList COMMA parameterDeclaration     {printf("Found a multiple parameter declaration\n");}
+    : parameterDeclaration                          {$$ = $1;}
+    | parameterList COMMA parameterDeclaration      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "parameterList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 parameterDeclaration
-    : typeSpecifier IDENTIFIER                      {printf("[paramDec] Found a type specifier and Identifier");}
-    | VOID_TYPE                                     {printf("[paramDec] Found a VOID");}
+    : typeSpecifier IDENTIFIER                      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "parameterDeclaration", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
+    | VOID_TYPE                                     {$$ = $1;}
     ;
 
 compoundStmt
-    : LBRACE RBRACE                             {printf("Found {}\n");}
-    | LBRACE statementList RBRACE               {printf("Found a compoundStmt with Statements\n");}
+    : LBRACE RBRACE                                 {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyCompoundStatement", 0);
+                                                        $$ = node;
+                                                    }
+    | LBRACE statementList RBRACE                   {$$ = $2;}
     ;
 
 statementList
-    : statement                                     {printf("Found statement\n");}
-    | statementList statement                       {printf("Found a recursive statement list\n");}
+    : statement                                     {$$ = $1;}
+    | statementList statement                       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "statementList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 statement
-    : varDeclaration SEMICOLON                      {printf("[State] Found a varDeclaration\n");}
-    | expression SEMICOLON                          {printf("[State] Found a expression\n");}
-    | iterationStmt                                 {printf("[State] Found a iterationStmt\n");}
-    | conditionalStmt                               {printf("[State] Found a conditionalStmt\n");}
-    | returnStmt SEMICOLON                          {printf("[State] Found a returnStmt\n");}
-    | READ_KW LPARENTHESES IDENTIFIER RPARENTHESES SEMICOLON {printf("[State] Found a read statement");}
-    | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {printf("[State] Found a write statement");}
+    : varDeclaration SEMICOLON                      {$$ = $1;}
+    | expression SEMICOLON                          {$$ = $1;}
+    | iterationStmt                                 {$$ = $1;}
+    | conditionalStmt                               {$$ = $1;}
+    | returnStmt SEMICOLON                          {$$ = $1;}
+    | READ_KW LPARENTHESES IDENTIFIER RPARENTHESES SEMICOLON {
+                                                                 struct tree_node *node = create_node(ast_tree_list, "readStmt", 1);
+                                                                 add_leaf(node, $3, 0);
+                                                                 $$ = node;
+                                                             }
+    | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {
+                                                                 struct tree_node *node = create_node(ast_tree_list, "writeStmt", 1);
+                                                                 add_leaf(node, $3, 0);
+                                                                 $$ = node;
+                                                             }
     ;
 
 iterationStmt
-    : WHILE_KW LPARENTHESES expression RPARENTHESES compoundStmt {printf("While\n");}
-    | FOR_KW LPARENTHESES typeSpecifier IDENTIFIER RPARENTHESES IN_KW IDENTIFIER compoundStmt {printf("For\n");}
+    : WHILE_KW LPARENTHESES expression RPARENTHESES compoundStmt {
+                                                                     struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                     add_leaf(node, $3, 0);
+                                                                     add_leaf(node, $5, 1);
+                                                                     $$ = node;
+                                                                 }
+    | FOR_KW LPARENTHESES typeSpecifier IDENTIFIER RPARENTHESES IN_KW IDENTIFIER compoundStmt {
+                                                                                                 struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                                                 add_leaf(node, $3, 0);
+                                                                                                 add_leaf(node, $5, 1);
+                                                                                                 $$ = node;
+                                                                                             }
+
     ;
 
 conditionalStmt
-    : ifStmt elseStmt                               {printf("Conditional Statement\n");}
+    : ifStmt elseStmt                               {
+                                                        struct tree_node *node = create_node(ast_tree_list, "conditionalStmt", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $2, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 ifStmt
-    : IF_KW LPARENTHESES expression RPARENTHESES compoundStmt {printf("[CondStmt] If expr");}
+    : IF_KW LPARENTHESES expression RPARENTHESES compoundStmt   {
+                                                                    struct tree_node *node = create_node(ast_tree_list, "ifStmt", 2);
+                                                                    add_leaf(node, $3, 0);
+                                                                    add_leaf(node, $5, 1);
+                                                                    $$ = node;
+                                                                }
     ;
 
 elseStmt
-    : ELSE_KW compoundStmt                          {printf("[CondStmt] Else expr");}
-    | %empty                                        {printf("[Condstmt] Empty else");}
+    : ELSE_KW compoundStmt                          {
+                                                        struct tree_node *node = create_node(ast_tree_list, "elseStmt", 1);
+                                                        add_leaf(node, $2, 0);
+                                                        $$ = node;
+                                                    }
+    | %empty                                        {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyElse", 0);
+                                                        $$ = node;
+                                                    }
     ;
 
 returnStmt
-    : RETURN_KW                                     {printf("Return\n");}
-    | RETURN_KW expression                          {printf("Return with expr\n");}
+    : RETURN_KW                                     {
+                                                        struct tree_node *node = create_node(ast_tree_list, "return", 0);
+                                                        $$ = node;
+                                                    }
+    | RETURN_KW expression                          {
+                                                        struct tree_node *node = create_node(ast_tree_list, "return", 1);
+                                                        add_leaf(node, $2, 0);
+                                                        $$ = node;
+                                                    }
     ;
 
 expression
-    : logicalOrExp                                  {printf("[Expr] logicalOrExp\n");}
-    | mutable DEF_EQ logicalOrExp                   {printf("[Expr] logicalOrExp with mutable\n");}
+    : logicalOrExp                                  {$$ = $1;}
+    | mutable DEF_EQ logicalOrExp                   {
+                                                        struct tree_node *node = create_node(ast_tree_list, "=", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 logicalOrExp
-    : logicalAndExp                                 {printf("[Expr] logicalAndExp\n");}
-    | logicalOrExp OR_OP logicalAndExp              {printf("[Expr] || \n");}
+    : logicalAndExp                                 {$$ = $1;}
+    | logicalOrExp OR_OP logicalAndExp              {
+                                                        struct tree_node *node = create_node(ast_tree_list, "||", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 logicalAndExp
-    : equalityExp                                   {printf("[Expr] equalityExp\n");}
-    | logicalAndExp AND_OP equalityExp              {printf("[Expr] && \n");}
+    : equalityExp                                   {$$ = $1;}
+    | logicalAndExp AND_OP equalityExp              {
+                                                        struct tree_node *node = create_node(ast_tree_list, "&&", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 equalityExp
-    : relationExp                                   {printf("[Expr] relationExp\n");}
-    | equalityExp COMPARISON_OP relationExp         {printf("[Expr] == \n");}
-    | equalityExp NOTEQUAL_OP relationExp           {printf("[Expr] != \n");}
+    : relationExp                                   {$$ = $1;}
+    | equalityExp COMPARISON_OP relationExp         {
+                                                        struct tree_node *node = create_node(ast_tree_list, "==", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | equalityExp NOTEQUAL_OP relationExp           {
+                                                        struct tree_node *node = create_node(ast_tree_list, "!=", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 relationExp
-    : sumExp                                        {printf("[Expr] sumExp\n");}
-    | relationExp GREATERTHAN_OP sumExp             {printf("[Expr] > \n");}
-    | relationExp LESSTHAN_OP sumExp                {printf("[Expr] < \n");}
-    | relationExp GREATEREQUAl_OP sumExp            {printf("[Expr] >= \n");}
-    | relationExp LESSEQUAL_OP sumExp               {printf("[Expr] <= \n");}
+    : sumExp                                        {$$ = $1;}
+    | relationExp GREATERTHAN_OP sumExp             {
+                                                        struct tree_node *node = create_node(ast_tree_list, ">", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | relationExp LESSTHAN_OP sumExp                {
+                                                        struct tree_node *node = create_node(ast_tree_list, "<", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | relationExp GREATEREQUAl_OP sumExp            {
+                                                        struct tree_node *node = create_node(ast_tree_list, ">=", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | relationExp LESSEQUAL_OP sumExp               {
+                                                        struct tree_node *node = create_node(ast_tree_list, "<=", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 sumExp
-    : multExp                                       {printf("[Expr] multExp\n");}
-    | sumExp ADD_OP multExp                         {printf("[Expr] + \n");}
-    | sumExp SUB_OP multExp                         {printf("[Expr] - \n");}
+    : multExp                                       {$$ = $1;}
+    | sumExp ADD_OP multExp                         {
+                                                        struct tree_node *node = create_node(ast_tree_list, "+", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | sumExp SUB_OP multExp                         {
+                                                        struct tree_node *node = create_node(ast_tree_list, "-", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 multExp
-    : unaryExp                                      {printf("[Expr] unaryExp\n");}
-    | multExp MULT_OP unaryExp                      {printf("[Expr] * \n");}
-    | multExp DIV_OP unaryExp                       {printf("[Expr] / \n");}
-    | multExp REM_OP unaryExp                       {printf("[Expr] rem \n");}
+    : unaryExp                                      {$$ = $1;}
+    | multExp MULT_OP unaryExp                      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "*", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | multExp DIV_OP unaryExp                       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "/", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | multExp REM_OP unaryExp                       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "%", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 unaryExp
-    : baseValue                                     {printf("[Expr] baseValue\n");}
-    | NOT_OP unaryExp                               {printf("[Expr] ! \n");}
+    : baseValue                                     {$$ = $1;}
+    | NOT_OP unaryExp                               {
+                                                        struct tree_node *node = create_node(ast_tree_list, "!", 1);
+                                                        add_leaf(node, $2, 0);
+                                                        $$ = node;
+                                                    }
     ;
 
 baseValue
-    : LPARENTHESES expression RPARENTHESES          {printf("[baseValue] Expr in parentheses\n");}
+    : LPARENTHESES expression RPARENTHESES          {$$ = $2;}
     | lexerror
-    | constant                                      {printf("[baseValue] Constant\n");}
-    | functCall                                     {printf("[baseValue] Function Call\n");}
-    | mutable                                       {printf("[baseValue] Mutable\n");}
+    | constant                                      {$$ = $1;}
+    | functCall                                     {$$ = $1;}
+    | mutable                                       {$$ = $1;}
     ;
 
 mutable
-    : IDENTIFIER                                    {printf("Found Identifier\n");}
-    | IDENTIFIER LBRACKET expression RBRACKET       {printf("Found Identifier []\n");}
-    | IDENTIFIER LBRACKET expression COLON expression RBRACKET {printf("Found Identifier []\n");}
-    | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET  {printf("Found Identifier []\n");}
+    : IDENTIFIER                                    {$$ = $1;}
+    | IDENTIFIER LBRACKET expression RBRACKET       {
+                                                        struct tree_node *node = create_node(ast_tree_list, "mutable[]", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
+                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;]", 3);
+                                                                    add_leaf(node, $1, 0);
+                                                                    add_leaf(node, $3, 1);
+                                                                    add_leaf(node, $5, 2);
+                                                                    $$ = node;
+                                                                }
+    | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
+                                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;:]", 4);
+                                                                                    add_leaf(node, $1, 0);
+                                                                                    add_leaf(node, $3, 1);
+                                                                                    add_leaf(node, $5, 2);
+                                                                                    add_leaf(node, $7, 3);
+                                                                                    $$ = node;
+                                                                                }
     ;
 
 functCall
-    : IDENTIFIER LPARENTHESES args RPARENTHESES     {printf("Function call\n");}
+    : IDENTIFIER LPARENTHESES args RPARENTHESES     {
+                                                        struct tree_node *node = create_node(ast_tree_list, "functCall", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
     ;
 
 args
-    : argList                                       {printf("argList\n");}
-    | %empty                                        {printf("Empty argument list\n");}
+    : argList                                       {$$ = $1;}
+    | %empty                                        {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyArgs", 0);
+                                                        $$ = node;
+                                                    }
     ;
 
 argList
-    : expression COMMA argList                      {printf("Multiple arguments list\n");}
-    | expression                                    {printf("Single arguments list\n");}
+    : expression COMMA argList                      {
+                                                        struct tree_node *node = create_node(ast_tree_list, "argList", 2);
+                                                        add_leaf(node, $1, 0);
+                                                        add_leaf(node, $3, 1);
+                                                        $$ = node;
+                                                    }
+    | expression                                    {$$ = $1;}
     ;
 
 constant
-    : INTCONST                                      {printf("INTCONST\n");}
-    | FLOATCONST                                    {printf("FLOATCONST\n");}
-    | BOOLEANCONST                                  {printf("BOOLEANCONST\n");}
-    | CHARCONST                                     {printf("CHARCONST\n");}
-    | STRINGCONST                                   {printf("STRINGCONST\n");}
+    : INTCONST                                      {$$ = $1;}
+    | FLOATCONST                                    {$$ = $1;}
+    | BOOLEANCONST                                  {$$ = $1;}
+    | CHARCONST                                     {$$ = $1;}
+    | STRINGCONST                                   {$$ = $1;}
     ;
 
 typeSpecifier

@@ -493,17 +493,17 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   123,   123,   127,   128,   129,   133,   134,   138,   139,
-     140,   141,   142,   143,   148,   152,   156,   160,   164,   168,
-     169,   173,   174,   178,   179,   183,   184,   188,   189,   193,
-     194,   198,   199,   203,   204,   208,   209,   210,   211,   212,
-     213,   214,   218,   219,   223,   227,   231,   232,   236,   237,
-     241,   242,   246,   247,   251,   252,   256,   257,   258,   262,
-     263,   264,   265,   266,   270,   271,   272,   276,   277,   278,
-     279,   283,   284,   288,   289,   290,   291,   292,   296,   297,
-     298,   299,   303,   307,   308,   312,   313,   317,   318,   319,
-     320,   321,   325,   326,   327,   328,   329,   330,   334,   339,
-     344
+       0,   123,   123,   127,   128,   134,   138,   139,   143,   144,
+     150,   151,   157,   158,   168,   177,   186,   190,   199,   208,
+     209,   219,   220,   229,   230,   239,   247,   257,   258,   267,
+     273,   277,   281,   285,   286,   295,   296,   297,   298,   299,
+     300,   305,   313,   319,   329,   338,   347,   352,   359,   363,
+     371,   372,   381,   382,   391,   392,   401,   402,   408,   417,
+     418,   424,   430,   436,   445,   446,   452,   461,   462,   468,
+     474,   483,   484,   492,   493,   494,   495,   496,   500,   501,
+     507,   514,   525,   534,   535,   542,   548,   552,   553,   554,
+     555,   556,   560,   561,   562,   563,   564,   565,   569,   574,
+     579
 };
 #endif
 
@@ -2870,594 +2870,828 @@ yyreduce:
 
   case 3:
 #line 127 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found declaration.\n");}
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
 #line 2875 "src/parser.c"
     break;
 
   case 4:
 #line 128 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found recursive declaration.\n");}
-#line 2881 "src/parser.c"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "declarationList", 2);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 2886 "src/parser.c"
     break;
 
   case 6:
-#line 133 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found varDeclaration\n");}
-#line 2887 "src/parser.c"
+#line 138 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 2892 "src/parser.c"
     break;
 
   case 7:
-#line 134 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found functDelcaration\n");}
-#line 2893 "src/parser.c"
+#line 139 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 2898 "src/parser.c"
     break;
 
   case 8:
-#line 138 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found varSimpleDeclaration\n");}
-#line 2899 "src/parser.c"
+#line 143 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 2904 "src/parser.c"
     break;
 
   case 9:
-#line 139 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found varSimpleDeclaration with Definition\n");}
-#line 2905 "src/parser.c"
+#line 144 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "varDeclaration", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 2915 "src/parser.c"
     break;
 
   case 10:
-#line 140 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found arrayDeclaration\n");}
-#line 2911 "src/parser.c"
+#line 150 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 2921 "src/parser.c"
     break;
 
   case 11:
-#line 141 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found arrayDeclaration with Definition\n");}
-#line 2917 "src/parser.c"
+#line 151 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclarationDefinition", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 2932 "src/parser.c"
     break;
 
   case 12:
-#line 142 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found tableDeclaration\n");}
-#line 2923 "src/parser.c"
+#line 157 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 2938 "src/parser.c"
     break;
 
   case 13:
-#line 143 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found tableDeclaration with Definition\n");}
-#line 2929 "src/parser.c"
+#line 158 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "tableDeclarationDefinition", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 2949 "src/parser.c"
     break;
 
   case 14:
-#line 148 "flex_bison/porygon_syntax.y"
-                                                    {printf("[varSimpleDec] Found type specifier and ID\n");}
-#line 2935 "src/parser.c"
+#line 168 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "varSimpleDeclaration", 2);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 2960 "src/parser.c"
     break;
 
   case 15:
-#line 152 "flex_bison/porygon_syntax.y"
-                                                    {printf("[arrayDec] Found ARR type specifier and ID []\n");}
-#line 2941 "src/parser.c"
-    break;
-
-  case 16:
-#line 156 "flex_bison/porygon_syntax.y"
-                                                  {printf("Found ARR DEF { }\n");}
-#line 2947 "src/parser.c"
-    break;
-
-  case 17:
-#line 160 "flex_bison/porygon_syntax.y"
-                                                            {printf("Found table type with type specification ID[]\n");}
-#line 2953 "src/parser.c"
-    break;
-
-  case 18:
-#line 164 "flex_bison/porygon_syntax.y"
-                                                                         {printf("Table definition with PIPES\n");}
-#line 2959 "src/parser.c"
-    break;
-
-  case 19:
-#line 168 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found a constant\n");}
-#line 2965 "src/parser.c"
-    break;
-
-  case 20:
-#line 169 "flex_bison/porygon_syntax.y"
-                                                      {printf("Found a recursive constant list\n");}
+#line 177 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclaration", 2);
+                                                        add_leaf(node, (yyvsp[-3].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
 #line 2971 "src/parser.c"
     break;
 
-  case 21:
-#line 173 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found a string constant\n");}
+  case 16:
+#line 186 "flex_bison/porygon_syntax.y"
+                                                  {(yyval.tree_node) = (yyvsp[-1].tree_node);}
 #line 2977 "src/parser.c"
     break;
 
+  case 17:
+#line 190 "flex_bison/porygon_syntax.y"
+                                                            {
+                                                                struct tree_node *node = create_node(ast_tree_list, "tableDeclaration", 2);
+                                                                add_leaf(node, (yyvsp[-3].tree_node), 0);
+                                                                add_leaf(node, (yyvsp[-2].tree_node), 1);
+                                                                (yyval.tree_node) = node;
+                                                            }
+#line 2988 "src/parser.c"
+    break;
+
+  case 18:
+#line 199 "flex_bison/porygon_syntax.y"
+                                                                         {
+                                                                            struct tree_node *node = create_node(ast_tree_list, "tableDefinition", 2);
+                                                                            add_leaf(node, (yyvsp[-4].tree_node), 0);
+                                                                            add_leaf(node, (yyvsp[-1].tree_node), 1);
+                                                                            (yyval.tree_node) = node;
+                                                                         }
+#line 2999 "src/parser.c"
+    break;
+
+  case 19:
+#line 208 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3005 "src/parser.c"
+    break;
+
+  case 20:
+#line 209 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "constList", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+
+                                                    }
+#line 3017 "src/parser.c"
+    break;
+
+  case 21:
+#line 219 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3023 "src/parser.c"
+    break;
+
   case 22:
-#line 174 "flex_bison/porygon_syntax.y"
-                                                         {printf("Found a recursive definition of string\n");}
-#line 2983 "src/parser.c"
+#line 220 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "stringList", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3034 "src/parser.c"
     break;
 
   case 23:
-#line 178 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found a definition of column\n");}
-#line 2989 "src/parser.c"
+#line 229 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3040 "src/parser.c"
     break;
 
   case 24:
-#line 179 "flex_bison/porygon_syntax.y"
-                                                              {printf("Found a multiple column definition.\n");}
-#line 2995 "src/parser.c"
+#line 230 "flex_bison/porygon_syntax.y"
+                                                              {
+                                                                struct tree_node *node = create_node(ast_tree_list, "columnContent", 2);
+                                                                add_leaf(node, (yyvsp[-4].tree_node), 0);
+                                                                add_leaf(node, (yyvsp[-1].tree_node), 1);
+                                                                (yyval.tree_node) = node;
+                                                              }
+#line 3051 "src/parser.c"
     break;
 
   case 25:
-#line 183 "flex_bison/porygon_syntax.y"
-                                                                                    {printf("Found a complete function delcaration.\n");}
-#line 3001 "src/parser.c"
+#line 239 "flex_bison/porygon_syntax.y"
+                                                                                    {
+                                                                                        struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 4);
+                                                                                        add_leaf(node, (yyvsp[-5].tree_node), 0);
+                                                                                        add_leaf(node, (yyvsp[-4].tree_node), 1);
+                                                                                        add_leaf(node, (yyvsp[-2].tree_node), 2);
+                                                                                        add_leaf(node, (yyvsp[0].tree_node), 3);
+                                                                                        (yyval.tree_node) = node;
+                                                                                    }
+#line 3064 "src/parser.c"
     break;
 
   case 26:
-#line 184 "flex_bison/porygon_syntax.y"
-                                                                      {printf("Found a no parameters function delcaration.\n");}
-#line 3007 "src/parser.c"
+#line 247 "flex_bison/porygon_syntax.y"
+                                                                      {
+                                                                            struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 3);
+                                                                            add_leaf(node, (yyvsp[-4].tree_node), 0);
+                                                                            add_leaf(node, (yyvsp[-3].tree_node), 1);
+                                                                            add_leaf(node, (yyvsp[0].tree_node), 2);
+                                                                            (yyval.tree_node) = node;
+                                                                      }
+#line 3076 "src/parser.c"
     break;
 
   case 27:
-#line 188 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found a parameter declaration\n");}
-#line 3013 "src/parser.c"
+#line 257 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3082 "src/parser.c"
     break;
 
   case 28:
-#line 189 "flex_bison/porygon_syntax.y"
-                                                   {printf("Found a multiple parameter declaration\n");}
-#line 3019 "src/parser.c"
+#line 258 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "parameterList", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3093 "src/parser.c"
     break;
 
   case 29:
-#line 193 "flex_bison/porygon_syntax.y"
-                                                    {printf("[paramDec] Found a type specifier and Identifier");}
-#line 3025 "src/parser.c"
+#line 267 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "parameterDeclaration", 2);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3104 "src/parser.c"
     break;
 
   case 30:
-#line 194 "flex_bison/porygon_syntax.y"
-                                                    {printf("[paramDec] Found a VOID");}
-#line 3031 "src/parser.c"
+#line 273 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3110 "src/parser.c"
     break;
 
   case 31:
-#line 198 "flex_bison/porygon_syntax.y"
-                                                {printf("Found {}\n");}
-#line 3037 "src/parser.c"
+#line 277 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyCompoundStatement", 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3119 "src/parser.c"
     break;
 
   case 32:
-#line 199 "flex_bison/porygon_syntax.y"
-                                                {printf("Found a compoundStmt with Statements\n");}
-#line 3043 "src/parser.c"
+#line 281 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3125 "src/parser.c"
     break;
 
   case 33:
-#line 203 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found statement\n");}
-#line 3049 "src/parser.c"
+#line 285 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3131 "src/parser.c"
     break;
 
   case 34:
-#line 204 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found a recursive statement list\n");}
-#line 3055 "src/parser.c"
+#line 286 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "statementList", 2);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3142 "src/parser.c"
     break;
 
   case 35:
-#line 208 "flex_bison/porygon_syntax.y"
-                                                    {printf("[State] Found a varDeclaration\n");}
-#line 3061 "src/parser.c"
+#line 295 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3148 "src/parser.c"
     break;
 
   case 36:
-#line 209 "flex_bison/porygon_syntax.y"
-                                                    {printf("[State] Found a expression\n");}
-#line 3067 "src/parser.c"
+#line 296 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3154 "src/parser.c"
     break;
 
   case 37:
-#line 210 "flex_bison/porygon_syntax.y"
-                                                    {printf("[State] Found a iterationStmt\n");}
-#line 3073 "src/parser.c"
+#line 297 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3160 "src/parser.c"
     break;
 
   case 38:
-#line 211 "flex_bison/porygon_syntax.y"
-                                                    {printf("[State] Found a conditionalStmt\n");}
-#line 3079 "src/parser.c"
+#line 298 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3166 "src/parser.c"
     break;
 
   case 39:
-#line 212 "flex_bison/porygon_syntax.y"
-                                                    {printf("[State] Found a returnStmt\n");}
-#line 3085 "src/parser.c"
+#line 299 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3172 "src/parser.c"
     break;
 
   case 40:
-#line 213 "flex_bison/porygon_syntax.y"
-                                                             {printf("[State] Found a read statement");}
-#line 3091 "src/parser.c"
+#line 300 "flex_bison/porygon_syntax.y"
+                                                             {
+                                                                 struct tree_node *node = create_node(ast_tree_list, "readStmt", 1);
+                                                                 add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                                 (yyval.tree_node) = node;
+                                                             }
+#line 3182 "src/parser.c"
     break;
 
   case 41:
-#line 214 "flex_bison/porygon_syntax.y"
-                                                             {printf("[State] Found a write statement");}
-#line 3097 "src/parser.c"
+#line 305 "flex_bison/porygon_syntax.y"
+                                                             {
+                                                                 struct tree_node *node = create_node(ast_tree_list, "writeStmt", 1);
+                                                                 add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                                 (yyval.tree_node) = node;
+                                                             }
+#line 3192 "src/parser.c"
     break;
 
   case 42:
-#line 218 "flex_bison/porygon_syntax.y"
-                                                                 {printf("While\n");}
-#line 3103 "src/parser.c"
+#line 313 "flex_bison/porygon_syntax.y"
+                                                                 {
+                                                                     struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                     add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                                     add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                                     (yyval.tree_node) = node;
+                                                                 }
+#line 3203 "src/parser.c"
     break;
 
   case 43:
-#line 219 "flex_bison/porygon_syntax.y"
-                                                                                              {printf("For\n");}
-#line 3109 "src/parser.c"
+#line 319 "flex_bison/porygon_syntax.y"
+                                                                                              {
+                                                                                                 struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                                                 add_leaf(node, (yyvsp[-5].tree_node), 0);
+                                                                                                 add_leaf(node, (yyvsp[-3].tree_node), 1);
+                                                                                                 (yyval.tree_node) = node;
+                                                                                             }
+#line 3214 "src/parser.c"
     break;
 
   case 44:
-#line 223 "flex_bison/porygon_syntax.y"
-                                                    {printf("Conditional Statement\n");}
-#line 3115 "src/parser.c"
+#line 329 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "conditionalStmt", 2);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3225 "src/parser.c"
     break;
 
   case 45:
-#line 227 "flex_bison/porygon_syntax.y"
-                                                              {printf("[CondStmt] If expr");}
-#line 3121 "src/parser.c"
+#line 338 "flex_bison/porygon_syntax.y"
+                                                                {
+                                                                    struct tree_node *node = create_node(ast_tree_list, "ifStmt", 2);
+                                                                    add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                                    add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                                    (yyval.tree_node) = node;
+                                                                }
+#line 3236 "src/parser.c"
     break;
 
   case 46:
-#line 231 "flex_bison/porygon_syntax.y"
-                                                    {printf("[CondStmt] Else expr");}
-#line 3127 "src/parser.c"
+#line 347 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "elseStmt", 1);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3246 "src/parser.c"
     break;
 
   case 47:
-#line 232 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Condstmt] Empty else");}
-#line 3133 "src/parser.c"
+#line 352 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyElse", 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3255 "src/parser.c"
     break;
 
   case 48:
-#line 236 "flex_bison/porygon_syntax.y"
-                                                    {printf("Return\n");}
-#line 3139 "src/parser.c"
+#line 359 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "return", 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3264 "src/parser.c"
     break;
 
   case 49:
-#line 237 "flex_bison/porygon_syntax.y"
-                                                    {printf("Return with expr\n");}
-#line 3145 "src/parser.c"
+#line 363 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "return", 1);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3274 "src/parser.c"
     break;
 
   case 50:
-#line 241 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] logicalOrExp\n");}
-#line 3151 "src/parser.c"
+#line 371 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3280 "src/parser.c"
     break;
 
   case 51:
-#line 242 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] logicalOrExp with mutable\n");}
-#line 3157 "src/parser.c"
+#line 372 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "=", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3291 "src/parser.c"
     break;
 
   case 52:
-#line 246 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] logicalAndExp\n");}
-#line 3163 "src/parser.c"
+#line 381 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3297 "src/parser.c"
     break;
 
   case 53:
-#line 247 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] || \n");}
-#line 3169 "src/parser.c"
+#line 382 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "||", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3308 "src/parser.c"
     break;
 
   case 54:
-#line 251 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] equalityExp\n");}
-#line 3175 "src/parser.c"
+#line 391 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3314 "src/parser.c"
     break;
 
   case 55:
-#line 252 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] && \n");}
-#line 3181 "src/parser.c"
-    break;
-
-  case 56:
-#line 256 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] relationExp\n");}
-#line 3187 "src/parser.c"
-    break;
-
-  case 57:
-#line 257 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] == \n");}
-#line 3193 "src/parser.c"
-    break;
-
-  case 58:
-#line 258 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] != \n");}
-#line 3199 "src/parser.c"
-    break;
-
-  case 59:
-#line 262 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] sumExp\n");}
-#line 3205 "src/parser.c"
-    break;
-
-  case 60:
-#line 263 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] > \n");}
-#line 3211 "src/parser.c"
-    break;
-
-  case 61:
-#line 264 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] < \n");}
-#line 3217 "src/parser.c"
-    break;
-
-  case 62:
-#line 265 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] >= \n");}
-#line 3223 "src/parser.c"
-    break;
-
-  case 63:
-#line 266 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] <= \n");}
-#line 3229 "src/parser.c"
-    break;
-
-  case 64:
-#line 270 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] multExp\n");}
-#line 3235 "src/parser.c"
-    break;
-
-  case 65:
-#line 271 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] + \n");}
-#line 3241 "src/parser.c"
-    break;
-
-  case 66:
-#line 272 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] - \n");}
-#line 3247 "src/parser.c"
-    break;
-
-  case 67:
-#line 276 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] unaryExp\n");}
-#line 3253 "src/parser.c"
-    break;
-
-  case 68:
-#line 277 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] * \n");}
-#line 3259 "src/parser.c"
-    break;
-
-  case 69:
-#line 278 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] / \n");}
-#line 3265 "src/parser.c"
-    break;
-
-  case 70:
-#line 279 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] rem \n");}
-#line 3271 "src/parser.c"
-    break;
-
-  case 71:
-#line 283 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] baseValue\n");}
-#line 3277 "src/parser.c"
-    break;
-
-  case 72:
-#line 284 "flex_bison/porygon_syntax.y"
-                                                    {printf("[Expr] ! \n");}
-#line 3283 "src/parser.c"
-    break;
-
-  case 73:
-#line 288 "flex_bison/porygon_syntax.y"
-                                                    {printf("[baseValue] Expr in parentheses\n");}
-#line 3289 "src/parser.c"
-    break;
-
-  case 75:
-#line 290 "flex_bison/porygon_syntax.y"
-                                                    {printf("[baseValue] Constant\n");}
-#line 3295 "src/parser.c"
-    break;
-
-  case 76:
-#line 291 "flex_bison/porygon_syntax.y"
-                                                    {printf("[baseValue] Function Call\n");}
-#line 3301 "src/parser.c"
-    break;
-
-  case 77:
-#line 292 "flex_bison/porygon_syntax.y"
-                                                    {printf("[baseValue] Mutable\n");}
-#line 3307 "src/parser.c"
-    break;
-
-  case 78:
-#line 296 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found Identifier\n");}
-#line 3313 "src/parser.c"
-    break;
-
-  case 79:
-#line 297 "flex_bison/porygon_syntax.y"
-                                                    {printf("Found Identifier []\n");}
-#line 3319 "src/parser.c"
-    break;
-
-  case 80:
-#line 298 "flex_bison/porygon_syntax.y"
-                                                               {printf("Found Identifier []\n");}
+#line 392 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "&&", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
 #line 3325 "src/parser.c"
     break;
 
-  case 81:
-#line 299 "flex_bison/porygon_syntax.y"
-                                                                                 {printf("Found Identifier []\n");}
+  case 56:
+#line 401 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
 #line 3331 "src/parser.c"
     break;
 
-  case 82:
-#line 303 "flex_bison/porygon_syntax.y"
-                                                    {printf("Function call\n");}
-#line 3337 "src/parser.c"
+  case 57:
+#line 402 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "==", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3342 "src/parser.c"
     break;
 
-  case 83:
-#line 307 "flex_bison/porygon_syntax.y"
-                                                    {printf("argList\n");}
-#line 3343 "src/parser.c"
+  case 58:
+#line 408 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "!=", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3353 "src/parser.c"
     break;
 
-  case 84:
-#line 308 "flex_bison/porygon_syntax.y"
-                                                    {printf("Empty argument list\n");}
-#line 3349 "src/parser.c"
+  case 59:
+#line 417 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3359 "src/parser.c"
     break;
 
-  case 85:
-#line 312 "flex_bison/porygon_syntax.y"
-                                                    {printf("Multiple arguments list\n");}
-#line 3355 "src/parser.c"
+  case 60:
+#line 418 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, ">", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3370 "src/parser.c"
     break;
 
-  case 86:
-#line 313 "flex_bison/porygon_syntax.y"
-                                                    {printf("Single arguments list\n");}
-#line 3361 "src/parser.c"
+  case 61:
+#line 424 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "<", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3381 "src/parser.c"
     break;
 
-  case 87:
-#line 317 "flex_bison/porygon_syntax.y"
-                                                    {printf("INTCONST\n");}
-#line 3367 "src/parser.c"
+  case 62:
+#line 430 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, ">=", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3392 "src/parser.c"
     break;
 
-  case 88:
-#line 318 "flex_bison/porygon_syntax.y"
-                                                    {printf("FLOATCONST\n");}
-#line 3373 "src/parser.c"
-    break;
-
-  case 89:
-#line 319 "flex_bison/porygon_syntax.y"
-                                                    {printf("BOOLEANCONST\n");}
-#line 3379 "src/parser.c"
-    break;
-
-  case 90:
-#line 320 "flex_bison/porygon_syntax.y"
-                                                    {printf("CHARCONST\n");}
-#line 3385 "src/parser.c"
-    break;
-
-  case 91:
-#line 321 "flex_bison/porygon_syntax.y"
-                                                    {printf("STRINGCONST\n");}
-#line 3391 "src/parser.c"
-    break;
-
-  case 92:
-#line 325 "flex_bison/porygon_syntax.y"
-                                                    {printf("CHAR_TYPE\n");}
-#line 3397 "src/parser.c"
-    break;
-
-  case 93:
-#line 326 "flex_bison/porygon_syntax.y"
-                                                    {printf("INT_TYPE\n");}
+  case 63:
+#line 436 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "<=", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
 #line 3403 "src/parser.c"
     break;
 
-  case 94:
-#line 327 "flex_bison/porygon_syntax.y"
-                                                    {printf("FLOAT_TYPE\n");}
+  case 64:
+#line 445 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
 #line 3409 "src/parser.c"
     break;
 
+  case 65:
+#line 446 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "+", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3420 "src/parser.c"
+    break;
+
+  case 66:
+#line 452 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "-", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3431 "src/parser.c"
+    break;
+
+  case 67:
+#line 461 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3437 "src/parser.c"
+    break;
+
+  case 68:
+#line 462 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "*", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3448 "src/parser.c"
+    break;
+
+  case 69:
+#line 468 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "/", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3459 "src/parser.c"
+    break;
+
+  case 70:
+#line 474 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "%", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3470 "src/parser.c"
+    break;
+
+  case 71:
+#line 483 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3476 "src/parser.c"
+    break;
+
+  case 72:
+#line 484 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "!", 1);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3486 "src/parser.c"
+    break;
+
+  case 73:
+#line 492 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[-1].tree_node);}
+#line 3492 "src/parser.c"
+    break;
+
+  case 75:
+#line 494 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3498 "src/parser.c"
+    break;
+
+  case 76:
+#line 495 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3504 "src/parser.c"
+    break;
+
+  case 77:
+#line 496 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3510 "src/parser.c"
+    break;
+
+  case 78:
+#line 500 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3516 "src/parser.c"
+    break;
+
+  case 79:
+#line 501 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "mutable[]", 2);
+                                                        add_leaf(node, (yyvsp[-3].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3527 "src/parser.c"
+    break;
+
+  case 80:
+#line 507 "flex_bison/porygon_syntax.y"
+                                                                {
+                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;]", 3);
+                                                                    add_leaf(node, (yyvsp[-5].tree_node), 0);
+                                                                    add_leaf(node, (yyvsp[-3].tree_node), 1);
+                                                                    add_leaf(node, (yyvsp[-1].tree_node), 2);
+                                                                    (yyval.tree_node) = node;
+                                                                }
+#line 3539 "src/parser.c"
+    break;
+
+  case 81:
+#line 514 "flex_bison/porygon_syntax.y"
+                                                                                {
+                                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;:]", 4);
+                                                                                    add_leaf(node, (yyvsp[-7].tree_node), 0);
+                                                                                    add_leaf(node, (yyvsp[-5].tree_node), 1);
+                                                                                    add_leaf(node, (yyvsp[-3].tree_node), 2);
+                                                                                    add_leaf(node, (yyvsp[-1].tree_node), 3);
+                                                                                    (yyval.tree_node) = node;
+                                                                                }
+#line 3552 "src/parser.c"
+    break;
+
+  case 82:
+#line 525 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "functCall", 2);
+                                                        add_leaf(node, (yyvsp[-3].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[-1].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3563 "src/parser.c"
+    break;
+
+  case 83:
+#line 534 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3569 "src/parser.c"
+    break;
+
+  case 84:
+#line 535 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "emptyArgs", 0);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3578 "src/parser.c"
+    break;
+
+  case 85:
+#line 542 "flex_bison/porygon_syntax.y"
+                                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, "argList", 2);
+                                                        add_leaf(node, (yyvsp[-2].tree_node), 0);
+                                                        add_leaf(node, (yyvsp[0].tree_node), 1);
+                                                        (yyval.tree_node) = node;
+                                                    }
+#line 3589 "src/parser.c"
+    break;
+
+  case 86:
+#line 548 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3595 "src/parser.c"
+    break;
+
+  case 87:
+#line 552 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3601 "src/parser.c"
+    break;
+
+  case 88:
+#line 553 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3607 "src/parser.c"
+    break;
+
+  case 89:
+#line 554 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3613 "src/parser.c"
+    break;
+
+  case 90:
+#line 555 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3619 "src/parser.c"
+    break;
+
+  case 91:
+#line 556 "flex_bison/porygon_syntax.y"
+                                                    {(yyval.tree_node) = (yyvsp[0].tree_node);}
+#line 3625 "src/parser.c"
+    break;
+
+  case 92:
+#line 560 "flex_bison/porygon_syntax.y"
+                                                    {printf("CHAR_TYPE\n");}
+#line 3631 "src/parser.c"
+    break;
+
+  case 93:
+#line 561 "flex_bison/porygon_syntax.y"
+                                                    {printf("INT_TYPE\n");}
+#line 3637 "src/parser.c"
+    break;
+
+  case 94:
+#line 562 "flex_bison/porygon_syntax.y"
+                                                    {printf("FLOAT_TYPE\n");}
+#line 3643 "src/parser.c"
+    break;
+
   case 95:
-#line 328 "flex_bison/porygon_syntax.y"
+#line 563 "flex_bison/porygon_syntax.y"
                                                     {printf("BOOL_TYPE\n");}
-#line 3415 "src/parser.c"
+#line 3649 "src/parser.c"
     break;
 
   case 96:
-#line 329 "flex_bison/porygon_syntax.y"
+#line 564 "flex_bison/porygon_syntax.y"
                                                     {printf("STRING_TYPE\n");}
-#line 3421 "src/parser.c"
+#line 3655 "src/parser.c"
     break;
 
   case 97:
-#line 330 "flex_bison/porygon_syntax.y"
+#line 565 "flex_bison/porygon_syntax.y"
                                                     {printf("VOID_TYPE\n");}
-#line 3427 "src/parser.c"
+#line 3661 "src/parser.c"
     break;
 
   case 98:
-#line 334 "flex_bison/porygon_syntax.y"
+#line 569 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
                                                         printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, column_num);
                                                         reset_pcolor();
                                                     }
-#line 3437 "src/parser.c"
+#line 3671 "src/parser.c"
     break;
 
   case 99:
-#line 339 "flex_bison/porygon_syntax.y"
+#line 574 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
                                                         printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, column_num);
                                                         reset_pcolor();
                                                     }
-#line 3447 "src/parser.c"
+#line 3681 "src/parser.c"
     break;
 
   case 100:
-#line 344 "flex_bison/porygon_syntax.y"
+#line 579 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
                                                         printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, column_num);
                                                         reset_pcolor();
                                                     }
-#line 3457 "src/parser.c"
+#line 3691 "src/parser.c"
     break;
 
 
-#line 3461 "src/parser.c"
+#line 3695 "src/parser.c"
 
       default: break;
     }
@@ -3689,7 +3923,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 351 "flex_bison/porygon_syntax.y"
+#line 586 "flex_bison/porygon_syntax.y"
 
 
 void yyerror(char const *msg) {

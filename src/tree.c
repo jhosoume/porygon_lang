@@ -87,11 +87,11 @@ void print_tree_rec(struct tree_node *root, int depth) {
     int stage = 0;
     while (stage < depth - 1) {
         ++stage;
-        printf("    ");
+        printf("  ");
     }
     while(stage < depth) {
         ++stage;
-        printf(" -> ");
+        printf("->");
     }
     printf("%s\n", root->name);
 
@@ -108,7 +108,7 @@ void free_node(struct tree_node *node) {
         printf("NULL NODE POINTER!\n");
         return;
     }
-    printf("FREEING NODE %s\n", node->name);
+    // printf("FREEING NODE %s\n", node->name);
     free(node->leaf); node->leaf = NULL;
     free(node->name); node->name = NULL;
     free(node);

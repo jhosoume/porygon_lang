@@ -103,7 +103,7 @@ static enum yytokentype valid_id(void);
                                 return TABLE_TYPE;
                             }
 
-"bool"                      { 
+"bool"                      {
                                 update_pos();
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return BOOL_TYPE;
@@ -150,17 +150,42 @@ static enum yytokentype valid_id(void);
 
 
         /* Boolean Constants */
-"true"                      { update_pos(); return BOOLEANCONST; }
-"false"                     { update_pos(); return BOOLEANCONST; }
+"true"                      {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return BOOLEANCONST;
+                            }
+"false"                     {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return BOOLEANCONST;
+                             }
 
         /* Numbers Constants */
-[\+\-]?{DIGIT}+             { update_pos(); return INTCONST; }
-[\+\-]?{DIGIT}+"."{DIGIT}*  { update_pos(); return FLOATCONST; }
+[\+\-]?{DIGIT}+             {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return INTCONST;
+                             }
+[\+\-]?{DIGIT}+"."{DIGIT}*  {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return FLOATCONST;
+                            }
 
         /* Char or string constants */
         /* Reference: https://stackoverflow.com/questions/2039795/regular-expression-for-a-string-literal-in-flex-lex */
-'(\\.|[^\\'])+'             { update_pos(); return valid_char_const(); }
-\"(\\.|[^\\"])*\"           { update_pos(); return STRINGCONST; }
+'(\\.|[^\\'])+'             {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return valid_char_const();
+                             }
+\"(\\.|[^\\"])*\"           {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return STRINGCONST;
+                            }
+
 
         /* Matching Identifiers */
 ({LETTER}|"_")({LETTER}|{DIGIT}|"_")* { update_pos(); return valid_id(); }
