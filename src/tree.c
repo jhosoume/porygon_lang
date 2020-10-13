@@ -1,4 +1,5 @@
 #include "tree.h"
+/* Tree implementation based on https://github.com/Aendur/KyuubiNoLang */
 
 struct node_list *initialize_list() {
     struct node_list *list = malloc(sizeof(struct node_list));
@@ -74,7 +75,9 @@ void print_tree(struct tree_node *root) {
     printf("-------------------------------------------------------------------------------------\n");
     printf("                                    TREE                                     \n");
     printf("-------------------------------------------------------------------------------------\n");
-    print_tree_rec(root, 0);
+    if (root != NULL) {
+        print_tree_rec(root, 0);
+    }
     printf("-------------------------------------------------------------------------------------\n");
 
 }

@@ -11,12 +11,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
+    /* AST based on https://efxa.org/2014/05/25/how-to-create-an-abstract-syntax-tree-while-parsing-an-input-stream/ */
 #include "tree.h"
 
 #include "helpers.h"
 
+/* Pointer to symbol table initilized in the main*/
 extern struct st_entry *symbol_table;
+
+/* Pointer to struct that holds a list of the ast nodes*/
+extern struct node_list *ast_tree_list;
+
+/* Pointer to ast tree root (Program start)*/
+extern struct tree_node *ast_root;
+
 extern int line_num;
 extern int column_num;
 
@@ -40,12 +48,12 @@ extern int column_num;
     %token <string_val>     STRINGCONST */
 
 
-%token <string_val>     IDENTIFIER
-%token <integer_val>    INTCONST
-%token <float_val>      FLOATCONST
-%token <integer_val>    BOOLEANCONST
-%token <string_val>     CHARCONST
-%token <string_val>     STRINGCONST
+%token <tree_node> IDENTIFIER
+%token <tree_node> INTCONST
+%token <tree_node> FLOATCONST
+%token <tree_node> BOOLEANCONST
+%token <tree_node> CHARCONST
+%token <tree_node> STRINGCONST
 
 %token <tree_node> WHILE_KW               /* while */
 %token <tree_node> FOR_KW                 /* for */
@@ -109,8 +117,12 @@ int yylex(void);
 %}
 
     /* Defines the starting type */
-%start declarationList
+%start program
 %%
+program
+    : declarationList                               {ast_root = $1;}
+    ;
+
 declarationList
     : declaration                                   {printf("Found declaration.\n");}
     | declarationList declaration                   {printf("Found recursive declaration.\n");}

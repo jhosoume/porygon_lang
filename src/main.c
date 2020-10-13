@@ -14,7 +14,8 @@
 */
 /* Declare symbol table and the list of nodes of the abstract syntax tree. */
 struct st_entry *symbol_table = NULL;
-struct node_list *ast_tree_list;
+struct node_list *ast_tree_list = NULL;
+struct tree_node *ast_root = NULL;
 
 
 int main(int argc, char** argv) {
@@ -94,6 +95,7 @@ int main(int argc, char** argv) {
     yyparse();
     ends_scan(argc);
     print_table();
+    print_tree(ast_root);
 
     free_st();
     free_list(ast_tree_list);

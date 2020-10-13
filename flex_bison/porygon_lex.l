@@ -37,6 +37,9 @@ extern int column_num;
 /* Get symbol table */
 extern struct st_entry *symbol_table;
 
+/* Get List of Nodes */
+extern struct node_list  *ast_tree_list;
+
 /* Getting auxiliary functions. They are described at the end of the current file. */
 static void update_pos(void);
 static enum yytokentype valid_char_const(void);
@@ -70,13 +73,47 @@ static enum yytokentype valid_id(void);
 "write"                     { update_pos(); return WRITE_KW; }
 
         /* Variable types */
-"char"                      { update_pos(); return CHAR_TYPE; }
-"string"                    { update_pos(); return STRING_TYPE; }
-"int"                       { update_pos(); return INT_TYPE; }
-"float"                     { update_pos(); return FLOAT_TYPE; }
-"table"                     { update_pos(); return TABLE_TYPE; }
-"bool"                      { update_pos(); return BOOL_TYPE; }
-"void"                      { update_pos(); return VOID_TYPE; }
+"char"                      {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return CHAR_TYPE;
+                            }
+
+"string"                    {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return STRING_TYPE;
+                            }
+
+"int"                       {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return INT_TYPE;
+                            }
+
+"float"                     {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return FLOAT_TYPE;
+                            }
+
+"table"                     {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return TABLE_TYPE;
+                            }
+
+"bool"                      { 
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return BOOL_TYPE;
+                            }
+
+"void"                      {
+                                update_pos();
+                                yylval.tree_node = create_node(ast_tree_list, yytext, 0);
+                                return VOID_TYPE;
+                            }
 
         /* Definition of some operators */
 "+"                         { update_pos(); return ADD_OP; }
@@ -146,6 +183,7 @@ int yywrap(void) {
 /* Verifies if the constant char, e.g. 'j', has only one char */
 static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
+        yylval.tree_node = create_node(ast_tree_list, yytext, 0);
         return CHARCONST;
         } else {
         return ERR_INVALID_CHARCONST;
@@ -156,6 +194,7 @@ static enum yytokentype valid_char_const(void) {
 static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
         add_entry(yytext, IDENTIFIER, line_num, column_num - yyleng);
+        yylval.tree_node = create_node(ast_tree_list, yytext, 0);
         return IDENTIFIER;
     } else {
         return ERR_INVALID_ID;

@@ -6,6 +6,7 @@
 #include "token.h"
 #include "token_type.h"
 #include "helpers.h"
+#include "tree.h"
 
 // extern int line_num;
 // extern int column_num;
@@ -23,6 +24,9 @@ extern char* yytext;
 
 /* Length of the most recently matched token */
 extern int yyleng;
+
+/* List of AST nodes */
+extern struct node_list *ast_tree_list;
 
 
 /* Main function to the scanner*/
