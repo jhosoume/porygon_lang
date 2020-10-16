@@ -15,6 +15,8 @@
 #include "tree.h"
 
 #include "helpers.h"
+#include "symbol_table.h"
+#include "scope.h"
 
 /* Pointer to symbol table initilized in the main*/
 extern struct st_entry *symbol_table;
@@ -28,6 +30,9 @@ extern struct tree_node *ast_root;
 extern int line_num;
 extern int column_num;
 
+extern int cur_scope;
+
+extern scope_stack *sp_stack;
 %}
 
 
@@ -55,46 +60,46 @@ extern int column_num;
 %token <tree_node> CHARCONST
 %token <tree_node> STRINGCONST
 
-%token <tree_node> WHILE_KW               /* while */
-%token <tree_node> FOR_KW                 /* for */
-%token <tree_node> IN_KW                  /* in */
-%token <tree_node> IF_KW                  /* if */
-%token <tree_node> ELSE_KW                /* else */
-%token <tree_node> RETURN_KW              /* return */
-%token <tree_node> READ_KW                /* read */
-%token <tree_node> WRITE_KW               /* write */
-%token <tree_node> CHAR_TYPE              /* char */
-%token <tree_node> INT_TYPE               /* int */
-%token <tree_node> FLOAT_TYPE             /* float */
-%token <tree_node> STRING_TYPE            /* string */
-%token <tree_node> TABLE_TYPE             /* table */
-%token <tree_node> BOOL_TYPE              /* bool */
-%token <tree_node> VOID_TYPE              /* void */
-%token <tree_node> ADD_OP                 /* + */
-%token <tree_node> SUB_OP                 /* - */
-%token <tree_node> MULT_OP                /* * */
-%token <tree_node> DIV_OP                 /* / */
-%token <tree_node> REM_OP                 /* % */
-%token <tree_node> NOT_OP                 /* ! */
-%token <tree_node> LESSTHAN_OP            /* < */
-%token <tree_node> LESSEQUAL_OP           /* <= */
-%token <tree_node> GREATERTHAN_OP         /* > */
-%token <tree_node> GREATEREQUAl_OP        /* >= */
-%token <tree_node> NOTEQUAL_OP            /* != */
-%token <tree_node> COMPARISON_OP          /* == */
-%token <tree_node> OR_OP                  /* || */
-%token <tree_node> AND_OP                 /* && */
-%token <tree_node> LBRACE                 /* { */
-%token <tree_node> RBRACE                 /* } */
-%token <tree_node> LBRACKET               /* [ */
-%token <tree_node> RBRACKET               /* ] */
-%token <tree_node> LPARENTHESES           /* ( */
-%token <tree_node> RPARENTHESES           /* ) */
-%token <tree_node> COLON                  /* : */
-%token <tree_node> SEMICOLON              /* ; */
-%token <tree_node> DEF_EQ                 /* = */
-%token <tree_node> COMMA                  /* , */
-%token <tree_node> PIPE                   /* | */
+%token <tree_node> WHILE_KW        "while"  /* while */
+%token <tree_node> FOR_KW          "for"    /* for */
+%token <tree_node> IN_KW           "in"     /* in */
+%token <tree_node> IF_KW           "if"     /* if */
+%token <tree_node> ELSE_KW         "else"   /* else */
+%token <tree_node> RETURN_KW       "return" /* return */
+%token <tree_node> READ_KW         "read"   /* read */
+%token <tree_node> WRITE_KW        "write"  /* write */
+%token <tree_node> CHAR_TYPE       "char"   /* char */
+%token <tree_node> INT_TYPE        "int"    /* int */
+%token <tree_node> FLOAT_TYPE      "float"  /* float */
+%token <tree_node> STRING_TYPE     "string" /* string */
+%token <tree_node> TABLE_TYPE      "table"  /* table */
+%token <tree_node> BOOL_TYPE       "bool"   /* bool */
+%token <tree_node> VOID_TYPE       "void"   /* void */
+%token <tree_node> ADD_OP          "+"      /* + */
+%token <tree_node> SUB_OP          "-"      /* - */
+%token <tree_node> MULT_OP         "*"      /* * */
+%token <tree_node> DIV_OP          "/"      /* / */
+%token <tree_node> REM_OP          "%"      /* % */
+%token <tree_node> NOT_OP          "!"      /* ! */
+%token <tree_node> LESSTHAN_OP     "<"      /* < */
+%token <tree_node> LESSEQUAL_OP    "<="     /* <= */
+%token <tree_node> GREATERTHAN_OP  ">"      /* > */
+%token <tree_node> GREATEREQUAl_OP ">="     /* >= */
+%token <tree_node> NOTEQUAL_OP     "!="     /* != */
+%token <tree_node> COMPARISON_OP   "=="     /* == */
+%token <tree_node> OR_OP           "||"     /* || */
+%token <tree_node> AND_OP          "&&"     /* && */
+%token <tree_node> LBRACE          "{"      /* { */
+%token <tree_node> RBRACE          "}"      /* } */
+%token <tree_node> LBRACKET        "["      /* [ */
+%token <tree_node> RBRACKET        "]"      /* ] */
+%token <tree_node> LPARENTHESES    "("      /* ( */
+%token <tree_node> RPARENTHESES    ")"      /* ) */
+%token <tree_node> COLON           ":"      /* : */
+%token <tree_node> SEMICOLON       ";"      /* ; */
+%token <tree_node> DEF_EQ          "="      /* = */
+%token <tree_node> COMMA           ","      /* , */
+%token <tree_node> PIPE            "|"      /* | */
 
 %token ERR_INVALID_ID
 %token ERR_INVALID_CHARCONST
@@ -137,6 +142,7 @@ declarationList
 declaration
     : varDeclaration SEMICOLON                      {$$ = $1;}
     | functDeclaration                              {$$ = $1;}
+    | lexerror
     ;
 
 varDeclaration
@@ -243,6 +249,11 @@ functDeclaration
                                                                                         add_leaf(node, $4, 2);
                                                                                         add_leaf(node, $6, 3);
                                                                                         $$ = node;
+                                                                                        struct st_entry *entry = find_id($2->name, cur_scope);
+                                                                                        if (entry != NULL) {
+                                                                                            entry->id_type = FUNCTION;
+                                                                                            strcpy(entry->type, $1->name);
+                                                                                        }
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 3);
@@ -250,6 +261,11 @@ functDeclaration
                                                                             add_leaf(node, $2, 1);
                                                                             add_leaf(node, $5, 2);
                                                                             $$ = node;
+                                                                            struct st_entry *entry = find_id($2->name, cur_scope);
+                                                                            if (entry != NULL) {
+                                                                                entry->id_type = FUNCTION;
+                                                                                strcpy(entry->type, $1->name);
+                                                                            }
                                                                       }
     ;
 
@@ -269,6 +285,12 @@ parameterDeclaration
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
+                                                        printf("Im in this scope %d %d\n", cur_scope, count_scope);
+                                                        struct st_entry *entry = find_id($2->name, cur_scope);
+                                                        if (entry != NULL) {
+                                                            entry->id_type = FUNCTION;
+                                                            strcpy(entry->type, $1->name);
+                                                        }
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
     ;
@@ -557,12 +579,12 @@ constant
     ;
 
 typeSpecifier
-    : CHAR_TYPE                                     {printf("CHAR_TYPE\n");}
-    | INT_TYPE                                      {printf("INT_TYPE\n");}
-    | FLOAT_TYPE                                    {printf("FLOAT_TYPE\n");}
-    | BOOL_TYPE                                     {printf("BOOL_TYPE\n");}
-    | STRING_TYPE                                   {printf("STRING_TYPE\n");}
-    | VOID_TYPE                                     {printf("VOID_TYPE\n");}
+    : CHAR_TYPE                                     {$$ = $1;}
+    | INT_TYPE                                      {$$ = $1;}
+    | FLOAT_TYPE                                    {$$ = $1;}
+    | BOOL_TYPE                                     {$$ = $1;}
+    | STRING_TYPE                                   {$$ = $1;}
+    | VOID_TYPE                                     {$$ = $1;}
     ;
 
 lexerror

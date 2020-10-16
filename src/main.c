@@ -2,6 +2,7 @@
 #include "scanner.h"
 #include "symbol_table.h"
 #include "tree.h"
+#include "scope.h"
 
 /* Helper to test the symbol table*/
 #define test_st 0
@@ -16,6 +17,11 @@
 struct st_entry *symbol_table = NULL;
 struct node_list *ast_tree_list = NULL;
 struct tree_node *ast_root = NULL;
+
+scope_stack *sp_stack = NULL;
+int cur_scope = 0;
+int count_scope = 0;
+
 
 
 int main(int argc, char** argv) {
@@ -96,9 +102,11 @@ int main(int argc, char** argv) {
     ends_scan(argc);
     print_table();
     print_tree(ast_root);
+    print_stack();
 
     free_st();
     free_list(ast_tree_list);
+    free_stack();
 
     return 0;
 }

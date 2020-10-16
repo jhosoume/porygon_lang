@@ -5,7 +5,7 @@ int QUADRADO;
 string str;
 string nl;
 
-N = 10%;
+N = 10%; /* Syntax Error, because there is no right hand side of the REM operator */
 str = "Quadrado: ";
 nl = "\n";
 

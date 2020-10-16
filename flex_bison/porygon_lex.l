@@ -29,6 +29,7 @@ LETTER [a-zA-Z]
 #include "symbol_table.h"
 #include "tree.h"
 #include "parser.h"
+#include "scope.h"
 
 /* Integers to indicate line number and column, both are defined in the scanner.h*/
 extern int line_num;
@@ -44,6 +45,11 @@ extern struct node_list  *ast_tree_list;
 static void update_pos(void);
 static enum yytokentype valid_char_const(void);
 static enum yytokentype valid_id(void);
+
+extern int cur_scope;
+extern int count_scope;
+
+extern scope_stack *sp_stack;
 
 %}
 
@@ -75,42 +81,49 @@ static enum yytokentype valid_id(void);
         /* Variable types */
 "char"                      {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return CHAR_TYPE;
                             }
 
 "string"                    {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return STRING_TYPE;
                             }
 
 "int"                       {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return INT_TYPE;
                             }
 
 "float"                     {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return FLOAT_TYPE;
                             }
 
 "table"                     {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return TABLE_TYPE;
                             }
 
 "bool"                      {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return BOOL_TYPE;
                             }
 
 "void"                      {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return VOID_TYPE;
                             }
@@ -135,8 +148,18 @@ static enum yytokentype valid_id(void);
 "&&"                        { update_pos(); return AND_OP; }
 
         /* Some symbols to help syntax */
-"{"                         { update_pos(); return LBRACE; }
-"}"                         { update_pos(); return RBRACE; }
+"{"                         {
+                                update_pos();
+                                ++count_scope;
+                                add_stack(cur_scope);
+                                cur_scope = count_scope;
+                                return LBRACE;
+                            }
+"}"                         {
+                                update_pos();
+                                cur_scope = pop_stack();
+                                return RBRACE;
+                            }
 "["                         { update_pos(); return LBRACKET; }
 "]"                         { update_pos(); return RBRACKET; }
 "("                         { update_pos(); return LPARENTHESES; }
@@ -152,11 +175,13 @@ static enum yytokentype valid_id(void);
         /* Boolean Constants */
 "true"                      {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return BOOLEANCONST;
                             }
 "false"                     {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return BOOLEANCONST;
                              }
@@ -164,11 +189,13 @@ static enum yytokentype valid_id(void);
         /* Numbers Constants */
 [\+\-]?{DIGIT}+             {
                                 update_pos();
+                                yylval.integer_val= atoi(yytext);
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return INTCONST;
                              }
 [\+\-]?{DIGIT}+"."{DIGIT}*  {
                                 update_pos();
+                                yylval.float_val= atof(yytext);
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return FLOATCONST;
                             }
@@ -177,18 +204,24 @@ static enum yytokentype valid_id(void);
         /* Reference: https://stackoverflow.com/questions/2039795/regular-expression-for-a-string-literal-in-flex-lex */
 '(\\.|[^\\'])+'             {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return valid_char_const();
                              }
 \"(\\.|[^\\"])*\"           {
                                 update_pos();
+                                yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, yytext, 0);
                                 return STRINGCONST;
                             }
 
 
         /* Matching Identifiers */
-({LETTER}|"_")({LETTER}|{DIGIT}|"_")* { update_pos(); return valid_id(); }
+({LETTER}|"_")({LETTER}|{DIGIT}|"_")* {
+                                            update_pos();
+                                            yylval.string_val = yytext;
+                                            return valid_id();
+                                      }
 
 
         /* Break line, tabs and whitespace are ignored, including
@@ -218,7 +251,8 @@ static enum yytokentype valid_char_const(void) {
 /* Verifies if the identifier is not bigger than 32 chars */
 static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
-        add_entry(yytext, IDENTIFIER, line_num, column_num - yyleng);
+        printf("[ADD] Im in this scope %d %d\n", cur_scope, count_scope);
+        add_entry(yytext, VARIABLE, cur_scope, line_num, column_num - yyleng);
         yylval.tree_node = create_node(ast_tree_list, yytext, 0);
         return IDENTIFIER;
     } else {
