@@ -2,7 +2,7 @@ CC	     := gcc
 # CFLAGS   := -std=c11 --pedantic -O3 -Wall -Wextra -Wpedantic
 CFLAGS   := -std=c18 --pedantic -Wall -Wextra -Wpedantic -g
 
-TARGET   := bin/scanner
+TARGET   := bin/parser
 
 SRCEXT   := c
 SRCDIR   := src

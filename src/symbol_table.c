@@ -5,7 +5,14 @@
    Availabe in GitHub https://troydhanson.github.io/uthash/userguide.html#_a_hash_in_c
 */
 
-void force_add_entry(const char *name, const char *type, enum id_type id_type, int scope, int line, int col) {
+void force_add_entry(
+                      const char *name,
+                      const char *type,
+                      enum id_type id_type,
+                      int scope,
+                      enum special_var spec_var,
+                      int size,
+                      int line, int col) {
     struct st_entry *sample = (struct st_entry *) malloc(sizeof *sample);
     strcpy(sample->name, name);
     char scope_char[5 * sizeof(char)];
@@ -15,16 +22,25 @@ void force_add_entry(const char *name, const char *type, enum id_type id_type, i
     strcpy(sample->type, type);
     sample->id_type = id_type;
     sample->scope = scope;
+    sample->spec_var = spec_var;
+    sample->size = size;
     sample->line = line;
     sample->col = col;
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
-void add_entry(const char *name, const char *type, enum id_type id_type, int scope, int line, int col) {
+void add_entry(
+                const char *name,
+                const char *type,
+                enum id_type id_type,
+                int scope,
+                enum special_var spec_var,
+                int size,
+                int line, int col) {
     struct st_entry *entry = NULL;
     entry = find_id(name, scope);
     if (entry == NULL) {
-        force_add_entry(name, type, id_type, scope, line, col);
+        force_add_entry(name, type, id_type, scope, spec_var, size, line, col);
     }
 }
 
@@ -71,6 +87,21 @@ char const *ttos(enum id_type type) {
     }
 }
 
+char const *vtos(enum special_var type) {
+    if (type == SIMPLE) {
+        return "SIMPLE";
+
+    } else if (type == ARRAY) {
+        return "ARRAY";
+
+    } else if (type == TABLE) {
+        return "TABLE";
+
+    } else {
+        return "STRING";
+    }
+}
+
 void print_table() {
     struct st_entry *entry = NULL;
     printf("---------------------------------------------------------------------------------------------------------------------------\n");
@@ -81,6 +112,8 @@ void print_table() {
         printf("Type: %10s | ", entry->type);
         printf("ID: %10s | ", ttos(entry->id_type));
         printf("Scope: %3d | ", entry->scope);
+        printf("Scope: %6s | ", vtos(entry->spec_var));
+        // printf("Size: %3d | ", entry->size);
         // printf("Line: %4d | ", entry->line);
         // printf("Column: %4d | ", entry->col);
         printf("\n");

@@ -2962,7 +2962,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[-1].tree_node), 0);
                                                         add_leaf(node, (yyvsp[0].tree_node), 1);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->name, VARIABLE, cur_scope, line_num, strlen((yyvsp[0].tree_node)->name));
+                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->name, VARIABLE, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[0].tree_node)->name));
                                                     }
 #line 2968 "src/parser.c"
     break;
@@ -2974,7 +2974,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[-3].tree_node), 0);
                                                         add_leaf(node, (yyvsp[-2].tree_node), 1);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, line_num, strlen((yyvsp[-2].tree_node)->name));
+                                                        add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, ARRAY, 0, line_num, strlen((yyvsp[-2].tree_node)->name));
                                                     }
 #line 2980 "src/parser.c"
     break;
@@ -2992,7 +2992,7 @@ yyreduce:
                                                                 add_leaf(node, (yyvsp[-3].tree_node), 0);
                                                                 add_leaf(node, (yyvsp[-2].tree_node), 1);
                                                                 (yyval.tree_node) = node;
-                                                                add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, line_num, strlen((yyvsp[-3].tree_node)->name));
+                                                                add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->name, VARIABLE, TABLE, cur_scope, 0, line_num, strlen((yyvsp[-3].tree_node)->name));
                                                             }
 #line 2998 "src/parser.c"
     break;
@@ -3069,7 +3069,7 @@ yyreduce:
                                                                                         add_leaf(node, (yyvsp[-2].tree_node), 2);
                                                                                         add_leaf(node, (yyvsp[0].tree_node), 3);
                                                                                         (yyval.tree_node) = node;
-                                                                                        add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->name, FUNCTION, cur_scope, line_num, strlen((yyvsp[-4].tree_node)->name));
+                                                                                        add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[-4].tree_node)->name));
                                                                                     }
 #line 3075 "src/parser.c"
     break;
@@ -3082,7 +3082,7 @@ yyreduce:
                                                                             add_leaf(node, (yyvsp[-3].tree_node), 1);
                                                                             add_leaf(node, (yyvsp[0].tree_node), 2);
                                                                             (yyval.tree_node) = node;
-                                                                            add_entry((yyvsp[-3].tree_node)->name, (yyvsp[-4].tree_node)->name, FUNCTION, cur_scope, line_num, strlen((yyvsp[-3].tree_node)->name));
+                                                                            add_entry((yyvsp[-3].tree_node)->name, (yyvsp[-4].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[-3].tree_node)->name));
                                                                       }
 #line 3088 "src/parser.c"
     break;
@@ -3111,7 +3111,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[-1].tree_node), 0);
                                                         add_leaf(node, (yyvsp[0].tree_node), 1);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->name, VARIABLE, count_scope + 1, line_num, strlen((yyvsp[0].tree_node)->name));
+                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen((yyvsp[0].tree_node)->name));
                                                     }
 #line 3117 "src/parser.c"
     break;
@@ -3222,7 +3222,7 @@ yyreduce:
                                                                                                  add_leaf(node, (yyvsp[-5].tree_node), 0);
                                                                                                  add_leaf(node, (yyvsp[-3].tree_node), 1);
                                                                                                  (yyval.tree_node) = node;
-                                                                                                add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->name, VARIABLE, count_scope + 1, line_num, strlen((yyvsp[-6].tree_node)->name));
+                                                                                                add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen((yyvsp[-6].tree_node)->name));
                                                                                              }
 #line 3228 "src/parser.c"
     break;
@@ -3678,7 +3678,7 @@ yyreduce:
 #line 584 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
 #line 3685 "src/parser.c"
@@ -3688,7 +3688,7 @@ yyreduce:
 #line 589 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
 #line 3695 "src/parser.c"
@@ -3698,7 +3698,7 @@ yyreduce:
 #line 594 "flex_bison/porygon_syntax.y"
                                                     {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
 #line 3705 "src/parser.c"

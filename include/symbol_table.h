@@ -14,6 +14,13 @@ enum id_type {
     FUNCTION
 };
 
+enum special_var {
+    SIMPLE,
+    ARRAY,
+    TABLE,
+    STRING
+};
+
 struct st_entry {
     char identifier[64];
     char name[32];
@@ -22,6 +29,9 @@ struct st_entry {
     int scope;
     int line;
     int col;
+    enum special_var spec_var;
+    int size;
+
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };
 
@@ -31,6 +41,8 @@ void force_add_entry(
                      const char *type,
                      enum id_type id_type,
                      int scope,
+                     enum special_var spec_var,
+                     int size,
                      int line, int col);
 
 void add_entry(
@@ -38,6 +50,8 @@ void add_entry(
                const char *type,
                enum id_type id_type,
                int scope,
+               enum special_var spec_var,
+               int size,
                int line, int col);
 
 void free_st();

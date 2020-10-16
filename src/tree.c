@@ -41,6 +41,7 @@ struct tree_node *create_node(struct node_list *list, const char *name, int num_
     struct tree_node *node = malloc(sizeof(struct tree_node));
     node->root = NULL;
     node->num_leaves = num_leaves;
+    node->size = 0;
     node->leaf = malloc(node->num_leaves * sizeof(struct tree_node**));
     node->name = malloc(strlen(name) + 1);
     strcpy(node->name, name);
@@ -93,7 +94,7 @@ void print_tree_rec(struct tree_node *root, int depth) {
         ++stage;
         printf("->");
     }
-    printf("%s\n", root->name);
+    printf("%s(%d)\n", root->name, root->num_leaves);
 
     for (int leaf_indx = 0; leaf_indx < root->num_leaves; ++leaf_indx) {
         print_tree_rec(root->leaf[leaf_indx], depth + 1);
