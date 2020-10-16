@@ -1,5 +1,5 @@
 #include "tree.h"
-/* Tree implementation based on https://github.com/Aendur/KyuubiNoLang */
+/* Tree implementation based on https://efxa.org/2014/05/25/how-to-create-an-abstract-syntax-tree-while-parsing-an-input-stream/ */
 
 struct node_list *initialize_list() {
     struct node_list *list = malloc(sizeof(struct node_list));
