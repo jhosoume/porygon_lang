@@ -4,6 +4,7 @@
 /* Used by the scanner to identify line and column */
 int line_num = 1;
 int column_num = 1;
+int previous_col = 1;
 
 void run_scanner(void) {
     enum yytokentype ntoken;

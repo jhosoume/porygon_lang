@@ -28,12 +28,14 @@ struct st_entry {
 char const *ttos(enum id_type type);
 void force_add_entry(
                      const char *name,
+                     const char *type,
                      enum id_type id_type,
                      int scope,
                      int line, int col);
 
 void add_entry(
                const char *name,
+               const char *type,
                enum id_type id_type,
                int scope,
                int line, int col);

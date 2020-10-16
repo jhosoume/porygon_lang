@@ -29,10 +29,13 @@ extern struct tree_node *ast_root;
 
 extern int line_num;
 extern int column_num;
+extern int previous_col;
 
 extern int cur_scope;
 
 extern scope_stack *sp_stack;
+
+extern int lex_errors;
 %}
 
 
@@ -142,7 +145,6 @@ declarationList
 declaration
     : varDeclaration SEMICOLON                      {$$ = $1;}
     | functDeclaration                              {$$ = $1;}
-    | lexerror
     ;
 
 varDeclaration
@@ -176,6 +178,7 @@ varSimpleDeclaration
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
+                                                        add_entry($2->name, $1->name, VARIABLE, cur_scope, line_num, strlen($2->name));
                                                     }
     ;
 
@@ -185,6 +188,7 @@ arrayDeclaration
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
+                                                        add_entry($2->name, $1->name, VARIABLE, cur_scope, line_num, strlen($2->name));
                                                     }
     ;
 
@@ -198,6 +202,7 @@ tableDeclaration
                                                                 add_leaf(node, $2, 0);
                                                                 add_leaf(node, $3, 1);
                                                                 $$ = node;
+                                                                add_entry($3->name, $2->name, VARIABLE, cur_scope, line_num, strlen($2->name));
                                                             }
     ;
 
@@ -249,11 +254,7 @@ functDeclaration
                                                                                         add_leaf(node, $4, 2);
                                                                                         add_leaf(node, $6, 3);
                                                                                         $$ = node;
-                                                                                        struct st_entry *entry = find_id($2->name, cur_scope);
-                                                                                        if (entry != NULL) {
-                                                                                            entry->id_type = FUNCTION;
-                                                                                            strcpy(entry->type, $1->name);
-                                                                                        }
+                                                                                        add_entry($2->name, $1->name, FUNCTION, cur_scope, line_num, strlen($2->name));
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 3);
@@ -261,11 +262,7 @@ functDeclaration
                                                                             add_leaf(node, $2, 1);
                                                                             add_leaf(node, $5, 2);
                                                                             $$ = node;
-                                                                            struct st_entry *entry = find_id($2->name, cur_scope);
-                                                                            if (entry != NULL) {
-                                                                                entry->id_type = FUNCTION;
-                                                                                strcpy(entry->type, $1->name);
-                                                                            }
+                                                                            add_entry($2->name, $1->name, FUNCTION, cur_scope, line_num, strlen($2->name));
                                                                       }
     ;
 
@@ -285,12 +282,7 @@ parameterDeclaration
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
-                                                        printf("Im in this scope %d %d\n", cur_scope, count_scope);
-                                                        struct st_entry *entry = find_id($2->name, cur_scope);
-                                                        if (entry != NULL) {
-                                                            entry->id_type = FUNCTION;
-                                                            strcpy(entry->type, $1->name);
-                                                        }
+                                                        add_entry($2->name, $1->name, VARIABLE, count_scope + 1, line_num, strlen($2->name));
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
     ;
@@ -343,6 +335,7 @@ iterationStmt
                                                                                                  add_leaf(node, $3, 0);
                                                                                                  add_leaf(node, $5, 1);
                                                                                                  $$ = node;
+                                                                                                add_entry($4->name, $3->name, VARIABLE, count_scope + 1, line_num, strlen($2->name));
                                                                                              }
 
     ;
@@ -590,17 +583,17 @@ typeSpecifier
 lexerror
     : ERR_INVALID_ID                                {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
     | ERR_INVALID_CHARCONST                         {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
     | ERR_UNKNOWN_TOKEN                             {
                                                         red_print();
-                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, column_num);
+                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, previous_col);
                                                         reset_pcolor();
                                                     }
     ;
@@ -608,5 +601,5 @@ lexerror
 %%
 
 void yyerror(char const *msg) {
-    fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found error %s\n", line_num, column_num, msg);
+    fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found error %s\n", line_num, previous_col, msg);
 }

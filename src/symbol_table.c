@@ -5,13 +5,14 @@
    Availabe in GitHub https://troydhanson.github.io/uthash/userguide.html#_a_hash_in_c
 */
 
-void force_add_entry(const char *name, enum id_type id_type, int scope, int line, int col) {
+void force_add_entry(const char *name, const char *type, enum id_type id_type, int scope, int line, int col) {
     struct st_entry *sample = (struct st_entry *) malloc(sizeof *sample);
     strcpy(sample->name, name);
     char scope_char[5 * sizeof(char)];
     sprintf(scope_char, "_%d", scope);
     strcpy(sample->identifier, name);
     strcat(sample->identifier, scope_char);
+    strcpy(sample->type, type);
     sample->id_type = id_type;
     sample->scope = scope;
     sample->line = line;
@@ -19,11 +20,11 @@ void force_add_entry(const char *name, enum id_type id_type, int scope, int line
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
-void add_entry(const char *name, enum id_type id_type, int scope, int line, int col) {
+void add_entry(const char *name, const char *type, enum id_type id_type, int scope, int line, int col) {
     struct st_entry *entry = NULL;
     entry = find_id(name, scope);
     if (entry == NULL) {
-        force_add_entry(name, id_type, scope, line, col);
+        force_add_entry(name, type, id_type, scope, line, col);
     }
 }
 
@@ -31,6 +32,8 @@ void free_st() {
     struct st_entry *entry, *tmp = NULL;
     HASH_ITER(hh, symbol_table, entry, tmp) {
         HASH_DEL(symbol_table, entry);
+        // free(entry->name);
+        // free(entry->identifier);
         free(entry);
     }
 }
@@ -74,12 +77,12 @@ void print_table() {
     printf("                                    SYMBOL TABLE                                     \n");
     printf("---------------------------------------------------------------------------------------------------------------------------\n");
     for (entry = symbol_table; entry != NULL; entry = entry->hh.next) {
-        printf("Entry Name: %32s | ", entry->name);
+        printf("Entry Name: %32s | ", entry->identifier);
         printf("Type: %10s | ", entry->type);
         printf("ID: %10s | ", ttos(entry->id_type));
         printf("Scope: %3d | ", entry->scope);
-        printf("Line: %4d | ", entry->line);
-        printf("Column: %4d | ", entry->col);
+        // printf("Line: %4d | ", entry->line);
+        // printf("Column: %4d | ", entry->col);
         printf("\n");
     }
     printf("---------------------------------------------------------------------------------------------------------------------------\n");

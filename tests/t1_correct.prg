@@ -9,17 +9,18 @@ float another_function(float p1, float p2, char c1 /* comment */) {
 }
 
 bool third_func(bool b) {
-    bool var = 7 > 9;
-    var = var && true;
+    bool var = (7 > 9) && true;
     return  9 <= 10  || !false;
 }
 
 int main() {
     /* Do some computations */
+    (5 - 4) * 10;
     int one_var = 3;
     int one = 10 / 10;
     float another;
     float result;
+    string input;
     another = 7.98; /* This comment should not appear */
 
     bool ttrue = !false;

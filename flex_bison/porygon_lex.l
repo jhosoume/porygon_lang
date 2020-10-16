@@ -34,6 +34,7 @@ LETTER [a-zA-Z]
 /* Integers to indicate line number and column, both are defined in the scanner.h*/
 extern int line_num;
 extern int column_num;
+extern int previous_col;
 
 /* Get symbol table */
 extern struct st_entry *symbol_table;
@@ -45,6 +46,8 @@ extern struct node_list  *ast_tree_list;
 static void update_pos(void);
 static enum yytokentype valid_char_const(void);
 static enum yytokentype valid_id(void);
+
+int lex_errors = 0;
 
 extern int cur_scope;
 extern int count_scope;
@@ -228,7 +231,11 @@ extern scope_stack *sp_stack;
            \f and \r for feed and carriege return and \v for vertical */
 [ \n\t\f\v\r]               { update_pos(); }
 
-.                           { update_pos(); return ERR_UNKNOWN_TOKEN; }
+.                           {
+                                update_pos();
+                                ++lex_errors;
+                                yyerror("Lexical Error! Invalid Token (not recognized).");
+                                return ERR_UNKNOWN_TOKEN; }
 
 %%
 
@@ -243,7 +250,9 @@ static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         yylval.tree_node = create_node(ast_tree_list, yytext, 0);
         return CHARCONST;
-        } else {
+    } else {
+        ++lex_errors;
+        yyerror("Lexical Error! Invalid Char Const (more than one character).");
         return ERR_INVALID_CHARCONST;
     }
 }
@@ -251,11 +260,12 @@ static enum yytokentype valid_char_const(void) {
 /* Verifies if the identifier is not bigger than 32 chars */
 static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
-        printf("[ADD] Im in this scope %d %d\n", cur_scope, count_scope);
-        add_entry(yytext, VARIABLE, cur_scope, line_num, column_num - yyleng);
+        /* add_entry(yytext, "Null", VARIABLE, 0, line_num, column_num - yyleng); */
         yylval.tree_node = create_node(ast_tree_list, yytext, 0);
         return IDENTIFIER;
     } else {
+        ++lex_errors;
+        yyerror("Lexical Error! Invalid Identifier.");
         return ERR_INVALID_ID;
     }
 }
@@ -267,9 +277,11 @@ static void update_pos(void) {
     for (int nletter = 0; nletter < yyleng; ++nletter) {
         if (yytext[nletter] == '\n') {
             column_num = 1;
+            previous_col = 1;
             line_num++;
         } else {
             column_num++;
         }
     }
+    previous_col = column_num - yyleng;
 }
