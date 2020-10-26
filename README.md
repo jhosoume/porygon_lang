@@ -29,7 +29,7 @@ To compile all the files without using the Makefile:
 ```console
 mkdir build;
 mkdir bin;
-flex src/porygon_lex.l
+flex flex_bison/porygon_lex.l
 bison -Wall -Wconflicts-sr flex_bison/porygon_syntax.y
 gcc -std=c18 --pedantic -Wall -Wextra -Wpedantic -g -I include -c -o build/helpers.o src/helpers.c
 gcc -std=c18 --pedantic -Wall -Wextra -Wpedantic -g -I include -c -o build/token_type.o src/token_type.c
