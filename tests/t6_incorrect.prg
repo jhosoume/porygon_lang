@@ -1,3 +1,4 @@
+/* Missing semicolon, line 3 */
 int main(void) {
     string c = "Forgot the SEMICOLON"
     // int k = 8 * 6 + 10;

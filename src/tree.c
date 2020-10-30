@@ -1,6 +1,8 @@
 #include "tree.h"
 /* Tree implementation based on https://efxa.org/2014/05/25/how-to-create-an-abstract-syntax-tree-while-parsing-an-input-stream/ */
 
+
+/* Creating a tree list! Makes it easier to access them and free them */
 struct node_list *initialize_list() {
     struct node_list *list = malloc(sizeof(struct node_list));
     list->size = 0;
@@ -9,6 +11,11 @@ struct node_list *initialize_list() {
     return list;
 }
 
+/* Dynamic list based on https://medium.com/@imjacobclark/working-with-dynamic-arrays-in-c-c7d40a3cea01 */
+/* List could be implemented as a linked list, however every time a new node
+   is created a malloc should be called. The current implementation skips some
+   of these steps, reducing the time needed
+*/
 void push_list(struct node_list *list, struct tree_node *node) {
     int INCREASE_FACTOR = 4;
     /* Check if the list already reached the capacity */
@@ -37,6 +44,7 @@ void push_list(struct node_list *list, struct tree_node *node) {
     }
 }
 
+/* Allocates space for a node. Also allocs all the needed structures */
 struct tree_node *create_node(struct node_list *list, const char *name, int num_leaves) {
     struct tree_node *node = malloc(sizeof(struct tree_node));
     node->root = NULL;
@@ -51,8 +59,10 @@ struct tree_node *create_node(struct node_list *list, const char *name, int num_
 
 void add_leaf(struct tree_node *root, struct tree_node *leaf, int leaf_indx) {
     //TODO make guards (verify NULL and size)
-    root->leaf[leaf_indx] = leaf;
-    leaf->root = root;
+    if (root != NULL) {
+        root->leaf[leaf_indx] = leaf;
+        leaf->root = root;
+    }
 }
 
 
@@ -72,6 +82,7 @@ void print_list(struct node_list *list) {
     }
 }
 
+/* Print tree header and calls the function to print the tree recursively */
 void print_tree(struct tree_node *root) {
     printf("-------------------------------------------------------------------------------------\n");
     printf("                                    TREE                                     \n");
@@ -84,25 +95,28 @@ void print_tree(struct tree_node *root) {
 }
 
 
+/* Recursive function to print the AST */
 void print_tree_rec(struct tree_node *root, int depth) {
-    int stage = 0;
+    /* Initializations and checking */
+    int stage = 0;                  // Used to provide padding
+    if (root == NULL) return;
     while (stage < depth - 1) {
         ++stage;
         printf("  ");
     }
-    while(stage < depth) {
+    while (stage < depth) {
         ++stage;
-        printf("->");
+        printf(" |--> ");
     }
-    printf("%s(%d)\n", root->name, root->num_leaves);
-
+    printf("%s (%d)\n", root->name, root->num_leaves);
+    /* Recursive call to traverse through the tree */
     for (int leaf_indx = 0; leaf_indx < root->num_leaves; ++leaf_indx) {
         print_tree_rec(root->leaf[leaf_indx], depth + 1);
     }
 
 }
 
-
+/* Function used to free a single node of the tree */
 void free_node(struct tree_node *node) {
     /* Free a single node of the tree */
     if (node == NULL) {
@@ -110,14 +124,16 @@ void free_node(struct tree_node *node) {
         return;
     }
     // printf("FREEING NODE %s\n", node->name);
+    /* Free all the structures */
     free(node->leaf); node->leaf = NULL;
     free(node->name); node->name = NULL;
     free(node);
 }
 
+/* Function to free all the nodes in the list */
 void free_list(struct node_list *list) {
     if (list == NULL) {
-        printf("NULL LIST POINTER!\n");
+        // printf("NULL LIST POINTER!\n");
         return;
     }
     /* Free Nodes! */

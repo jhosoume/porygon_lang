@@ -22,6 +22,14 @@ int main() {
     float result;
     string input;
     another = 7.98; /* This comment should not appear */
+    int arr[] = [1, 2, 3, 4];
+    int a;
+    a = 83;
+    string one_s = "Im a string!";
+
+    table float balance[] = | ("id", "profit", "debt") : (0, 1, 2), (0.2, 0.9, 108.3), (2.3, 5.3, 9.6)|;
+
+
 
     bool ttrue = !false;
 

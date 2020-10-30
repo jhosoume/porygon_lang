@@ -6,12 +6,12 @@ int main(void) {
     indx = 2;
     // table sample =
 
-    int arr[] = {1, 2, 3, 4};
+    int arr[] = [1, 2, 3, 4];
     for (int num) in arr {
         write(num);
     }
 
-    bool values[] = {false, false, false, true, false, true, false, false, false};
+    bool values[] = [false, false, false, true, false, true, false, false, false];
     values[3:7:2];
 
     table float balance[] = | ("id", "profit", "debt") : (0, 1, 2), (0.2, 0.9, 108.3), (2.3, 5.3, 9.6)|;

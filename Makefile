@@ -31,6 +31,7 @@ clean_all:
 	@echo " Cleaning...";
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 	@echo " $(RM) $(SRCDIR)/porygon_lex.c $(INCLUDEDIR)/porygon_lex.h"; $(RM) $(SRCDIR)/porygon_lex.c $(SRCDIR)/porygon_lex.h
+	@echo " $(RM) $(SRCDIR)/parser.c $(INCLUDEDIR)/parser.h"; $(RM) $(SRCDIR)/parser.c $(SRCDIR)/parser.h
 
 flex:
 	@echo " Running FLEX..."
@@ -38,6 +39,27 @@ flex:
 
 bison:
 	@echo " Running BISON..."
-	@echo " bison -Wall -Wconflicts-sr flex_bison/porygon_syntax.y "; bison -Wall flex_bison/porygon_syntax.y
+	@echo " bison -Wall flex_bison/porygon_syntax.y "; bison -Wall flex_bison/porygon_syntax.y
+
+testing:
+	@echo " Running Tests..."
+	@mkdir -p valgrind_output
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_correct.out" ./bin/parser tests/t1_correct.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_correct.out" ./bin/parser tests/t2_correct.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_incorrect.out" ./bin/parser tests/t1_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_incorrect.out" ./bin/parser tests/t2_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t3_incorrect.out" ./bin/parser tests/t3_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t4_incorrect.out" ./bin/parser tests/t4_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t5_incorrect.out" ./bin/parser tests/t5_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t6_incorrect.out" ./bin/parser tests/t6_incorrect.prg
+	@echo " \n\n\n "
+
 
 .PHONY: clean_all flex

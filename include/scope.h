@@ -11,6 +11,8 @@ typedef struct scope_stack {
     struct scope_stack *next;
 } scope_stack;
 
+/* Definition of scope based on hint by Jose */
+
 extern int cur_scope;
 extern int count_scope;
 

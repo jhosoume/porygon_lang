@@ -36,6 +36,7 @@ extern int cur_scope;
 extern scope_stack *sp_stack;
 
 extern int lex_errors;
+int synt_errors = 0;
 %}
 
 
@@ -113,7 +114,8 @@ extern int lex_errors;
 %type <tree_node> typeSpecifier constList stringList columnContent parameterList
 %type <tree_node> compoundStmt parameterDeclaration statementList statement expression iterationStmt conditionalStmt
 %type <tree_node> returnStmt ifStmt elseStmt logicalAndExp equalityExp relationExp sumExp multExp unaryExp mutable baseValue
-%type <tree_node> functCall args argList constant lexerror
+%type <tree_node> functCall args argList constant
+    /* %type <tree_node> lexerror */
 
 %code provides {
     void yyerror(char const *msg);
@@ -139,12 +141,12 @@ declarationList
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
                                                     }
-    | lexerror
     ;
 
 declaration
     : varDeclaration SEMICOLON                      {$$ = $1;}
     | functDeclaration                              {$$ = $1;}
+    | error                                         {++synt_errors;}
     ;
 
 varDeclaration
@@ -193,7 +195,7 @@ arrayDeclaration
     ;
 
 arrayDefinition
-    : LBRACE constList RBRACE                     {$$ = $2;}
+    : LBRACKET constList RBRACKET                    {$$ = $2;}
     ;
 
 tableDeclaration
@@ -202,7 +204,7 @@ tableDeclaration
                                                                 add_leaf(node, $2, 0);
                                                                 add_leaf(node, $3, 1);
                                                                 $$ = node;
-                                                                add_entry($3->name, $2->name, VARIABLE, TABLE, cur_scope, 0, line_num, strlen($2->name));
+                                                                add_entry($3->name, $2->name, VARIABLE, cur_scope, TABLE, 0, line_num, strlen($2->name));
                                                             }
     ;
 
@@ -321,6 +323,7 @@ statement
                                                                  add_leaf(node, $3, 0);
                                                                  $$ = node;
                                                              }
+    | error                                                  {++synt_errors;}
     ;
 
 iterationStmt
@@ -505,7 +508,7 @@ unaryExp
 
 baseValue
     : LPARENTHESES expression RPARENTHESES          {$$ = $2;}
-    | lexerror
+    | error                                         {++synt_errors;}
     | constant                                      {$$ = $1;}
     | functCall                                     {$$ = $1;}
     | mutable                                       {$$ = $1;}
@@ -580,23 +583,23 @@ typeSpecifier
     | VOID_TYPE                                     {$$ = $1;}
     ;
 
-lexerror
-    : ERR_INVALID_ID                                {
-                                                        red_print();
-                                                        printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, previous_col);
-                                                        reset_pcolor();
-                                                    }
-    | ERR_INVALID_CHARCONST                         {
-                                                        red_print();
-                                                        printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, previous_col);
-                                                        reset_pcolor();
-                                                    }
-    | ERR_UNKNOWN_TOKEN                             {
-                                                        red_print();
-                                                        printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, previous_col);
-                                                        reset_pcolor();
-                                                    }
-    ;
+    /* lexerror
+        : ERR_INVALID_ID                                {
+                                                            red_print();
+                                                            printf("[LEXICAL ERR] Invalid Identifier (size bigger than 32 characters). Line: %d Column: %d\n", line_num, previous_col);
+                                                            reset_pcolor();
+                                                        }
+        | ERR_INVALID_CHARCONST                         {
+                                                            red_print();
+                                                            printf("[LEXICAL ERR] Invalid char (more than one character). Line: %d Column: %d\n", line_num, previous_col);
+                                                            reset_pcolor();
+                                                        }
+        | ERR_UNKNOWN_TOKEN                             {
+                                                            red_print();
+                                                            printf("[LEXICAL ERR] Unknown Token. Line: %d Column: %d\n", line_num, previous_col);
+                                                            reset_pcolor();
+                                                        }
+        ; */
 
 %%
 

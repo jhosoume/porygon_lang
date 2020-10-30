@@ -97,8 +97,10 @@ char const *vtos(enum special_var type) {
     } else if (type == TABLE) {
         return "TABLE";
 
-    } else {
+    } else if (type == STRING) {
         return "STRING";
+    } else {
+        return "NONE";
     }
 }
 
@@ -112,7 +114,7 @@ void print_table() {
         printf("Type: %10s | ", entry->type);
         printf("ID: %10s | ", ttos(entry->id_type));
         printf("Scope: %3d | ", entry->scope);
-        printf("Scope: %6s | ", vtos(entry->spec_var));
+        printf("Var Type: %6s | ", vtos(entry->spec_var));
         // printf("Size: %3d | ", entry->size);
         // printf("Line: %4d | ", entry->line);
         // printf("Column: %4d | ", entry->col);

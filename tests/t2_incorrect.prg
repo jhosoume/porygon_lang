@@ -9,7 +9,7 @@ int main(void) {
 anidentifier;
 
 }
-
+/* Syntax Err line 13, does not have a type specifier that triggers other errors */
 float someFunct(flaot a, float b) {
     float something = a +b;
     return something;

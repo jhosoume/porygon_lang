@@ -14,6 +14,8 @@ struct tree_node {
     int size;
 };
 
+/* Creation of node list based on hint by Diogo */
+
 struct node_list {
     struct tree_node **nodes;   // List to store all nodes
     int size;                   // Number of nodes in the list

@@ -22,6 +22,8 @@ scope_stack *sp_stack = NULL;
 int cur_scope = 0;
 int count_scope = 0;
 
+extern int synt_errors;
+
 
 
 int main(int argc, char** argv) {
@@ -101,7 +103,12 @@ int main(int argc, char** argv) {
     yyparse();
     ends_scan(argc);
     print_table();
-    print_tree(ast_root);
+    /* Only print tree if no synt errors are reported, since they cause failure */
+    if (synt_errors == 0) {
+        print_tree(ast_root);
+    } else {
+        printf("Not printing AST, found errors!\n");
+    }
     print_stack();
 
     free_st();
