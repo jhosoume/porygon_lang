@@ -7,6 +7,7 @@
 
 void force_add_entry(
                       const char *name,
+                      enum ttype dec_type,
                       const char *type,
                       enum id_type id_type,
                       int scope,
@@ -21,6 +22,7 @@ void force_add_entry(
     strcat(sample->identifier, scope_char);
     strcpy(sample->type, type);
     sample->id_type = id_type;
+    sample->dec_type = dec_type;
     sample->scope = scope;
     sample->spec_var = spec_var;
     sample->size = size;
@@ -31,6 +33,7 @@ void force_add_entry(
 
 void add_entry(
                 const char *name,
+                enum ttype dec_type,
                 const char *type,
                 enum id_type id_type,
                 int scope,
@@ -40,7 +43,7 @@ void add_entry(
     struct st_entry *entry = NULL;
     entry = find_id(name, scope);
     if (entry == NULL) {
-        force_add_entry(name, type, id_type, scope, spec_var, size, line, col);
+        force_add_entry(name, dec_type, type, id_type, scope, spec_var, size, line, col);
     }
 }
 

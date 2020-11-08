@@ -187,7 +187,7 @@ varSimpleDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->name, VARIABLE, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
+                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
                                                     }
     ;
 
@@ -198,7 +198,7 @@ arrayDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->name, VARIABLE, cur_scope, ARRAY, 0, line_num, strlen($2->name));
+                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, ARRAY, 0, line_num, strlen($2->name));
                                                     }
     ;
 
@@ -213,7 +213,7 @@ tableDeclaration
                                                                 add_leaf(node, $3, 1);
                                                                 check_type(node);
                                                                 $$ = node;
-                                                                add_entry($3->name, $2->name, VARIABLE, cur_scope, TABLE, 0, line_num, strlen($2->name));
+                                                                add_entry($3->name, $2->type, $2->name, VARIABLE, cur_scope, TABLE, 0, line_num, strlen($2->name));
                                                             }
     ;
 
@@ -270,7 +270,7 @@ functDeclaration
                                                                                         add_leaf(node, $6, 3);
                                                                                         check_type(node);
                                                                                         $$ = node;
-                                                                                        add_entry($2->name, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
+                                                                                        add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
@@ -279,7 +279,7 @@ functDeclaration
                                                                             add_leaf(node, $5, 2);
                                                                             check_type(node);
                                                                             $$ = node;
-                                                                            add_entry($2->name, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
+                                                                            add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
                                                                       }
     ;
 
@@ -301,7 +301,7 @@ parameterDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
+                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
     ;
@@ -361,7 +361,7 @@ iterationStmt
                                                                                                  add_leaf(node, $5, 1);
                                                                                                  $$ = node;
                                                                                                  check_type(node);
-                                                                                                 add_entry($4->name, $3->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
+                                                                                                 add_entry($4->name, $3->type, $3->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
                                                                                              }
 
     ;

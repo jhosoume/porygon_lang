@@ -43,6 +43,7 @@ struct st_entry {
 char const *ttos(enum id_type type);
 void force_add_entry(
                      const char *name,
+                     enum ttype dec_type,
                      const char *type,
                      enum id_type id_type,
                      int scope,
@@ -52,6 +53,7 @@ void force_add_entry(
 
 void add_entry(
                const char *name,
+               enum ttype dec_type,
                const char *type,
                enum id_type id_type,
                int scope,

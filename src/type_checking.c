@@ -4,12 +4,13 @@ void check_type(struct tree_node *node) {
     struct st_entry *entry;
     switch(node->node_type) {
         case(ID):
-            // entry = find_id(node->name, cur_scope);
-            // if (entry == NULL) {
-            //     yyerror("Semantic Error! Identifier not declared.");
-            // } else {
-            //     node->type = entry->dec_type;
-            // }
+            entry = find_id(node->name, cur_scope);
+            if (entry == NULL) {
+                yyerror("Semantic Error! Identifier not declared.");
+            }
+            else {
+                node->type = entry->dec_type;
+            }
             return;
 
 
