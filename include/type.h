@@ -1,14 +1,17 @@
-#ifndef TYPE
-#define TYPE
+#ifndef TTYPE
+#define TTYPE
 
-enum type {
-    CHAR,
-    INT,
-    FLOAT,
-    BOOL,
-    VOID,
-    UNDEFINED,
-    NONE
+enum ttype {
+    STRING_,
+    CHAR_,
+    INT_,
+    FLOAT_,
+    BOOL_,
+    VOID_,
+    UNDEFINED_,
+    NONE_
 };
+
+const char* type_string(enum ttype t);
 
 #endif

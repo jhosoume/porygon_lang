@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "node_type.h"
+#include "type.h"
 
 
 struct tree_node {
@@ -14,6 +15,7 @@ struct tree_node {
     enum node_type node_type;                 // Store name of the node
     int size;
     char *name;                 // Store name of the node
+    enum ttype type;
 
 };
 

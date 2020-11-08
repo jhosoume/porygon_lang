@@ -61,6 +61,7 @@ enum node_type {
     FLOAT_CONST,
     CHAR_CONST,
     STRING_CONST,
+    ID
 };
 
 const char* node_type_string(enum node_type type);

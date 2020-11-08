@@ -61,6 +61,7 @@ const char* node_type_string(enum node_type type) {
         case(FLOAT_CONST): return "float_const";
         case(CHAR_CONST): return "char_const";
         case(STRING_CONST): return "string_const";
+        case(ID): return "id";
         default: return "[ERR] Node type not identified!";
     }
 }

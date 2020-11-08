@@ -6,8 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "token_type.h"
+#include "type.h"
+#include "scope.h"
 
 extern struct st_entry *symbol_table;
+extern struct scope_stack *sp_stack;
+extern int cur_scope;
 
 enum id_type {
     VARIABLE,
@@ -26,6 +30,7 @@ struct st_entry {
     char name[32];                  /* ID name */
     enum id_type id_type;           /* Function or Variable */
     char type[15];                  /* */
+    enum ttype dec_type;
     int scope;                      /* Integer that is related to scope*/
     int line;
     int col;

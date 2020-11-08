@@ -66,6 +66,24 @@ struct st_entry *find_id(const char *name, int scope) {
     return entry;
 }
 
+// struct st_entry *find_id_rec(const char *name) {
+//     /* Using temp stack */
+//     scope_stack *temp_stack = NULL;
+//     int f_scope = cur_scope;
+//     // while()
+//
+//
+//     // char scope_char[5 * sizeof(char)];
+//     // char identifier[strlen(name) + 5 * sizeof(char)];
+//     // sprintf(scope_char, "_%d", scope);
+//     // strcpy(identifier, name);
+//     // strcat(identifier, scope_char);
+//     struct st_entry *entry = NULL;
+//     // HASH_FIND_STR(symbol_table, identifier, entry);
+//     // if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
+//     return entry;
+// }
+
 struct st_entry *find_id_verbose(const char *name, int scope) {
     char scope_char[5 * sizeof(char)];
     char identifier[strlen(name) + 5 * sizeof(char)];

@@ -87,6 +87,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, CHAR_T, yytext, 0);
+                                yylval.tree_node->type = CHAR_;
                                 return CHAR_TYPE;
                             }
 
@@ -94,6 +95,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, STRING_T, yytext, 0);
+                                yylval.tree_node->type = STRING_;
                                 return STRING_TYPE;
                             }
 
@@ -101,6 +103,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, INT_T, yytext, 0);
+                                yylval.tree_node->type = INT_;
                                 return INT_TYPE;
                             }
 
@@ -108,6 +111,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, FLOAT_T, yytext, 0);
+                                yylval.tree_node->type = FLOAT_;
                                 return FLOAT_TYPE;
                             }
 
@@ -122,6 +126,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, BOOL_T, yytext, 0);
+                                yylval.tree_node->type = BOOL_;
                                 return BOOL_TYPE;
                             }
 
@@ -129,6 +134,7 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, VOID_T, yytext, 0);
+                                yylval.tree_node->type = VOID_;
                                 return VOID_TYPE;
                             }
 
@@ -182,6 +188,7 @@ extern scope_stack *sp_stack;
                                 yylval.string_val = yytext;
                                 /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, TRUE_CONST, yytext, 0);
+                                yylval.tree_node->type = BOOL_;
                                 return BOOLEANCONST;
                             }
 "false"                     {
@@ -189,6 +196,7 @@ extern scope_stack *sp_stack;
                                 yylval.string_val = yytext;
                                 /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, FALSE_CONST, yytext, 0);
+                                yylval.tree_node->type = BOOL_;
                                 return BOOLEANCONST;
                              }
 
@@ -198,12 +206,14 @@ extern scope_stack *sp_stack;
                                 yylval.integer_val= atoi(yytext);
                                 /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, INT_CONST, yytext, 0);
+                                yylval.tree_node->type = INT_;
                                 return INTCONST;
                              }
 [\+\-]?{DIGIT}+"."{DIGIT}*  {
                                 update_pos();
                                 yylval.float_val= atof(yytext);
                                 yylval.tree_node = create_node(ast_tree_list, FLOAT_CONST, yytext, 0);
+                                yylval.tree_node->type = FLOAT_;
                                 return FLOATCONST;
                             }
 
@@ -213,12 +223,14 @@ extern scope_stack *sp_stack;
                                 update_pos();
                                 yylval.string_val = yytext;
                                 /* yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0); */
+                                /* yylval.tree_node->type = CHAR_; */
                                 return valid_char_const();
                              }
 \"(\\.|[^\\"])*\"           {
                                 update_pos();
                                 yylval.string_val = yytext;
                                 yylval.tree_node = create_node(ast_tree_list, STRING_CONST, yytext, 0);
+                                yylval.tree_node->type = STRING_;
                                 return STRINGCONST;
                             }
 
@@ -253,6 +265,7 @@ int yywrap(void) {
 static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0);
+        yylval.tree_node->type = CHAR_;
         return CHARCONST;
     } else {
         ++lex_errors;
@@ -266,7 +279,7 @@ static enum yytokentype valid_id(void) {
     if (yyleng <= 32) {
         /* add_entry(yytext, "Null", VARIABLE, 0, line_num, column_num - yyleng); */
         /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
-        yylval.tree_node = create_node(ast_tree_list, STRING_CONST, yytext, 0);
+        yylval.tree_node = create_node(ast_tree_list, ID, yytext, 0);
         return IDENTIFIER;
     } else {
         ++lex_errors;
