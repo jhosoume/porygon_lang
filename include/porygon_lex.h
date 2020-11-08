@@ -468,7 +468,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 241 "flex_bison/porygon_lex.l"
+#line 245 "flex_bison/porygon_lex.l"
 
 
 #line 475 "include/porygon_lex.h"

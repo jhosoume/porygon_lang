@@ -45,12 +45,13 @@ void push_list(struct node_list *list, struct tree_node *node) {
 }
 
 /* Allocates space for a node. Also allocs all the needed structures */
-struct tree_node *create_node(struct node_list *list, const char *name, int num_leaves) {
+struct tree_node *create_node(struct node_list *list, enum node_type nd_type, const char *name, int num_leaves) {
     struct tree_node *node = malloc(sizeof(struct tree_node));
     node->root = NULL;
     node->num_leaves = num_leaves;
     node->size = 0;
     node->leaf = malloc(node->num_leaves * sizeof(struct tree_node**));
+    node->node_type = nd_type;
     node->name = malloc(strlen(name) + 1);
     strcpy(node->name, name);
     push_list(list, node);
@@ -108,7 +109,7 @@ void print_tree_rec(struct tree_node *root, int depth) {
         ++stage;
         printf(" |--> ");
     }
-    printf("%s (%d)\n", root->name, root->num_leaves);
+    printf("%s %s (%d)\n", root->name, node_type_string(root->node_type), root->num_leaves);
     /* Recursive call to traverse through the tree */
     for (int leaf_indx = 0; leaf_indx < root->num_leaves; ++leaf_indx) {
         print_tree_rec(root->leaf[leaf_indx], depth + 1);

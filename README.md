@@ -8,6 +8,8 @@ prof. Cláudia Nalon
 Implementation of a lexical analyzer (scanner) using [flex](https://github.com/westes/flex).
 Implementation of a syntax analyzer (parser) using [bison](https://www.gnu.org/software/bison/manual/).
 
+The operating system used to develop and test the implementation was Ubuntu 20.04, with gcc 9.3, flex 2.6.4 and bison 3.5.1.
+
 ---
 
 ## How to Compile
@@ -30,7 +32,7 @@ To compile all the files without using the Makefile:
 mkdir build;
 mkdir bin;
 flex flex_bison/porygon_lex.l
-bison -Wall -Wconflicts-sr flex_bison/porygon_syntax.y
+bison -Wall flex_bison/porygon_syntax.y
 gcc -std=c18 --pedantic -Wall -Wextra -Wpedantic -g -I include -c -o build/helpers.o src/helpers.c
 gcc -std=c18 --pedantic -Wall -Wextra -Wpedantic -g -I include -c -o build/token_type.o src/token_type.c
 gcc -std=c18 --pedantic -Wall -Wextra -Wpedantic -g -I include -c -o build/porygon_lex.o src/porygon_lex.c

@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
 
   /* Creating Symbol Table */
 
+  /* Segment of code only used to test the AST!  */
     #if test_st
 
     add_entry("testing", IDENTIFIER, 0, 0);
@@ -97,9 +98,11 @@ int main(int argc, char** argv) {
     free_list(test_tree_list);
 
     #endif
+    /* Code to test AST ends here! */
 
     /* Scanner functions */
     // run_scanner();
+    /* Starts parser */
     yyparse();
     ends_scan(argc);
     print_table();

@@ -22,14 +22,14 @@ enum special_var {
 };
 
 struct st_entry {
-    char identifier[64];
-    char name[32];
-    enum id_type id_type;
-    char type[15];
-    int scope;
+    char identifier[64];            /* ID name + Scope */
+    char name[32];                  /* ID name */
+    enum id_type id_type;           /* Function or Variable */
+    char type[15];                  /* */
+    int scope;                      /* Integer that is related to scope*/
     int line;
     int col;
-    enum special_var spec_var;
+    enum special_var spec_var;     /* Simple, array or table*/
     int size;
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */

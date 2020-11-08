@@ -17,6 +17,7 @@
 #include "helpers.h"
 #include "symbol_table.h"
 #include "scope.h"
+#include "node_type.h"
 
 /* Pointer to symbol table initilized in the main*/
 extern struct st_entry *symbol_table;
@@ -136,7 +137,7 @@ program
 declarationList
     : declaration                                   {$$ = $1;}
     | declarationList declaration                   {
-                                                        struct tree_node *node = create_node(ast_tree_list, "declarationList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, DECLARATION_LIST, "declarationList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -152,21 +153,21 @@ declaration
 varDeclaration
     : varSimpleDeclaration                          {$$ = $1;}
     | varSimpleDeclaration DEF_EQ logicalOrExp      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "varDeclaration", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, VAR_DECLARATION, "varDeclaration",  2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | arrayDeclaration                              {$$ = $1;}
     | arrayDeclaration DEF_EQ arrayDefinition       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclarationDefinition", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, ARRAY_DECLARATION_DEFINITION, "arrayDeclarationDefinition", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | tableDeclaration                              {$$ = $1;}
     | tableDeclaration DEF_EQ tableDefinition       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "tableDeclarationDefinition", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, TABLE_DECLARATION_DEFINITION, "tableDeclarationDefinition", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -176,7 +177,7 @@ varDeclaration
 
 varSimpleDeclaration
     : typeSpecifier IDENTIFIER                      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "varSimpleDeclaration", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, VAR_SIMPLE_DECLARATION, "varSimpleDeclaration", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -186,7 +187,7 @@ varSimpleDeclaration
 
 arrayDeclaration
     : typeSpecifier IDENTIFIER LBRACKET RBRACKET    {
-                                                        struct tree_node *node = create_node(ast_tree_list, "arrayDeclaration", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, ARRAY_DECLARATION, "arrayDeclaration", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -200,7 +201,7 @@ arrayDefinition
 
 tableDeclaration
     : TABLE_TYPE typeSpecifier IDENTIFIER LBRACKET RBRACKET {
-                                                                struct tree_node *node = create_node(ast_tree_list, "tableDeclaration", 2);
+                                                                struct tree_node *node = create_node(ast_tree_list, TABLE_DECLARATION, "tableDeclaration", 2);
                                                                 add_leaf(node, $2, 0);
                                                                 add_leaf(node, $3, 1);
                                                                 $$ = node;
@@ -210,7 +211,7 @@ tableDeclaration
 
 tableDefinition
     : PIPE LPARENTHESES stringList RPARENTHESES COLON columnContent PIPE {
-                                                                            struct tree_node *node = create_node(ast_tree_list, "tableDefinition", 2);
+                                                                            struct tree_node *node = create_node(ast_tree_list, TABLE_DEFINITION, "tableDefinition", 2);
                                                                             add_leaf(node, $3, 0);
                                                                             add_leaf(node, $6, 1);
                                                                             $$ = node;
@@ -220,7 +221,7 @@ tableDefinition
 constList
     : constant                                      {$$ = $1;}
     | constList COMMA constant                      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "constList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, CONST_LIST, "constList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -231,7 +232,7 @@ constList
 stringList
     : STRINGCONST                                   {$$ = $1;}
     | stringList COMMA STRINGCONST                  {
-                                                        struct tree_node *node = create_node(ast_tree_list, "stringList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, STRING_LIST, "stringList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -241,7 +242,7 @@ stringList
 columnContent
     : LPARENTHESES constList RPARENTHESES           {$$ = $2;}
     | columnContent COMMA LPARENTHESES constList RPARENTHESES {
-                                                                struct tree_node *node = create_node(ast_tree_list, "columnContent", 2);
+                                                                struct tree_node *node = create_node(ast_tree_list, COLUMN_CONTENT, "columnContent", 2);
                                                                 add_leaf(node, $1, 0);
                                                                 add_leaf(node, $4, 1);
                                                                 $$ = node;
@@ -250,7 +251,7 @@ columnContent
 
 functDeclaration
     : typeSpecifier IDENTIFIER LPARENTHESES parameterList RPARENTHESES compoundStmt {
-                                                                                        struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 4);
+                                                                                        struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 4);
                                                                                         add_leaf(node, $1, 0);
                                                                                         add_leaf(node, $2, 1);
                                                                                         add_leaf(node, $4, 2);
@@ -259,7 +260,7 @@ functDeclaration
                                                                                         add_entry($2->name, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
-                                                                            struct tree_node *node = create_node(ast_tree_list, "functDeclaration", 3);
+                                                                            struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
                                                                             add_leaf(node, $1, 0);
                                                                             add_leaf(node, $2, 1);
                                                                             add_leaf(node, $5, 2);
@@ -271,7 +272,7 @@ functDeclaration
 parameterList
     : parameterDeclaration                          {$$ = $1;}
     | parameterList COMMA parameterDeclaration      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "parameterList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, PARAMETER_LIST, "parameterList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -280,7 +281,7 @@ parameterList
 
 parameterDeclaration
     : typeSpecifier IDENTIFIER                      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "parameterDeclaration", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, PARAMETER_DECLARATION, "parameterDeclaration", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -291,7 +292,7 @@ parameterDeclaration
 
 compoundStmt
     : LBRACE RBRACE                                 {
-                                                        struct tree_node *node = create_node(ast_tree_list, "emptyCompoundStatement", 0);
+                                                        struct tree_node *node = create_node(ast_tree_list, EMPTY_COMPOUND_STATEMENT, "emptyCompoundStatement", 0);
                                                         $$ = node;
                                                     }
     | LBRACE statementList RBRACE                   {$$ = $2;}
@@ -300,7 +301,7 @@ compoundStmt
 statementList
     : statement                                     {$$ = $1;}
     | statementList statement                       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "statementList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, STATEMENT_LIST, "statementList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -314,12 +315,12 @@ statement
     | conditionalStmt                               {$$ = $1;}
     | returnStmt SEMICOLON                          {$$ = $1;}
     | READ_KW LPARENTHESES IDENTIFIER RPARENTHESES SEMICOLON {
-                                                                 struct tree_node *node = create_node(ast_tree_list, "readStmt", 1);
+                                                                 struct tree_node *node = create_node(ast_tree_list, READ_STMT, "readStmt", 1);
                                                                  add_leaf(node, $3, 0);
                                                                  $$ = node;
                                                              }
     | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {
-                                                                 struct tree_node *node = create_node(ast_tree_list, "writeStmt", 1);
+                                                                 struct tree_node *node = create_node(ast_tree_list, WRITE_STMT, "writeStmt", 1);
                                                                  add_leaf(node, $3, 0);
                                                                  $$ = node;
                                                              }
@@ -328,13 +329,13 @@ statement
 
 iterationStmt
     : WHILE_KW LPARENTHESES expression RPARENTHESES compoundStmt {
-                                                                     struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                     struct tree_node *node = create_node(ast_tree_list, WHILE, "while", 2);
                                                                      add_leaf(node, $3, 0);
                                                                      add_leaf(node, $5, 1);
                                                                      $$ = node;
                                                                  }
     | FOR_KW LPARENTHESES typeSpecifier IDENTIFIER RPARENTHESES IN_KW IDENTIFIER compoundStmt {
-                                                                                                 struct tree_node *node = create_node(ast_tree_list, "while", 2);
+                                                                                                 struct tree_node *node = create_node(ast_tree_list, WHILE, "while",2);
                                                                                                  add_leaf(node, $3, 0);
                                                                                                  add_leaf(node, $5, 1);
                                                                                                  $$ = node;
@@ -345,7 +346,7 @@ iterationStmt
 
 conditionalStmt
     : ifStmt elseStmt                               {
-                                                        struct tree_node *node = create_node(ast_tree_list, "conditionalStmt", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, CONDITIONAL_STMT, "conditionalStmt", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $2, 1);
                                                         $$ = node;
@@ -354,7 +355,7 @@ conditionalStmt
 
 ifStmt
     : IF_KW LPARENTHESES expression RPARENTHESES compoundStmt   {
-                                                                    struct tree_node *node = create_node(ast_tree_list, "ifStmt", 2);
+                                                                    struct tree_node *node = create_node(ast_tree_list, IF_STMT, "ifStmt", 2);
                                                                     add_leaf(node, $3, 0);
                                                                     add_leaf(node, $5, 1);
                                                                     $$ = node;
@@ -363,23 +364,23 @@ ifStmt
 
 elseStmt
     : ELSE_KW compoundStmt                          {
-                                                        struct tree_node *node = create_node(ast_tree_list, "elseStmt", 1);
+                                                        struct tree_node *node = create_node(ast_tree_list, ELSE_STMT, "elseStmt", 1);
                                                         add_leaf(node, $2, 0);
                                                         $$ = node;
                                                     }
     | %empty                                        {
-                                                        struct tree_node *node = create_node(ast_tree_list, "emptyElse", 0);
+                                                        struct tree_node *node = create_node(ast_tree_list, EMPTY_ELSE, "emptyElse", 0);
                                                         $$ = node;
                                                     }
     ;
 
 returnStmt
     : RETURN_KW                                     {
-                                                        struct tree_node *node = create_node(ast_tree_list, "return", 0);
+                                                        struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 0);
                                                         $$ = node;
                                                     }
     | RETURN_KW expression                          {
-                                                        struct tree_node *node = create_node(ast_tree_list, "return", 1);
+                                                        struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 1);
                                                         add_leaf(node, $2, 0);
                                                         $$ = node;
                                                     }
@@ -388,7 +389,7 @@ returnStmt
 expression
     : logicalOrExp                                  {$$ = $1;}
     | mutable DEF_EQ logicalOrExp                   {
-                                                        struct tree_node *node = create_node(ast_tree_list, "=", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, ASSIGN, "=", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -398,7 +399,7 @@ expression
 logicalOrExp
     : logicalAndExp                                 {$$ = $1;}
     | logicalOrExp OR_OP logicalAndExp              {
-                                                        struct tree_node *node = create_node(ast_tree_list, "||", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, OR, "||", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -408,7 +409,7 @@ logicalOrExp
 logicalAndExp
     : equalityExp                                   {$$ = $1;}
     | logicalAndExp AND_OP equalityExp              {
-                                                        struct tree_node *node = create_node(ast_tree_list, "&&", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, AND, "&&", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -418,13 +419,13 @@ logicalAndExp
 equalityExp
     : relationExp                                   {$$ = $1;}
     | equalityExp COMPARISON_OP relationExp         {
-                                                        struct tree_node *node = create_node(ast_tree_list, "==", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, EQUALS, "==", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | equalityExp NOTEQUAL_OP relationExp           {
-                                                        struct tree_node *node = create_node(ast_tree_list, "!=", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, DIFFS, "!=", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -434,25 +435,25 @@ equalityExp
 relationExp
     : sumExp                                        {$$ = $1;}
     | relationExp GREATERTHAN_OP sumExp             {
-                                                        struct tree_node *node = create_node(ast_tree_list, ">", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, BIGGER, ">", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | relationExp LESSTHAN_OP sumExp                {
-                                                        struct tree_node *node = create_node(ast_tree_list, "<", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, LESSER, "<", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | relationExp GREATEREQUAl_OP sumExp            {
-                                                        struct tree_node *node = create_node(ast_tree_list, ">=", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, BIGGER_E, ">=", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | relationExp LESSEQUAL_OP sumExp               {
-                                                        struct tree_node *node = create_node(ast_tree_list, "<=", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, LESSER_E, "<=", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -462,13 +463,13 @@ relationExp
 sumExp
     : multExp                                       {$$ = $1;}
     | sumExp ADD_OP multExp                         {
-                                                        struct tree_node *node = create_node(ast_tree_list, "+", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, SUM, "+", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | sumExp SUB_OP multExp                         {
-                                                        struct tree_node *node = create_node(ast_tree_list, "-", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, MINUS, "-", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -478,19 +479,19 @@ sumExp
 multExp
     : unaryExp                                      {$$ = $1;}
     | multExp MULT_OP unaryExp                      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "*", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, MULT, "*", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | multExp DIV_OP unaryExp                       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "/", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, DIV, "/", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | multExp REM_OP unaryExp                       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "%", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, REM, "%", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -500,7 +501,7 @@ multExp
 unaryExp
     : baseValue                                     {$$ = $1;}
     | NOT_OP unaryExp                               {
-                                                        struct tree_node *node = create_node(ast_tree_list, "!", 1);
+                                                        struct tree_node *node = create_node(ast_tree_list, NOT, "!", 1);
                                                         add_leaf(node, $2, 0);
                                                         $$ = node;
                                                     }
@@ -517,20 +518,20 @@ baseValue
 mutable
     : IDENTIFIER                                    {$$ = $1;}
     | IDENTIFIER LBRACKET expression RBRACKET       {
-                                                        struct tree_node *node = create_node(ast_tree_list, "mutable[]", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, MUTABLE_ONE, "mutable[]", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
                                                     }
     | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
-                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;]", 3);
+                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_TWO, "mutable[;]", 3);
                                                                     add_leaf(node, $1, 0);
                                                                     add_leaf(node, $3, 1);
                                                                     add_leaf(node, $5, 2);
                                                                     $$ = node;
                                                                 }
     | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
-                                                                                    struct tree_node *node = create_node(ast_tree_list, "mutable[;:]", 4);
+                                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_THREE, "mutable[;;]", 4);
                                                                                     add_leaf(node, $1, 0);
                                                                                     add_leaf(node, $3, 1);
                                                                                     add_leaf(node, $5, 2);
@@ -541,7 +542,7 @@ mutable
 
 functCall
     : IDENTIFIER LPARENTHESES args RPARENTHESES     {
-                                                        struct tree_node *node = create_node(ast_tree_list, "functCall", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, FUNCT_CALL, "functCall", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
@@ -551,14 +552,14 @@ functCall
 args
     : argList                                       {$$ = $1;}
     | %empty                                        {
-                                                        struct tree_node *node = create_node(ast_tree_list, "emptyArgs", 0);
+                                                        struct tree_node *node = create_node(ast_tree_list, EMPTY_ARGS, "emptyArgs", 0);
                                                         $$ = node;
                                                     }
     ;
 
 argList
     : expression COMMA argList                      {
-                                                        struct tree_node *node = create_node(ast_tree_list, "argList", 2);
+                                                        struct tree_node *node = create_node(ast_tree_list, ARG_LIST, "argList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         $$ = node;
