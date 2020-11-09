@@ -668,5 +668,5 @@ typeSpecifier
 %%
 
 void yyerror(char const *msg) {
-    fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found error %s\n", line_num, previous_col, msg);
+    fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found %s\n", line_num, previous_col, msg);
 }

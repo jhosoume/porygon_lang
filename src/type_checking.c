@@ -30,6 +30,9 @@ void check_type(struct tree_node *node) {
                 // TODO Create interpolation sprintf
                 yyerror("Semantic Error! Function not defined!" );
             } else {
+                if (entry->id_type != FUNCTION) {
+                    yyerror("Semantic Error! Identifier is not a function, thus cannot be called!" );
+                }
                 node->type = entry->dec_type;
             }
             return;
@@ -196,7 +199,12 @@ void check_type(struct tree_node *node) {
             return;
 
         case(READ_STMT):
-            node->type = node->leaf[0]->type;
+            entry = find_id_rec(node->leaf[0]->name);
+            if (entry == NULL) {
+                yyerror("Semantic Error! Identifier not declared.");
+            }  else {
+                node->type = entry->dec_type;
+            }
             return;
 
         case(STATEMENT_LIST):
@@ -267,6 +275,23 @@ void check_type(struct tree_node *node) {
 
         case(VAR_SIMPLE_DECLARATION):
             node->leaf[1]->type = node->leaf[0]->type;
+            node->type = node->leaf[0]->type;
+            return;
+
+        case(TABLE_DECLARATION_DEFINITION):
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(ARRAY_DECLARATION_DEFINITION):
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(VAR_DECLARATION):
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(DECLARATION_LIST):
+            node->type = node->leaf[1]->type;
             return;
 
         default: return;

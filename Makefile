@@ -2,7 +2,7 @@ CC	     := gcc
 # CFLAGS   := -std=c11 --pedantic -O3 -Wall -Wextra -Wpedantic
 CFLAGS   := -std=c18 --pedantic -Wall -Wextra -Wpedantic -g
 
-TARGET   := bin/parser
+TARGET   := bin/porygon
 
 SRCEXT   := c
 SRCDIR   := src
@@ -44,21 +44,21 @@ bison:
 testing:
 	@echo " Running Tests..."
 	@mkdir -p valgrind_output
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_correct.out" ./bin/parser tests/t1_correct.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_correct.out" ./bin/porygon tests/t1_correct.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_correct.out" ./bin/parser tests/t2_correct.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_correct.out" ./bin/porygon tests/t2_correct.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_incorrect.out" ./bin/parser tests/t1_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t1_incorrect.out" ./bin/porygon tests/t1_incorrect.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_incorrect.out" ./bin/parser tests/t2_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t2_incorrect.out" ./bin/porygon tests/t2_incorrect.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t3_incorrect.out" ./bin/parser tests/t3_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t3_incorrect.out" ./bin/porygon tests/t3_incorrect.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t4_incorrect.out" ./bin/parser tests/t4_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t4_incorrect.out" ./bin/porygon tests/t4_incorrect.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t5_incorrect.out" ./bin/parser tests/t5_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t5_incorrect.out" ./bin/porygon tests/t5_incorrect.prg
 	@echo " \n\n\n "
-	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t6_incorrect.out" ./bin/parser tests/t6_incorrect.prg
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t6_incorrect.out" ./bin/porygon tests/t6_incorrect.prg
 	@echo " \n\n\n "
 
 

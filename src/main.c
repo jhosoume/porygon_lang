@@ -3,6 +3,7 @@
 #include "symbol_table.h"
 #include "tree.h"
 #include "scope.h"
+#include "semantic_analysis.h"
 
 /* Helper to test the symbol table*/
 #define test_st 0
@@ -106,6 +107,7 @@ int main(int argc, char** argv) {
     /* Starts parser */
     yyparse();
     ends_scan(argc);
+    semantic_nlz();
     print_table();
     /* Only print tree if no synt errors are reported, since they cause failure */
     if (synt_errors == 0) {

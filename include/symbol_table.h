@@ -9,6 +9,7 @@
 #include "type.h"
 #include "scope.h"
 #include "parser.h"
+#include "parameters.h"
 
 extern struct st_entry *symbol_table;
 extern struct scope_stack *sp_stack;
@@ -38,6 +39,8 @@ struct st_entry {
     int col;
     enum special_var spec_var;     /* Simple, array or table*/
     int size;
+    bool defined;
+    struct params_entry *params;
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };

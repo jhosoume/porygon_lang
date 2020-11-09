@@ -111,7 +111,12 @@ void print_tree_rec(struct tree_node *root, int depth) {
         ++stage;
         printf(" |--> ");
     }
-    printf("%s %s (%d)\n", root->name, type_string(root->type), root->num_leaves);
+    printf("%s (type:%s, numLeaves: %d, cast int->float: %s)\n",
+            root->name,
+            type_string(root->type),
+            root->num_leaves,
+            root-> need_casting ? "true" : "false"
+        );
     /* Recursive call to traverse through the tree */
     for (int leaf_indx = 0; leaf_indx < root->num_leaves; ++leaf_indx) {
         print_tree_rec(root->leaf[leaf_indx], depth + 1);

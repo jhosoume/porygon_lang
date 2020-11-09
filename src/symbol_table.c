@@ -28,6 +28,7 @@ void force_add_entry(
     sample->size = size;
     sample->line = line;
     sample->col = col;
+    sample->defined = false;
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
