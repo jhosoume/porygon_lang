@@ -164,9 +164,110 @@ void check_type(struct tree_node *node) {
             node->type = node->leaf[0]->type;
             return;
 
-        // case()
+        case(FOR_DEC):
+            node->type = node->leaf[0]->type;
+            node->leaf[1]->type = node->leaf[0]->type;
+            return;
 
+        case(FOR_LOOP):
+            node->type = node->leaf[2]->type;
+            entry = find_id_rec(node->leaf[1]->name);
+            if (entry == NULL) {
+                yyerror("Semantic Error! Identifier not declared.");
+            } else if (entry->spec_var != ARRAY) {
+                yyerror("Semantic Error! For loop not done in array.");
+            } else {
+                node->leaf[1]->type = entry->dec_type;
+            }
+            if (node->leaf[1]->type != node->leaf[0]->type) {
+                yyerror("Semantic Error! Variable type not compatible with array type.");
+            }
+            return;
 
+        case(WHILE):
+            if (node->leaf[0]->type != BOOL_) {
+                yyerror("Semantic Error! Variable type not compatible with array type.");
+            }
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(WRITE_STMT):
+            node->type = VOID_;
+            return;
+
+        case(READ_STMT):
+            node->type = node->leaf[0]->type;
+            return;
+
+        case(STATEMENT_LIST):
+            if (node->leaf[1]->node_type == RETURN) {
+                node->type = node->leaf[1]->type;
+            } else {
+                node->type = VOID_;
+            }
+            return;
+
+        case(EMPTY_COMPOUND_STATEMENT):
+            node->type = VOID_;
+            return;
+
+        case(PARAMETER_DECLARATION):
+            node->type = node->leaf[0]->type;
+            return;
+
+        case(PARAMETER_LIST):
+            node->type = VOID_;
+            return;
+
+        case(FUNCT_DECLARATION):
+            if (node->num_leaves == 4) {
+                if (node->leaf[0]->type != node->leaf[3]->type) {
+                    yyerror("Semantic Error! Function return value is different from declaration.");
+                }
+
+            } else if (node->num_leaves == 3) {
+                if (node->leaf[0]->type != node->leaf[2]->type) {
+                    yyerror("Semantic Error! Function return value is different from declaration.");
+                }
+
+            }
+            node->leaf[1]->type = node->leaf[0]->type;
+            node->type = node->leaf[0]->type;
+            return;
+
+        case(COLUMN_CONTENT):
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(STRING_LIST):
+            if ((node->leaf[0]->type != STRING_) || (node->leaf[1]->type != STRING_)) {
+                yyerror("Semantic Error! Column name is not a string.");
+            }
+            node->type = STRING_;
+            return;
+
+        case(CONST_LIST):
+            if (node->leaf[0]->type != node->leaf[1]->type) {
+                yyerror("Semantic Error! Table value does not match defined type.");
+            }
+            node->type = node->leaf[0]->type;
+            return;
+
+        case(TABLE_DEFINITION):
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(TABLE_DECLARATION):
+            node->leaf[1]->type = node->leaf[0]->type;
+            return;
+
+        case(ARRAY_DECLARATION):
+            node->leaf[1]->type = node->leaf[0]->type;
+            return;
+
+        case(VAR_SIMPLE_DECLARATION):
+            node->leaf[1]->type = node->leaf[0]->type;
+            return;
 
         default: return;
 
