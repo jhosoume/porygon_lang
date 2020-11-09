@@ -43,9 +43,14 @@ void free_params(struct params_entry **func_params) {
     return;
 }
 
+int num_params(struct params_entry **func_params) {
+    return HASH_COUNT(*func_params);
+}
+
+
 void print_params(struct params_entry *func_params) {
     struct params_entry *entry = NULL;
-    printf("\n    Function Params\n");
+    printf("\n    Function Params (count = %d)\n", num_params(&func_params));
     for (entry = func_params; entry != NULL; entry = entry->hh.next) {
         printf("     |-> (Indx: %d, ", entry->param_indx);
         printf("Type: %10s, ", type_string(entry->dec_type));

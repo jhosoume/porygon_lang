@@ -49,6 +49,7 @@ enum node_type {
     FUNCT_CALL,
     EMPTY_ARGS,
     ARG_LIST,
+    ARG_LIST_S,
     /* lexer node types */
     CHAR_T,
     STRING_T,

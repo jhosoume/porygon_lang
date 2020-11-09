@@ -20,7 +20,11 @@ void check_type(struct tree_node *node) {
             return;
 
         case(ARG_LIST):
-            node->type = UNDEFINED_;
+            node->type = node->leaf[1]->type;
+            return;
+
+        case(ARG_LIST_S):
+            node->type = node->leaf[0]->type;
             return;
 
         case(FUNCT_CALL):
@@ -256,9 +260,9 @@ void check_type(struct tree_node *node) {
 
         case(CONST_LIST):
             if (node->leaf[0]->type != node->leaf[1]->type) {
-                yyerror("Semantic Error! Table value does not match defined type.");
+                yyerror("Semantic Error! Table or array value does not match defined type.");
             }
-            node->type = node->leaf[0]->type;
+            node->type = node->leaf[1]->type;
             return;
 
         case(TABLE_DEFINITION):
@@ -266,27 +270,38 @@ void check_type(struct tree_node *node) {
             return;
 
         case(TABLE_DECLARATION):
+            node->type = node->leaf[0]->type;
             node->leaf[1]->type = node->leaf[0]->type;
             return;
 
         case(ARRAY_DECLARATION):
+            node->type = node->leaf[0]->type;
             node->leaf[1]->type = node->leaf[0]->type;
             return;
 
         case(VAR_SIMPLE_DECLARATION):
-            node->leaf[1]->type = node->leaf[0]->type;
             node->type = node->leaf[0]->type;
+            node->leaf[1]->type = node->leaf[0]->type;
             return;
 
         case(TABLE_DECLARATION_DEFINITION):
+            if (node->leaf[0]->type != node->leaf[1]->type) {
+                yyerror("Semantic Error! Array value does not match defined type.");
+            }
             node->type = node->leaf[1]->type;
             return;
 
         case(ARRAY_DECLARATION_DEFINITION):
+            if (node->leaf[0]->type != node->leaf[1]->type) {
+                yyerror("Semantic Error! Array value does not match defined type.");
+            }
             node->type = node->leaf[1]->type;
             return;
 
         case(VAR_DECLARATION):
+            if (node->leaf[0]->type != node->leaf[1]->type) {
+                yyerror("Semantic Error! Variable value does not match defined type.");
+            }
             node->type = node->leaf[1]->type;
             return;
 

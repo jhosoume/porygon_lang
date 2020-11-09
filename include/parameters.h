@@ -28,5 +28,6 @@ void force_add_param(struct params_entry **func_params,
            );
 void free_params(struct params_entry **func_params);
 void print_params(struct params_entry *func_params);
+int num_params(struct params_entry **func_params);
 
 #endif

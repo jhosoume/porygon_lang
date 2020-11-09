@@ -609,6 +609,7 @@ functCall
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        
                                                     }
     ;
 
@@ -622,14 +623,19 @@ args
     ;
 
 argList
-    : expression COMMA argList                      {
+    : argList COMMA expression                      {
                                                         struct tree_node *node = create_node(ast_tree_list, ARG_LIST, "argList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
                                                     }
-    | expression                                    {$$ = $1;}
+    | expression                                    {
+                                                        struct tree_node *node = create_node(ast_tree_list, ARG_LIST_S, "argListS", 1);
+                                                        add_leaf(node, $1, 0);
+                                                        check_type(node);
+                                                        $$ = node;
+                                                    }
     ;
 
 constant
