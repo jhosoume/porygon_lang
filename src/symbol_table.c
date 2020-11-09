@@ -44,6 +44,8 @@ void add_entry(
     entry = find_id(name, scope);
     if (entry == NULL) {
         force_add_entry(name, dec_type, type, id_type, scope, spec_var, size, line, col);
+    } else {
+        yyerror("Semantic Error! Redefinition.");
     }
 }
 
@@ -69,23 +71,35 @@ struct st_entry *find_id(const char *name, int scope) {
     return entry;
 }
 
-// struct st_entry *find_id_rec(const char *name) {
-//     /* Using temp stack */
-//     scope_stack *temp_stack = NULL;
-//     int f_scope = cur_scope;
-//     // while()
-//
-//
-//     // char scope_char[5 * sizeof(char)];
-//     // char identifier[strlen(name) + 5 * sizeof(char)];
-//     // sprintf(scope_char, "_%d", scope);
-//     // strcpy(identifier, name);
-//     // strcat(identifier, scope_char);
-//     struct st_entry *entry = NULL;
-//     // HASH_FIND_STR(symbol_table, identifier, entry);
-//     // if (entry == NULL) printf("[ERR] Entry not found, returning NULL\n");
-//     return entry;
-// }
+struct st_entry *find_id_rec(const char *name) {
+    /* Using temp stack */
+    bool found = false;
+    int f_scope = cur_scope;
+
+    /* Check if can be found in the current scope */
+    struct st_entry *entry = find_id(name, f_scope);
+    if (entry != NULL) {
+        found = true;
+    }
+
+    /* Only stops when found */
+    while(!found && !STACK_EMPTY(sp_stack)) {
+        f_scope = pop_stack();
+        add_generic(f_scope);
+
+        entry = find_id(name, f_scope);
+        if (entry != NULL) {
+            found = true;
+        }
+    }
+
+    /* Return values to the stack */
+    while(!STACK_EMPTY(temp_stack)) {
+        add_stack(pop_generic());
+    }
+
+    return entry;
+}
 
 struct st_entry *find_id_verbose(const char *name, int scope) {
     char scope_char[5 * sizeof(char)];

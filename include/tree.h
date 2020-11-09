@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "node_type.h"
 #include "type.h"
@@ -16,6 +17,7 @@ struct tree_node {
     int size;
     char *name;                 // Store name of the node
     enum ttype type;
+    bool need_casting;
 
 };
 

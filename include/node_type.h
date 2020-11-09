@@ -21,6 +21,8 @@ enum node_type {
     READ_STMT,
     WRITE_STMT,
     WHILE,
+    FOR_LOOP,
+    FOR_DEC,
     CONDITIONAL_STMT,
     IF_STMT,
     ELSE_STMT,

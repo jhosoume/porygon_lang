@@ -116,7 +116,7 @@ int synt_errors = 0;
 %type <tree_node> typeSpecifier constList stringList columnContent parameterList
 %type <tree_node> compoundStmt parameterDeclaration statementList statement expression iterationStmt conditionalStmt
 %type <tree_node> returnStmt ifStmt elseStmt logicalAndExp equalityExp relationExp sumExp multExp unaryExp mutable baseValue
-%type <tree_node> functCall args argList constant
+%type <tree_node> functCall args argList constant forDec
     /* %type <tree_node> lexerror */
 
 %code provides {
@@ -355,15 +355,26 @@ iterationStmt
                                                                      check_type(node);
                                                                      $$ = node;
                                                                  }
-    | FOR_KW LPARENTHESES typeSpecifier IDENTIFIER RPARENTHESES IN_KW IDENTIFIER compoundStmt {
-                                                                                                 struct tree_node *node = create_node(ast_tree_list, WHILE, "while",2);
+    | FOR_KW LPARENTHESES forDec RPARENTHESES IN_KW IDENTIFIER compoundStmt {
+                                                                                                 struct tree_node *node = create_node(ast_tree_list, FOR_LOOP, "for_loop", 3);
                                                                                                  add_leaf(node, $3, 0);
-                                                                                                 add_leaf(node, $5, 1);
-                                                                                                 $$ = node;
+                                                                                                 add_leaf(node, $6, 1);
+                                                                                                 add_leaf(node, $7, 2);
                                                                                                  check_type(node);
-                                                                                                 add_entry($4->name, $3->type, $3->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
+                                                                                                 $$ = node;
                                                                                              }
 
+    ;
+
+forDec
+    : typeSpecifier IDENTIFIER {
+                                     add_entry($2->name, $1->type, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
+                                     struct tree_node *node = create_node(ast_tree_list, FOR_DEC, "for_dec", 2);
+                                     add_leaf(node, $1, 0);
+                                     add_leaf(node, $2, 1);
+                                     check_type(node);
+                                     $$ = node;
+                                }
     ;
 
 conditionalStmt

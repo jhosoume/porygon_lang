@@ -8,9 +8,11 @@
 #include "token_type.h"
 #include "type.h"
 #include "scope.h"
+#include "parser.h"
 
 extern struct st_entry *symbol_table;
 extern struct scope_stack *sp_stack;
+extern struct scope_stack *temp_stack;
 extern int cur_scope;
 
 enum id_type {
@@ -66,5 +68,6 @@ void free_st();
 void print_table();
 
 struct st_entry *find_id(const char *name, int scope);
+struct st_entry *find_id_rec(const char *name);
 
 #endif

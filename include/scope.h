@@ -17,10 +17,14 @@ extern int cur_scope;
 extern int count_scope;
 
 extern scope_stack *sp_stack;
+extern scope_stack *temp_stack;
 
 void add_stack(int scope);
 int pop_stack();
 void print_stack();
 void free_stack();
+void add_generic(int scope);
+int pop_generic();
+void free_generic();
 
 #endif

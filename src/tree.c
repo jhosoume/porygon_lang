@@ -55,6 +55,7 @@ struct tree_node *create_node(struct node_list *list, enum node_type nd_type, co
     node->name = malloc(strlen(name) + 1);
     strcpy(node->name, name);
     node->type = UNDEFINED_;
+    node->need_casting = false;
     push_list(list, node);
     return node;
 }

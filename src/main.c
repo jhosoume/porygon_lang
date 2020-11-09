@@ -19,6 +19,7 @@ struct node_list *ast_tree_list = NULL;
 struct tree_node *ast_root = NULL;
 
 scope_stack *sp_stack = NULL;
+scope_stack *temp_stack = NULL;
 int cur_scope = 0;
 int count_scope = 0;
 
@@ -117,6 +118,7 @@ int main(int argc, char** argv) {
     free_st();
     free_list(ast_tree_list);
     free_stack();
+    free_generic();
 
     return 0;
 }
