@@ -6,6 +6,7 @@
 #include "scope.h"
 #include "type.h"
 #include "tree.h"
+#include "parameters.h"
 
 extern int cur_scope;
 extern scope_stack *sp_stack;

@@ -29,6 +29,7 @@ void force_add_entry(
     sample->line = line;
     sample->col = col;
     sample->defined = false;
+    sample->params = NULL;
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
@@ -56,6 +57,8 @@ void free_st() {
         HASH_DEL(symbol_table, entry);
         // free(entry->name);
         // free(entry->identifier);
+        free_params(&entry->params);
+        entry->params = NULL;
         free(entry);
     }
 }
@@ -154,6 +157,9 @@ void print_table() {
         // printf("Size: %3d | ", entry->size);
         // printf("Line: %4d | ", entry->line);
         // printf("Column: %4d | ", entry->col);
+        if (entry->id_type == FUNCTION) {
+            print_params(entry->params);
+        }
         printf("\n");
     }
     printf("---------------------------------------------------------------------------------------------------------------------------\n");

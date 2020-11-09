@@ -19,6 +19,7 @@
 #include "scope.h"
 #include "node_type.h"
 #include "type_checking.h"
+#include "semantic_analysis.h"
 
 /* Pointer to symbol table initilized in the main*/
 extern struct st_entry *symbol_table;
@@ -271,6 +272,7 @@ functDeclaration
                                                                                         check_type(node);
                                                                                         $$ = node;
                                                                                         add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
+                                                                                        func_declaration_params($$);
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);

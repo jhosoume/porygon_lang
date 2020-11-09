@@ -1,7 +1,7 @@
 #include "type_checking.h"
 
 void check_type(struct tree_node *node) {
-    struct st_entry *entry;
+    struct st_entry *entry = NULL;
     switch(node->node_type) {
         case(ID):
             entry = find_id_rec(node->name);

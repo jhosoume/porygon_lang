@@ -13,7 +13,7 @@ bool third_func(bool b) {
     return  9 <= 10  || !false;
 }
 
-int main() {
+int main(int argc) {
     /* Do some computations */
     (5 - 4) * 10;
     int one_var = 3;
