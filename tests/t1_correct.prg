@@ -1,6 +1,10 @@
 /* This is a sample correct (lexically) input Porygon File */
 
 int sample_function() {
+    /* Checking behavior of string and char */
+    string my_phrase = "a";
+    char my_letter = 'a';
+
     return 93 + 72;
 }
 
@@ -26,7 +30,7 @@ int main(int argc) {
     int a;
     a = 83;
     bool test = third_func(true);
-    another = another_function(1.5, 6., 'a');
+    another = another_function(1.5, 6.0, 'a');
     string one_s = "Im a string!";
 
     table float balance[] = | ("id", "profit", "debt") : (0, 1, 2), (0.2, 0.9, 108.3), (2.3, 5.3, 9.6)|;

@@ -44,7 +44,10 @@ void free_params(struct params_entry **func_params) {
 }
 
 int num_params(struct params_entry **func_params) {
-    return HASH_COUNT(*func_params);
+    if (func_params != NULL) {
+        return HASH_COUNT(*func_params);
+    }
+    return 0;
 }
 
 

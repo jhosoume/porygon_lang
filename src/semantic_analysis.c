@@ -46,42 +46,56 @@ void verify_args(struct tree_node *node) {
     entry = find_id_rec(node->leaf[0]->name);
     if (entry != NULL) {
         indx_c = verify_arg_rec(node->leaf[1], &entry->params, true);
+        // printf("FINISH\n");
+        /* Check num of params */
+        if (indx_c != (num_params(&entry->params))) {
+            // printf("[CHECK]%d != %d\n", indx_c, num_params(&entry->params));
+            yyerror("Semantic Error! Number of parameters does not match.");
+        }
     }
-    /* Check num of params */
-    if (indx_c == 0) {
-        return;
-    }
-
-
 }
 
 int verify_arg_rec(struct tree_node *node, struct params_entry **func_params, bool redef) {
     static int indx = 0;
     struct params_entry *p_entry = NULL;
     if (redef) {
+        // printf("START OVER\n");
         indx = 0;
     }
     if (node == NULL) {
         return indx;
     } else if (node->node_type == ARG_LIST) {
-        p_entry = find_param(func_params, indx);
-        if (p_entry->dec_type != node->leaf[1]->type) {
-            yyerror("Semantic Error! Parameter types does not match.");
-        }
-        indx++;
-        return indx;
-    } else if (node->node_type == ARG_LIST_S) {
+        // printf("IM IN %s %s %d\n", node->name, node->leaf[0]->name, indx);
         p_entry = find_param(func_params, indx);
         if (p_entry->dec_type != node->leaf[0]->type) {
+            // printf("[CHECK] (indx = %d) %s %d != %s %d [%s]\n", indx, type_string(p_entry->dec_type), p_entry->dec_type, type_string(node->leaf[0]->type), node->leaf[0]->type, p_entry->name );
             yyerror("Semantic Error! Parameter types does not match.");
         }
-        indx++;
-        return indx;
+        ++indx  ;
+    } else if (node->node_type == ARG_LIST_S) {
+        p_entry = find_param(func_params, indx);
+        // printf("IM IN LAST %s %s %d\n", node->name, node->leaf[0]->name, indx);
+        if (p_entry->dec_type != node->leaf[0]->type) {
+            // printf("[CHECK] (indx = %d) %s %d != %s %d [%s]\n", indx, type_string(p_entry->dec_type), p_entry->dec_type, type_string(node->leaf[0]->type), node->leaf[0]->type, p_entry->name );
+            yyerror("Semantic Error! Parameter types does not match.");
+        }
+        ++indx;
     }
     for (int leaf_indx = 0; leaf_indx < node->num_leaves; ++leaf_indx) {
         verify_arg_rec(node->leaf[leaf_indx], func_params, false);
     }
     return indx;
+}
+
+void check_var(struct tree_node *node) {
+    struct st_entry *entry =  NULL;
+    entry = find_id_rec(node->name);
+    if (entry != NULL) {
+        if (entry->id_type != VARIABLE) {
+            yyerror("Semantic Error! Identifier is not a variable (possibly a function).");
+        }
+    }
+
 }
 
 void semantic_nlz() {

@@ -575,6 +575,7 @@ mutable
     : IDENTIFIER                                    {
                                                         $$ = $1;
                                                         check_type($$);
+                                                        check_var($$);
                                                     }
     | IDENTIFIER LBRACKET expression RBRACKET       {
                                                         struct tree_node *node = create_node(ast_tree_list, MUTABLE_ONE, "mutable[]", 2);
@@ -609,7 +610,7 @@ functCall
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        
+                                                        verify_args($$);
                                                     }
     ;
 
@@ -623,7 +624,7 @@ args
     ;
 
 argList
-    : argList COMMA expression                      {
+    : expression COMMA argList                      {
                                                         struct tree_node *node = create_node(ast_tree_list, ARG_LIST, "argList", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);

@@ -20,7 +20,7 @@ void check_type(struct tree_node *node) {
             return;
 
         case(ARG_LIST):
-            node->type = node->leaf[1]->type;
+            node->type = node->leaf[0]->type;
             return;
 
         case(ARG_LIST_S):
@@ -28,7 +28,6 @@ void check_type(struct tree_node *node) {
             return;
 
         case(FUNCT_CALL):
-            // TODO! Find further in the stack. MAKE GUARDS FOR LEAVES
             entry = find_id_rec(node->leaf[0]->name);
             if (entry == NULL) {
                 // TODO Create interpolation sprintf
@@ -38,6 +37,7 @@ void check_type(struct tree_node *node) {
                     yyerror("Semantic Error! Identifier is not a function, thus cannot be called!" );
                 }
                 node->type = entry->dec_type;
+                node->leaf[0]->type = entry->dec_type;
             }
             return;
 
@@ -225,6 +225,7 @@ void check_type(struct tree_node *node) {
 
         case(PARAMETER_DECLARATION):
             node->type = node->leaf[0]->type;
+            node->leaf[1]->type = node->leaf[0]->type;
             return;
 
         case(PARAMETER_LIST):
