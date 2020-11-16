@@ -2299,6 +2299,7 @@ static enum yytokentype valid_id(void) {
 
 /* Updates line and columns that are being read */
 static void update_pos(void) {
+    previous_col = column_num;
     for (int nletter = 0; nletter < yyleng; ++nletter) {
         if (yytext[nletter] == '\n') {
             column_num = 1;
@@ -2308,6 +2309,5 @@ static void update_pos(void) {
             column_num++;
         }
     }
-    previous_col = column_num - yyleng;
 }
 

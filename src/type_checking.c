@@ -233,19 +233,27 @@ void check_type(struct tree_node *node) {
             return;
 
         case(FUNCT_DECLARATION):
-            if (node->num_leaves == 4) {
-                if (node->leaf[0]->type != node->leaf[3]->type) {
-                    yyerror("Semantic Error! Function return value is different from declaration.");
-                }
-
-            } else if (node->num_leaves == 3) {
-                if (node->leaf[0]->type != node->leaf[2]->type) {
-                    yyerror("Semantic Error! Function return value is different from declaration.");
-                }
-
-            }
             node->leaf[1]->type = node->leaf[0]->type;
             node->type = node->leaf[0]->type;
+            bool found_return;
+            if (node->num_leaves == 4) {
+                found_return = check_return(node->leaf[3], node->type);
+                // if (node->leaf[0]->type != node->leaf[3]->type) {
+            //         // printf("[CHECK] %s %d != %s %d\n", type_string(node->leaf[0]->type), node->leaf[0]->type, type_string(node->leaf[2]->type), node->leaf[2]->type);
+            //         yyerror("Semantic Error! Function return value is different from declaration.");
+                // }
+            //
+            } else if (node->num_leaves == 3) {
+                found_return = check_return(node->leaf[2], node->type);
+            //     if (node->leaf[0]->type != node->leaf[2]->type) {
+            //         // printf("[CHECK] %s %d != %s %d\n", type_string(node->leaf[0]->type), node->leaf[0]->type, type_string(node->leaf[2]->type), node->leaf[2]->type);
+            //         yyerror("Semantic Error! Function return value is different from declaration.");
+            //     }
+            //
+            }
+            if (!found_return && node->type != VOID_) {
+                yyerror("Semantic Error! Function does not define return!");
+            }
             return;
 
         case(COLUMN_CONTENT):
@@ -338,4 +346,31 @@ bool binary_bool_check(struct tree_node *node) {
         return false;
     }
     return true;
+}
+
+bool check_return(struct tree_node *node, enum ttype func_type) {
+    bool found_return = false;
+    bool fr;
+    if (node == NULL) {
+        return found_return;
+    }
+    // printf("[CHECK %s]\n", node->name);
+
+    if (node->node_type == RETURN) {
+        found_return = true;
+        // printf("[CHECK %s] %s %d != %s %d\n", node->name, type_string(node->type), node->type, type_string(func_type), func_type);
+        if (node->type != func_type) {
+            if (node->type == INT_ && func_type == FLOAT_) {
+                node->need_casting = true;
+            } else {
+                yyerror("Semantic Error! Return does not match function declared type!");
+            }
+        }
+    }
+
+    for (int leaf_indx = 0; leaf_indx < node->num_leaves; ++leaf_indx) {
+        fr = check_return(node->leaf[leaf_indx], func_type);
+        found_return = fr || found_return;
+    }
+    return found_return;
 }

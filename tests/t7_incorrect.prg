@@ -3,7 +3,15 @@ int int_func() {
 }
 
 float float_func() {
+    int my_var = 7;
     return 9.0;
+}
+
+int int_func() {
+    /* Re-declaration of variable */
+    int my_var = 73;
+    int my_var = 42;
+    return 8 + 10;
 }
 
 
@@ -28,8 +36,6 @@ int main() {
 
     /* Simple variable being used as a function */
     int var_4 = 123 + my_var();
-
-
 
     !true;
     !arr[0];

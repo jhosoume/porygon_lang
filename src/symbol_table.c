@@ -47,7 +47,13 @@ void add_entry(
     if (entry == NULL) {
         force_add_entry(name, dec_type, type, id_type, scope, spec_var, size, line, col);
     } else {
-        yyerror("Semantic Error! Redefinition.");
+        if (entry->id_type == VARIABLE) {
+            yyerror("Semantic Error! Re-declaration of variable.");
+        } else if (entry->id_type == FUNCTION) {
+            yyerror("Semantic Error! Function redefinition.");
+        } else {
+            yyerror("Semantic Error! Redefinition.");
+        }
     }
 }
 

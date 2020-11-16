@@ -15,5 +15,6 @@ extern scope_stack *sp_stack;
 void check_type(struct tree_node *node);
 bool binary_bool_check(struct tree_node *node);
 bool binary_numerical_check(struct tree_node *node);
+bool check_return(struct tree_node *node, enum ttype func_type);
 
 #endif

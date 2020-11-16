@@ -2,13 +2,19 @@ int test(float a1, int b1, bool c1, string s1) {
     return 1;
 }
 
-float test_k(int b1) {
+float test_k(float b1) {
+    /* Type coercion of return */
     return 1;
 }
 
+
 void main() {
+    /* wrong number of arguments */
     test(23.6, 3, "hey");
-    test_l(4);
+    /* type coercion of the argument */
+    test_k(4);
+    test_k(1 - 4 + 7);
+    test_k(1 - 4 + 7 * 4.3);
 
     /* Function calls type mismatch erros */
     /* Missing Parameters */
