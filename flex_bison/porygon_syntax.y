@@ -303,7 +303,7 @@ parameterDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
+                                                        add_entry($2->name, $1->type, $1->name, PARAM, count_scope + 1, SIMPLE, 0, line_num, strlen($2->name));
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
     ;
@@ -363,6 +363,7 @@ iterationStmt
                                                                                                  add_leaf(node, $6, 1);
                                                                                                  add_leaf(node, $7, 2);
                                                                                                  check_type(node);
+                                                                                                 check_defined(node->leaf[1]->name);
                                                                                                  $$ = node;
                                                                                              }
 
@@ -576,12 +577,14 @@ mutable
                                                         $$ = $1;
                                                         check_type($$);
                                                         check_var($$);
+                                                        /* check_defined($$->name); */
                                                     }
     | IDENTIFIER LBRACKET expression RBRACKET       {
                                                         struct tree_node *node = create_node(ast_tree_list, MUTABLE_ONE, "mutable[]", 2);
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
+                                                        check_defined(node->leaf[0]->name);
                                                         $$ = node;
                                                     }
     | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
@@ -590,6 +593,7 @@ mutable
                                                                     add_leaf(node, $3, 1);
                                                                     add_leaf(node, $5, 2);
                                                                     check_type(node);
+                                                                    check_defined(node->leaf[0]->name);
                                                                     $$ = node;
                                                                 }
     | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
@@ -599,6 +603,7 @@ mutable
                                                                                     add_leaf(node, $5, 2);
                                                                                     add_leaf(node, $7, 3);
                                                                                     check_type(node);
+                                                                                    check_defined(node->leaf[0]->name);
                                                                                     $$ = node;
                                                                                 }
     ;
@@ -654,6 +659,9 @@ typeSpecifier
     | BOOL_TYPE                                     {$$ = $1; $$->type = BOOL_;}
     | STRING_TYPE                                   {$$ = $1; $$->type = STRING_;}
     | VOID_TYPE                                     {$$ = $1; $$->type = VOID_;}
+    /* | ERR_INVALID_ID                                {}
+    | ERR_INVALID_CHARCONST                         {}
+    | ERR_UNKNOWN_TOKEN                             {} */
     ;
 
     /* lexerror

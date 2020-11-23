@@ -139,7 +139,11 @@ void check_type(struct tree_node *node) {
             return;
         case(ASSIGN):
             if (node->leaf[0]->type != node->leaf[1]->type) {
-                yyerror("Semantic Error! Not matching assignment types.");
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->leaf[1]->need_casting = true;
+                } else {
+                    yyerror("Semantic Error! Variable value does not match defined type.");
+                }
             }
             node->type = node->leaf[0]->type;
             return;
@@ -236,6 +240,9 @@ void check_type(struct tree_node *node) {
             node->leaf[1]->type = node->leaf[0]->type;
             node->type = node->leaf[0]->type;
             bool found_return;
+            if (synt_errors > 0) {
+                return;
+            }
             if (node->num_leaves == 4) {
                 found_return = check_return(node->leaf[3], node->type);
                 // if (node->leaf[0]->type != node->leaf[3]->type) {
@@ -308,10 +315,20 @@ void check_type(struct tree_node *node) {
             return;
 
         case(VAR_DECLARATION):
+            node->type = node->leaf[1]->type;
             if (node->leaf[0]->type != node->leaf[1]->type) {
-                yyerror("Semantic Error! Variable value does not match defined type.");
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->leaf[1]->need_casting = true;
+                    node->type = node->leaf[0]->type;
+                } else {
+                    yyerror("Semantic Error! Variable value does not match defined type.");
+                }
             }
             node->type = node->leaf[1]->type;
+            /*Only here a variable is defined */
+            if (synt_errors == 0) {
+                set_defined(node->leaf[0]->leaf[1]->name);
+            }
             return;
 
         case(DECLARATION_LIST):

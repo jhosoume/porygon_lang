@@ -18,7 +18,8 @@ extern int cur_scope;
 
 enum id_type {
     VARIABLE,
-    FUNCTION
+    FUNCTION,
+    PARAM
 };
 
 enum special_var {
@@ -39,8 +40,9 @@ struct st_entry {
     int col;
     enum special_var spec_var;     /* Simple, array or table*/
     int size;
-    bool defined;
+    bool defined;                   /* Check if the variable has been defined */
     struct params_entry *params;
+
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };

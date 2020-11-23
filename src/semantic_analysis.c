@@ -99,11 +99,34 @@ void check_var(struct tree_node *node) {
     struct st_entry *entry =  NULL;
     entry = find_id_rec(node->name);
     if (entry != NULL) {
-        if (entry->id_type != VARIABLE) {
+        if (!(entry->id_type == VARIABLE || entry->id_type == PARAM)) {
             yyerror("Semantic Error! Identifier is not a variable (possibly a function).");
         }
     }
+}
 
+void check_defined(const char *name) {
+    if (name == NULL) {
+        return;
+    }
+    struct st_entry *entry =  NULL;
+    entry = find_id_rec(name);
+    if (entry != NULL) {
+        if (entry->id_type!= PARAM && !entry->defined) {
+            yyerror("Semantic Error! Identifier is not defined.");
+        }
+    }
+}
+
+void set_defined(const char *name) {
+    if (name == NULL) {
+        return;
+    }
+    struct st_entry *entry =  NULL;
+    entry = find_id_rec(name);
+    if (entry != NULL) {
+        entry->defined = true;
+    }
 }
 
 void semantic_nlz() {

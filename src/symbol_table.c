@@ -51,7 +51,9 @@ void add_entry(
             yyerror("Semantic Error! Re-declaration of variable.");
         } else if (entry->id_type == FUNCTION) {
             yyerror("Semantic Error! Function redefinition.");
-        } else {
+        } else if (entry->id_type == PARAM) {
+            yyerror("Semantic Error! Re-declaration of function parameter.");
+        } else  {
             yyerror("Semantic Error! Redefinition.");
         }
     }
@@ -127,8 +129,12 @@ struct st_entry *find_id_verbose(const char *name, int scope) {
 char const *ttos(enum id_type type) {
     if (type == VARIABLE) {
         return "VARIABLE";
-    } else {
+    } else if (type == PARAM) {
+        return "PARAM";
+    } else if (type == FUNCTION) {
         return "FUNCTION";
+    } else {
+        return "UNKNOWN";
     }
 }
 
@@ -160,7 +166,7 @@ void print_table() {
         printf("ID: %10s | ", ttos(entry->id_type));
         printf("Scope: %3d | ", entry->scope);
         printf("Var Type: %6s | ", vtos(entry->spec_var));
-        // printf("Size: %3d | ", entry->size);
+        printf("Defined: %5s | ", entry->defined ? "true" : "false");
         // printf("Line: %4d | ", entry->line);
         // printf("Column: %4d | ", entry->col);
         if (entry->id_type == FUNCTION) {

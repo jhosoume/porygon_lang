@@ -128,7 +128,7 @@ void print_tree_rec(struct tree_node *root, int depth) {
 void free_node(struct tree_node *node) {
     /* Free a single node of the tree */
     if (node == NULL) {
-        printf("NULL NODE POINTER!\n");
+        // printf("NULL NODE POINTER!\n");
         return;
     }
     // printf("FREEING NODE %s\n", node->name);
