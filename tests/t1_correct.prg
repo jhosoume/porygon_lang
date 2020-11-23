@@ -1,11 +1,13 @@
 /* This is a sample correct (lexically) input Porygon File */
 
+int k_out = 42;
+
 int sample_function() {
     /* Checking behavior of string and char */
     string my_phrase = "a";
     char my_letter = 'a';
 
-    return 93 + 72;
+    return 93 + 72 + k_out;
 }
 
 float another_function(float p1, float p2, char c1 /* comment */) {

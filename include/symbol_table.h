@@ -32,16 +32,16 @@ enum special_var {
 struct st_entry {
     char identifier[64];            /* ID name + Scope */
     char name[32];                  /* ID name */
-    enum id_type id_type;           /* Function or Variable */
-    char type[15];                  /* */
-    enum ttype dec_type;
+    enum id_type id_type;            /* Function, Variable or Parameter */
+    char type[15];                  /* Type of the entry as a string */
+    enum ttype dec_type;            /* Declared type (e.g. integer, float...)*/
     int scope;                      /* Integer that is related to scope*/
     int line;
     int col;
     enum special_var spec_var;     /* Simple, array or table*/
     int size;
     bool defined;                   /* Check if the variable has been defined */
-    struct params_entry *params;
+    struct params_entry *params;    /* Hold parameter values */
 
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */

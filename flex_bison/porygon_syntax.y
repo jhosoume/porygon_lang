@@ -161,6 +161,11 @@ varDeclaration
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        if ($1 != NULL) {
+                                                            if ($1->leaf[1] != NULL) {
+                                                                set_defined($1->leaf[1]->name);
+                                                            }
+                                                        }
                                                     }
     | arrayDeclaration                              {$$ = $1;}
     | arrayDeclaration DEF_EQ arrayDefinition       {
@@ -169,6 +174,11 @@ varDeclaration
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        if ($1 != NULL) {
+                                                            if ($1->leaf[1] != NULL) {
+                                                                set_defined($1->leaf[1]->name);
+                                                            }
+                                                        }
                                                     }
     | tableDeclaration                              {$$ = $1;}
     | tableDeclaration DEF_EQ tableDefinition       {
@@ -177,6 +187,11 @@ varDeclaration
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        if ($1 != NULL) {
+                                                            if ($1->leaf[1] != NULL) {
+                                                                set_defined($1->leaf[1]->name);
+                                                            }
+                                                        }
                                                     }
     ;
 
@@ -273,6 +288,7 @@ functDeclaration
                                                                                         $$ = node;
                                                                                         add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
                                                                                         func_declaration_params($$);
+                                                                                        set_defined($2->name);
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
@@ -282,6 +298,7 @@ functDeclaration
                                                                             check_type(node);
                                                                             $$ = node;
                                                                             add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen($2->name));
+                                                                            set_defined($2->name);
                                                                       }
     ;
 
@@ -339,6 +356,7 @@ statement
                                                                  add_leaf(node, $3, 0);
                                                                  check_type(node);
                                                                  $$ = node;
+                                                                set_defined($3->name);
                                                              }
     | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {
                                                                  struct tree_node *node = create_node(ast_tree_list, WRITE_STMT, "writeStmt", 1);
@@ -435,6 +453,9 @@ expression
                                                         add_leaf(node, $1, 0);
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
+                                                        if (node->leaf[0]->node_type == ID) {
+                                                            set_defined(node->leaf[0]->name);
+                                                        }
                                                         $$ = node;
                                                     }
     ;
@@ -659,9 +680,6 @@ typeSpecifier
     | BOOL_TYPE                                     {$$ = $1; $$->type = BOOL_;}
     | STRING_TYPE                                   {$$ = $1; $$->type = STRING_;}
     | VOID_TYPE                                     {$$ = $1; $$->type = VOID_;}
-    /* | ERR_INVALID_ID                                {}
-    | ERR_INVALID_CHARCONST                         {}
-    | ERR_UNKNOWN_TOKEN                             {} */
     ;
 
     /* lexerror

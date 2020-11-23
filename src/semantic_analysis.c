@@ -67,7 +67,9 @@ int verify_arg_rec(struct tree_node *node, struct params_entry **func_params, bo
     } else if (node->node_type == ARG_LIST) {
         // printf("IM IN %s %s %d\n", node->name, node->leaf[0]->name, indx);
         p_entry = find_param(func_params, indx);
-        if (p_entry->dec_type != node->leaf[0]->type) {
+        if (p_entry == NULL) {
+            yyerror("Semantic Error! More arguments than parameters!");
+        } if (p_entry->dec_type != node->leaf[0]->type) {
             if (p_entry->dec_type == FLOAT_ && node->leaf[0]->type == INT_) {
                 node->leaf[0]->need_casting = true;
             } else {
@@ -79,7 +81,9 @@ int verify_arg_rec(struct tree_node *node, struct params_entry **func_params, bo
     } else if (node->node_type == ARG_LIST_S) {
         p_entry = find_param(func_params, indx);
         // printf("IM IN LAST %s %s %d\n", node->name, node->leaf[0]->name, indx);
-        if (p_entry->dec_type != node->leaf[0]->type) {
+        if (p_entry == NULL) {
+            yyerror("Semantic Error! More arguments than parameters!");
+        } else if (p_entry->dec_type != node->leaf[0]->type) {
             if (p_entry->dec_type == FLOAT_ && node->leaf[0]->type == INT_) {
                 node->leaf[0]->need_casting = true;
             } else {

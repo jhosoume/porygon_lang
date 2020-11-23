@@ -68,6 +68,14 @@ testing:
 	@echo " \n\n\n "
 	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t10_incorrect.out" ./bin/porygon tests/t10_incorrect.prg
 	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra1_correct.out" ./bin/porygon tests/extra1_correct.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra2_correct.out" ./bin/porygon tests/extra2_correct.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra1_incorrect.out" ./bin/porygon tests/extra1_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra2_incorrect.out" ./bin/porygon tests/extra2_incorrect.prg
+	@echo " \n\n\n "
 
 
 .PHONY: clean_all flex
