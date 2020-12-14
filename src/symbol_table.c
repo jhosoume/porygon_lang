@@ -30,6 +30,7 @@ void force_add_entry(
     sample->col = col;
     sample->defined = false;
     sample->params = NULL;
+    sample->value.int_n = 0;
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 

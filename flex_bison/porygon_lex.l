@@ -185,35 +185,32 @@ extern scope_stack *sp_stack;
         /* Boolean Constants */
 "true"                      {
                                 update_pos();
-                                yylval.string_val = yytext;
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, TRUE_CONST, yytext, 0);
                                 yylval.tree_node->type = BOOL_;
+                                set_bool_v(yylval.tree_node, true);
                                 return BOOLEANCONST;
                             }
 "false"                     {
                                 update_pos();
-                                yylval.string_val = yytext;
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, FALSE_CONST, yytext, 0);
                                 yylval.tree_node->type = BOOL_;
+                                set_bool_v(yylval.tree_node, false);
                                 return BOOLEANCONST;
                              }
 
         /* Numbers Constants */
 [\+\-]?{DIGIT}+             {
                                 update_pos();
-                                yylval.integer_val= atoi(yytext);
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, INT_CONST, yytext, 0);
                                 yylval.tree_node->type = INT_;
+                                set_int_v(yylval.tree_node, atoi(yytext));
                                 return INTCONST;
                              }
 [\+\-]?{DIGIT}+"."{DIGIT}*  {
                                 update_pos();
-                                yylval.float_val= atof(yytext);
                                 yylval.tree_node = create_node(ast_tree_list, FLOAT_CONST, yytext, 0);
                                 yylval.tree_node->type = FLOAT_;
+                                set_float_v(yylval.tree_node, atof(yytext));
                                 return FLOATCONST;
                             }
 
@@ -222,6 +219,7 @@ extern scope_stack *sp_stack;
 '(\\.|[^\\'])+'             {
                                 update_pos();
                                 yylval.string_val = yytext;
+                                /* Functions to create node were moved to another function */
                                 /* yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0); */
                                 /* yylval.tree_node->type = CHAR_; */
                                 return valid_char_const();
@@ -266,6 +264,7 @@ static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0);
         yylval.tree_node->type = CHAR_;
+        set_char_v(yylval.tree_node, yytext[1]);
         return CHARCONST;
     } else {
         ++lex_errors;

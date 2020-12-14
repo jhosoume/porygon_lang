@@ -10,6 +10,7 @@
 #include "scope.h"
 #include "parser.h"
 #include "parameters.h"
+#include "values.h"
 
 extern struct st_entry *symbol_table;
 extern struct scope_stack *sp_stack;
@@ -41,6 +42,7 @@ struct st_entry {
     enum special_var spec_var;     /* Simple, array or table*/
     int size;
     bool defined;                   /* Check if the variable has been defined */
+    union Values value;
     struct params_entry *params;    /* Hold parameter values */
 
 

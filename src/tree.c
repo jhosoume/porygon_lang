@@ -56,6 +56,8 @@ struct tree_node *create_node(struct node_list *list, enum node_type nd_type, co
     strcpy(node->name, name);
     node->type = UNDEFINED_;
     node->need_casting = false;
+    node->value.int_n = 0;
+    node->is_const = false;
     push_list(list, node);
     return node;
 }
@@ -111,12 +113,25 @@ void print_tree_rec(struct tree_node *root, int depth) {
         ++stage;
         printf(" |--> ");
     }
-    printf("%s (type:%s, numLeaves: %d, cast int->float: %s)\n",
+    printf("%s (type:%s, numLeaves: %d, cast int->float: %s, is_const: %s)",
             root->name,
             type_string(root->type),
             root->num_leaves,
-            root-> need_casting ? "true" : "false"
+            root->need_casting ? "true" : "false",
+            root->is_const ? "true" : "false"
         );
+    if (root->is_const) {
+        if (root->type == INT_)
+            printf(" Value => %d \n", root->value.int_n);
+        if (root->type == FLOAT_)
+            printf(" Value => %f \n", root->value.float_n);
+        if (root->type == BOOL_)
+            printf(" Value => %s \n", root->value.boolean ? "true" : "false");
+        if (root->type == CHAR_)
+            printf(" Value => %c \n", root->value.character);
+    } else {
+        printf("\n");
+    }
     /* Recursive call to traverse through the tree */
     for (int leaf_indx = 0; leaf_indx < root->num_leaves; ++leaf_indx) {
         print_tree_rec(root->leaf[leaf_indx], depth + 1);
@@ -151,4 +166,29 @@ void free_list(struct node_list *list) {
     /* Properly free list */
     free(list->nodes);
     free(list);
+}
+
+/* Bellow are helper functions to set values for the nodes*/
+int set_int_v(struct tree_node *node, int value) {
+    node->value.int_n = value;
+    node->is_const = true;
+    return value;
+}
+
+float set_float_v(struct tree_node *node, float value) {
+    node->value.float_n = value;
+    node->is_const = true;
+    return value;
+}
+
+bool set_bool_v(struct tree_node *node, bool value) {
+    node->value.boolean = value;
+    node->is_const = true;
+    return value;
+}
+
+char set_char_v(struct tree_node *node, char value) {
+    node->value.character = value;
+    node->is_const = true;
+    return value;
 }

@@ -35,11 +35,11 @@ clean_all:
 
 flex:
 	@echo " Running FLEX..."
-	@echo " flex flex_bison/porygon_lex.l "; flex flex_bison/porygon_lex.l
+	flex flex_bison/porygon_lex.l
 
 bison:
 	@echo " Running BISON..."
-	@echo " bison -Wall -d -o -v flex_bison/porygon_syntax.y "; bison -Wall -d -o -v flex_bison/porygon_syntax.y
+	bison -Wall -d -v flex_bison/porygon_syntax.y
 
 testing:
 	@echo " Running Tests..."
@@ -67,6 +67,8 @@ testing:
 	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t9_incorrect.out" ./bin/porygon tests/t9_incorrect.prg
 	@echo " \n\n\n "
 	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t10_incorrect.out" ./bin/porygon tests/t10_incorrect.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/t11_incorrect.out" ./bin/porygon tests/t10_incorrect.prg
 	@echo " \n\n\n "
 	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra1_correct.out" ./bin/porygon tests/extra1_correct.prg
 	@echo " \n\n\n "

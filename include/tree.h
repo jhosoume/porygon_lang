@@ -7,17 +7,20 @@
 #include <string.h>
 #include "node_type.h"
 #include "type.h"
+#include "values.h"
 
 
 struct tree_node {
     struct tree_node *root;     // Store tree_node root
     struct tree_node **leaf;    // Store tree_node leaves (children) from node
     int num_leaves;             // Store number of leaves
-    enum node_type node_type;                 // Store name of the node
+    enum node_type node_type;   // Store name of the node
     int size;
     char *name;                 // Store name of the node
-    enum ttype type;
-    bool need_casting;
+    enum ttype type;            // Language type
+    bool need_casting;          // Indicates if casting is needed
+    union Values value;
+    bool is_const;
 
 };
 
@@ -43,5 +46,9 @@ void print_tree(struct tree_node *root);
 void print_tree_rec(struct tree_node *root, int depth);
 void free_node(struct tree_node *node);
 void free_list(struct node_list *list);
+int set_int_v(struct tree_node *node, int value);
+float set_float_v(struct tree_node *node, float value);
+bool set_bool_v(struct tree_node *node, bool value);
+char set_char_v(struct tree_node *node, char value);
 
 #endif

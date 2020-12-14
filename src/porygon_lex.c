@@ -1179,46 +1179,43 @@ YY_RULE_SETUP
 #line 187 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
-                                yylval.string_val = yytext;
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, TRUE_CONST, yytext, 0);
                                 yylval.tree_node->type = BOOL_;
+                                set_bool_v(yylval.tree_node, true);
                                 return BOOLEANCONST;
                             }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 195 "flex_bison/porygon_lex.l"
+#line 194 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
-                                yylval.string_val = yytext;
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, FALSE_CONST, yytext, 0);
                                 yylval.tree_node->type = BOOL_;
+                                set_bool_v(yylval.tree_node, false);
                                 return BOOLEANCONST;
                              }
 	YY_BREAK
 /* Numbers Constants */
 case 50:
 YY_RULE_SETUP
-#line 205 "flex_bison/porygon_lex.l"
+#line 203 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
-                                yylval.integer_val= atoi(yytext);
-                                /* yylval.tree_node = create_node(ast_tree_list, yytext, 0); */
                                 yylval.tree_node = create_node(ast_tree_list, INT_CONST, yytext, 0);
                                 yylval.tree_node->type = INT_;
+                                set_int_v(yylval.tree_node, atoi(yytext));
                                 return INTCONST;
                              }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 213 "flex_bison/porygon_lex.l"
+#line 210 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
-                                yylval.float_val= atof(yytext);
                                 yylval.tree_node = create_node(ast_tree_list, FLOAT_CONST, yytext, 0);
                                 yylval.tree_node->type = FLOAT_;
+                                set_float_v(yylval.tree_node, atof(yytext));
                                 return FLOATCONST;
                             }
 	YY_BREAK
@@ -1227,10 +1224,11 @@ YY_RULE_SETUP
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 223 "flex_bison/porygon_lex.l"
+#line 220 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
                                 yylval.string_val = yytext;
+                                /* Functions to create node were moved to another function */
                                 /* yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0); */
                                 /* yylval.tree_node->type = CHAR_; */
                                 return valid_char_const();
@@ -1239,7 +1237,7 @@ YY_RULE_SETUP
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 230 "flex_bison/porygon_lex.l"
+#line 228 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
                                 yylval.string_val = yytext;
@@ -1251,7 +1249,7 @@ YY_RULE_SETUP
 /* Matching Identifiers */
 case 54:
 YY_RULE_SETUP
-#line 240 "flex_bison/porygon_lex.l"
+#line 238 "flex_bison/porygon_lex.l"
 {
                                             update_pos();
                                             yylval.string_val = yytext;
@@ -1263,12 +1261,12 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 249 "flex_bison/porygon_lex.l"
+#line 247 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 251 "flex_bison/porygon_lex.l"
+#line 249 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
                                 ++lex_errors;
@@ -1277,10 +1275,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 257 "flex_bison/porygon_lex.l"
+#line 255 "flex_bison/porygon_lex.l"
 ECHO;
 	YY_BREAK
-#line 1284 "src/porygon_lex.c"
+#line 1282 "src/porygon_lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENTLINE):
 case YY_STATE_EOF(COMMENTBLOCK):
@@ -2259,7 +2257,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 257 "flex_bison/porygon_lex.l"
+#line 255 "flex_bison/porygon_lex.l"
 
 
 /*  */
@@ -2273,6 +2271,7 @@ static enum yytokentype valid_char_const(void) {
     if (yyleng <= 3) {
         yylval.tree_node = create_node(ast_tree_list, CHAR_CONST, yytext, 0);
         yylval.tree_node->type = CHAR_;
+        set_char_v(yylval.tree_node, yytext[1]);
         return CHARCONST;
     } else {
         ++lex_errors;
