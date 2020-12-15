@@ -1241,7 +1241,10 @@ YY_RULE_SETUP
 {
                                 update_pos();
                                 yylval.string_val = yytext;
-                                yylval.tree_node = create_node(ast_tree_list, STRING_CONST, yytext, 0);
+                                char *striped_yytext = yytext;
+                                ++striped_yytext; // Remove first char
+                                striped_yytext[strlen(striped_yytext) - 1] = 0; // Remove last char
+                                yylval.tree_node = create_node(ast_tree_list, STRING_CONST, striped_yytext, 0);
                                 yylval.tree_node->type = STRING_;
                                 return STRINGCONST;
                             }
@@ -1249,7 +1252,7 @@ YY_RULE_SETUP
 /* Matching Identifiers */
 case 54:
 YY_RULE_SETUP
-#line 238 "flex_bison/porygon_lex.l"
+#line 241 "flex_bison/porygon_lex.l"
 {
                                             update_pos();
                                             yylval.string_val = yytext;
@@ -1261,12 +1264,12 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 247 "flex_bison/porygon_lex.l"
+#line 250 "flex_bison/porygon_lex.l"
 { update_pos(); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 249 "flex_bison/porygon_lex.l"
+#line 252 "flex_bison/porygon_lex.l"
 {
                                 update_pos();
                                 ++lex_errors;
@@ -1275,10 +1278,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 255 "flex_bison/porygon_lex.l"
+#line 258 "flex_bison/porygon_lex.l"
 ECHO;
 	YY_BREAK
-#line 1282 "src/porygon_lex.c"
+#line 1285 "src/porygon_lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENTLINE):
 case YY_STATE_EOF(COMMENTBLOCK):
@@ -2257,7 +2260,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 255 "flex_bison/porygon_lex.l"
+#line 258 "flex_bison/porygon_lex.l"
 
 
 /*  */

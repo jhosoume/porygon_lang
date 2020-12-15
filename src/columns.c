@@ -5,6 +5,15 @@ struct column_entry *find_col(struct column_entry **table_cols, int column_indx)
     HASH_FIND_INT(*table_cols, &column_indx, entry);
     return entry;
 }
+struct column_entry *find_col_name(struct column_entry **table_cols, const char* name) {
+    struct column_entry *entry, *tmp = NULL;
+    HASH_ITER(hh, *table_cols, entry, tmp) {
+        if (entry != NULL && (strcmp(entry->name, name) == 0)) {
+            return entry;
+        }
+    }
+    return entry;
+}
 
 void add_col(struct column_entry **table_cols,
                int column_indx,

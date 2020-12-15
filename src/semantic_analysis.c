@@ -7,6 +7,7 @@ void check_main() {
     }
 
 }
+/*________________________________________________________________________________________________________- */
 
 void func_declaration_params(struct tree_node *node) {
     if (node->node_type != FUNCT_DECLARATION || node->num_leaves != 4) {
@@ -35,7 +36,7 @@ void add_param_rec(struct tree_node *node, struct params_entry **func_params, bo
         add_param_rec(node->leaf[leaf_indx], func_params, false);
     }
 }
-
+/*________________________________________________________________________________________________________- */
 void table_declaration_cols(struct tree_node *node) {
     if (node->node_type != TABLE_DECLARATION_DEFINITION || node->num_leaves != 2) {
         return;
@@ -68,7 +69,47 @@ void add_cols_rec(struct tree_node *node, struct column_entry **table_cols, bool
         add_cols_rec(node->leaf[leaf_indx], table_cols, false);
     }
 }
+/*________________________________________________________________________________________________________- */
 
+void arr_values(struct tree_node *node) {
+    if (node->node_type != ARRAY_DECLARATION_DEFINITION || node->num_leaves != 2) {
+        return;
+    }
+    struct tree_node *arr_dec = node->leaf[0];
+    if (arr_dec == NULL || arr_dec->node_type != ARRAY_DECLARATION) {
+        return;
+    }
+    struct st_entry *entry =  NULL;
+    entry = find_id_rec(arr_dec->leaf[1]->name);
+    if (entry != NULL) {
+        if (node->leaf[1] != NULL && node->leaf[1]->node_type == CONST_LIST) {
+            add_arr_rec(node->leaf[1], &entry->ar_val);
+        }
+    }
+}
+
+void add_arr_rec(struct tree_node *node, ar_values **values) {
+    if (node == NULL) {
+        return;
+    } else if (node->node_type == INT_CONST) {
+        add_int_value(values, node->value.int_n);
+        return;
+    } else if (node->node_type == FLOAT_CONST) {
+        add_float_value(values, node->value.float_n);
+        return;
+    } else if (node->node_type == CHAR_CONST) {
+        add_char_value(values, node->value.character);
+        return;
+    } else if (node->node_type == TRUE_CONST || node->node_type == FALSE_CONST) {
+        add_bool_value(values, node->value.boolean);
+        return;
+    }
+    for (int leaf_indx = 0; leaf_indx < node->num_leaves; ++leaf_indx) {
+        add_arr_rec(node->leaf[leaf_indx], values);
+    }
+}
+
+/*________________________________________________________________________________________________________- */
 void verify_args(struct tree_node *node) {
     if (node->node_type != FUNCT_CALL || node->num_leaves != 2) {
         return;

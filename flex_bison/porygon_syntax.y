@@ -179,6 +179,7 @@ varDeclaration
                                                                 set_defined($1->leaf[1]->name);
                                                             }
                                                         }
+                                                        arr_values($$);
                                                     }
     | tableDeclaration                              {$$ = $1;}
     | tableDeclaration DEF_EQ tableDefinition       {

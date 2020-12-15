@@ -32,6 +32,16 @@ void add_char_value(ar_values **values, char val) {
     DL_APPEND(*values, new_value);
 }
 
+void add_bool_value(ar_values **values, bool val) {
+    ar_values *new_value = NULL;
+    if ( (new_value = (ar_values *) malloc(sizeof *new_value)) == NULL ) {
+        printf("[ERR] Could not store value!\n");
+        return;
+    }
+    new_value->val.character = val;
+    DL_APPEND(*values, new_value);
+}
+
 int num_values(ar_values **values) {
     int count;
     ar_values *element = NULL;
@@ -58,7 +68,23 @@ ar_values *get_in(ar_values **values, int indx) {
         ++it;
     }
     return NULL;
+}
 
+void print_values(ar_values **values, enum ttype val_type) {
+    ar_values *vl = NULL;
+    printf("\n    Values (count = %d): [", num_values(values));
+    DL_FOREACH(*values, vl) {
+        if (val_type == CHAR_) {
+            printf("%c, ", vl->val.character);
+        } else if (val_type == INT_) {
+            printf("%d, ", vl->val.int_n);
+        } else if (val_type == FLOAT_) {
+            printf("%f, ", vl->val.float_n);
+        } else if (val_type == BOOL_) {
+            printf("%s, ", vl->val.boolean ? "true" : "false");
+        }
+    }
+    printf("]\n");
 }
 
 #if test_ar

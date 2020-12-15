@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "values.h"
 #include "utlist.h"
+#include "type.h"
 
 typedef struct ar_values {
     union Values val;
@@ -17,8 +18,10 @@ typedef struct ar_values {
 void add_int_value(ar_values **values, int val);
 void add_float_value(ar_values **values, float val);
 void add_char_value(ar_values **values, char val);
+void add_bool_value(ar_values **values, bool val);
 int num_values(ar_values **values);
 void free_values(ar_values **values);
 ar_values *get_in(ar_values **values, int indx);
+void print_values(ar_values **values, enum ttype val_type);
 
 #endif

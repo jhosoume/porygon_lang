@@ -178,6 +178,9 @@ void print_table() {
         if (entry->spec_var == TABLE) {
             print_col(entry->columns);
         }
+        if (entry->spec_var == ARRAY) {
+            print_values(&entry->ar_val, entry->dec_type);
+        }
         printf("\n");
     }
     printf("---------------------------------------------------------------------------------------------------------------------------\n");

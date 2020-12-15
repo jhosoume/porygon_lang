@@ -227,7 +227,10 @@ extern scope_stack *sp_stack;
 \"(\\.|[^\\"])*\"           {
                                 update_pos();
                                 yylval.string_val = yytext;
-                                yylval.tree_node = create_node(ast_tree_list, STRING_CONST, yytext, 0);
+                                char *striped_yytext = yytext;
+                                ++striped_yytext; // Remove first char
+                                striped_yytext[strlen(striped_yytext) - 1] = 0; // Remove last char
+                                yylval.tree_node = create_node(ast_tree_list, STRING_CONST, striped_yytext, 0);
                                 yylval.tree_node->type = STRING_;
                                 return STRINGCONST;
                             }
