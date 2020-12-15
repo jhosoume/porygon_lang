@@ -192,6 +192,7 @@ varDeclaration
                                                                 set_defined($1->leaf[1]->name);
                                                             }
                                                         }
+                                                        table_declaration_cols($$);
                                                     }
     ;
 

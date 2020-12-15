@@ -18,7 +18,6 @@ void func_declaration_params(struct tree_node *node) {
     if (entry != NULL) {
         add_param_rec(node->leaf[2], &entry->params, true);
     }
-
 }
 
 void add_param_rec(struct tree_node *node, struct params_entry **func_params, bool redef) {
@@ -34,6 +33,39 @@ void add_param_rec(struct tree_node *node, struct params_entry **func_params, bo
     }
     for (int leaf_indx = 0; leaf_indx < node->num_leaves; ++leaf_indx) {
         add_param_rec(node->leaf[leaf_indx], func_params, false);
+    }
+}
+
+void table_declaration_cols(struct tree_node *node) {
+    if (node->node_type != TABLE_DECLARATION_DEFINITION || node->num_leaves != 2) {
+        return;
+    }
+    struct tree_node *table_dec = node->leaf[0];
+    if (table_dec == NULL || table_dec->node_type != TABLE_DECLARATION) {
+        return;
+    }
+    struct st_entry *entry =  NULL;
+    entry = find_id_rec(table_dec->leaf[1]->name);
+    if (entry != NULL) {
+        if (node->leaf[1] != NULL && node->leaf[1]->leaf[0]->node_type == STRING_LIST) {
+            add_cols_rec(node->leaf[1]->leaf[0], &entry->columns, true);
+        }
+    }
+}
+
+void add_cols_rec(struct tree_node *node, struct column_entry **table_cols, bool redef) {
+    static int indx = 0;
+    if (redef) {
+        indx = 0;
+    }
+    if (node == NULL) {
+        return;
+    } else if (node->node_type == STRING_CONST) {
+        add_col(table_cols, indx++, STRING_, node->name);
+        return;
+    }
+    for (int leaf_indx = 0; leaf_indx < node->num_leaves; ++leaf_indx) {
+        add_cols_rec(node->leaf[leaf_indx], table_cols, false);
     }
 }
 

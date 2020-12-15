@@ -27,6 +27,7 @@ void force_add_entry(
     sample->size = size;
     sample->defined = false;
     sample->params = NULL;
+    sample->columns = NULL;
     sample->value.int_n = 0;
     sample->ar_val = NULL;
     HASH_ADD_STR(symbol_table, identifier, sample);
@@ -65,6 +66,8 @@ void free_st() {
         // free(entry->identifier);
         free_params(&entry->params);
         entry->params = NULL;
+        free_col(&entry->columns);
+        entry->columns = NULL;
         free_values(&entry->ar_val);
         entry->ar_val = NULL;
         free(entry);
@@ -171,6 +174,9 @@ void print_table() {
         // printf("Column: %4d | ", entry->col);
         if (entry->id_type == FUNCTION) {
             print_params(entry->params);
+        }
+        if (entry->spec_var == TABLE) {
+            print_col(entry->columns);
         }
         printf("\n");
     }

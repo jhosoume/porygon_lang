@@ -10,6 +10,7 @@
 #include "scope.h"
 #include "parser.h"
 #include "parameters.h"
+#include "columns.h"
 #include "values.h"
 #include "arrays.h"
 
@@ -44,6 +45,7 @@ struct st_entry {
     union Values value;             /* Stores a single value */
     ar_values *ar_val;               /* Stores multiple values */
     struct params_entry *params;    /* Hold parameter values */
+    struct column_entry *columns;    /* Hold parameter values */
 
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */
