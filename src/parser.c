@@ -2899,7 +2899,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[0].tree_node), 1);
                                                         check_type(node);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, VARIABLE, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[0].tree_node)->name));
+                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, VARIABLE, cur_scope, SIMPLE, 0);
                                                     }
 #line 2905 "src/parser.c"
     break;
@@ -2912,7 +2912,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[-2].tree_node), 1);
                                                         check_type(node);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->type, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, ARRAY, 0, line_num, strlen((yyvsp[-2].tree_node)->name));
+                                                        add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->type, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, ARRAY, 0);
                                                     }
 #line 2918 "src/parser.c"
     break;
@@ -2931,7 +2931,7 @@ yyreduce:
                                                                 add_leaf(node, (yyvsp[-2].tree_node), 1);
                                                                 check_type(node);
                                                                 (yyval.tree_node) = node;
-                                                                add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->type, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, TABLE, 0, line_num, strlen((yyvsp[-3].tree_node)->name));
+                                                                add_entry((yyvsp[-2].tree_node)->name, (yyvsp[-3].tree_node)->type, (yyvsp[-3].tree_node)->name, VARIABLE, cur_scope, TABLE, 0);
                                                             }
 #line 2937 "src/parser.c"
     break;
@@ -3013,7 +3013,7 @@ yyreduce:
                                                                                         add_leaf(node, (yyvsp[0].tree_node), 3);
                                                                                         check_type(node);
                                                                                         (yyval.tree_node) = node;
-                                                                                        add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->type, (yyvsp[-5].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[-4].tree_node)->name));
+                                                                                        add_entry((yyvsp[-4].tree_node)->name, (yyvsp[-5].tree_node)->type, (yyvsp[-5].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0);
                                                                                         func_declaration_params((yyval.tree_node));
                                                                                         set_defined((yyvsp[-4].tree_node)->name);
                                                                                     }
@@ -3029,7 +3029,7 @@ yyreduce:
                                                                             add_leaf(node, (yyvsp[0].tree_node), 2);
                                                                             check_type(node);
                                                                             (yyval.tree_node) = node;
-                                                                            add_entry((yyvsp[-3].tree_node)->name, (yyvsp[-4].tree_node)->type, (yyvsp[-4].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0, line_num, strlen((yyvsp[-3].tree_node)->name));
+                                                                            add_entry((yyvsp[-3].tree_node)->name, (yyvsp[-4].tree_node)->type, (yyvsp[-4].tree_node)->name, FUNCTION, cur_scope, SIMPLE, 0);
                                                                             set_defined((yyvsp[-3].tree_node)->name);
                                                                       }
 #line 3036 "src/parser.c"
@@ -3061,7 +3061,7 @@ yyreduce:
                                                         add_leaf(node, (yyvsp[0].tree_node), 1);
                                                         check_type(node);
                                                         (yyval.tree_node) = node;
-                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, PARAM, count_scope + 1, SIMPLE, 0, line_num, strlen((yyvsp[0].tree_node)->name));
+                                                        add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, PARAM, count_scope + 1, SIMPLE, 0);
                                                     }
 #line 3067 "src/parser.c"
     break;
@@ -3194,7 +3194,7 @@ yyreduce:
   case 45:
 #line 391 "flex_bison/porygon_syntax.y"
                                {
-                                     add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, VARIABLE, count_scope + 1, SIMPLE, 0, line_num, strlen((yyvsp[0].tree_node)->name));
+                                     add_entry((yyvsp[0].tree_node)->name, (yyvsp[-1].tree_node)->type, (yyvsp[-1].tree_node)->name, VARIABLE, count_scope + 1, SIMPLE, 0);
                                      struct tree_node *node = create_node(ast_tree_list, FOR_DEC, "for_dec", 2);
                                      add_leaf(node, (yyvsp[-1].tree_node), 0);
                                      add_leaf(node, (yyvsp[0].tree_node), 1);

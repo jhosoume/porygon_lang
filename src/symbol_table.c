@@ -12,8 +12,7 @@ void force_add_entry(
                       enum id_type id_type,
                       int scope,
                       enum special_var spec_var,
-                      int size,
-                      int line, int col) {
+                      int size) {
     struct st_entry *sample = (struct st_entry *) malloc(sizeof *sample);
     strcpy(sample->name, name);
     char scope_char[5 * sizeof(char)];
@@ -26,11 +25,10 @@ void force_add_entry(
     sample->scope = scope;
     sample->spec_var = spec_var;
     sample->size = size;
-    sample->line = line;
-    sample->col = col;
     sample->defined = false;
     sample->params = NULL;
     sample->value.int_n = 0;
+    sample->ar_val = NULL;
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
@@ -41,12 +39,11 @@ void add_entry(
                 enum id_type id_type,
                 int scope,
                 enum special_var spec_var,
-                int size,
-                int line, int col) {
+                int size) {
     struct st_entry *entry = NULL;
     entry = find_id(name, scope);
     if (entry == NULL) {
-        force_add_entry(name, dec_type, type, id_type, scope, spec_var, size, line, col);
+        force_add_entry(name, dec_type, type, id_type, scope, spec_var, size);
     } else {
         if (entry->id_type == VARIABLE) {
             yyerror("Semantic Error! Re-declaration of variable.");
@@ -68,6 +65,8 @@ void free_st() {
         // free(entry->identifier);
         free_params(&entry->params);
         entry->params = NULL;
+        free_values(&entry->ar_val);
+        entry->ar_val = NULL;
         free(entry);
     }
 }

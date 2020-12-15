@@ -11,6 +11,7 @@
 #include "parser.h"
 #include "parameters.h"
 #include "values.h"
+#include "arrays.h"
 
 extern struct st_entry *symbol_table;
 extern struct scope_stack *sp_stack;
@@ -37,12 +38,11 @@ struct st_entry {
     char type[15];                  /* Type of the entry as a string */
     enum ttype dec_type;            /* Declared type (e.g. integer, float...)*/
     int scope;                      /* Integer that is related to scope*/
-    int line;
-    int col;
     enum special_var spec_var;     /* Simple, array or table*/
     int size;
     bool defined;                   /* Check if the variable has been defined */
-    union Values value;
+    union Values value;             /* Stores a single value */
+    ar_values *ar_val;               /* Stores multiple values */
     struct params_entry *params;    /* Hold parameter values */
 
 
@@ -57,8 +57,7 @@ void force_add_entry(
                      enum id_type id_type,
                      int scope,
                      enum special_var spec_var,
-                     int size,
-                     int line, int col);
+                     int size);
 
 void add_entry(
                const char *name,
@@ -67,8 +66,7 @@ void add_entry(
                enum id_type id_type,
                int scope,
                enum special_var spec_var,
-               int size,
-               int line, int col);
+               int size);
 
 void free_st();
 
