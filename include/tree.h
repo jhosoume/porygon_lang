@@ -23,6 +23,7 @@ struct tree_node {
     union Values value;         // If constant, stores the value of the node
     bool is_const;              // Indicates if it is a constant
     tac_code *code;             // Stores tree node code
+    UT_string *addr;            // Store address for the TAC;
 };
 
 /* Creation of node list based on hint by Diogo */

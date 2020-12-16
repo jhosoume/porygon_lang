@@ -65,14 +65,28 @@ void print_code(tac_code **tac) {
     printf("\n");
 }
 
+void unite_code(tac_code **tac1, tac_code **tac2) {
+    tac_code *line = NULL;
+    DL_FOREACH(*tac2, line) {
+        append_code_line(tac1, utstring_body(line->code));
+    }
+
+}
+
 #if test_code
 int main() {
     tac_code *tac = NULL;
+    tac_code *tac2 = NULL;
     append_code_line(&tac, "ADD $1, $2");
+    append_code_line(&tac2, "MULT $3, $4");
+    unite_code(&tac, &tac2);
     append_code_line(&tac, "SUB $1, $2");
     prepend_code_line(&tac, "L1:");
     print_code(&tac);
+    printf("_________________________\n");
+    print_code(&tac2);
     free_tac(&tac);
+    free_tac(&tac2);
     return 0;
 }
 #endif

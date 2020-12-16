@@ -18,6 +18,7 @@ typedef struct tac_code {
 
 void prepend_code_line(tac_code **tac, const char *code);
 void append_code_line(tac_code **tac, const char *code);
+void unite_code(tac_code **tac1, tac_code **tac2);
 int num_lines(tac_code **tac);
 void free_tac(tac_code **tac);
 tac_code *tac_in(tac_code **tac, int indx);

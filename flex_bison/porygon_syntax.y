@@ -40,6 +40,7 @@ extern scope_stack *sp_stack;
 
 extern int lex_errors;
 int synt_errors = 0;
+extern int errors;
 %}
 
 
@@ -706,5 +707,6 @@ typeSpecifier
 %%
 
 void yyerror(char const *msg) {
+    ++errors;
     fprintf(stderr, "[ERR] (Line: %d, Column: %d) Found %s\n", line_num, previous_col, msg);
 }

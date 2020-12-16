@@ -24,6 +24,7 @@ scope_stack *temp_stack = NULL;
 int cur_scope = 0;
 int count_scope = 0;
 int symbol_count = 0;
+int errors = 0;
 
 extern int synt_errors;
 
