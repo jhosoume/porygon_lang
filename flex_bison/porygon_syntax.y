@@ -542,6 +542,7 @@ sumExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | sumExp SUB_OP multExp                         {
                                                         struct tree_node *node = create_node(ast_tree_list, MINUS, "-", 2);

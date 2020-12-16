@@ -30,6 +30,12 @@ void force_add_entry(
     sample->columns = NULL;
     sample->value.int_n = 0;
     sample->ar_val = NULL;
+    utstring_new(sample->tac_sym);
+    if (sample->spec_var == SIMPLE && sample->id_type == VARIABLE) {
+        defineSymbol(&sample->tac_sym);
+    } else {
+        utstring_printf(sample->tac_sym, "EMPTY");
+    }
     HASH_ADD_STR(symbol_table, identifier, sample);
 }
 
@@ -70,6 +76,8 @@ void free_st() {
         entry->columns = NULL;
         free_values(&entry->ar_val);
         entry->ar_val = NULL;
+        utstring_free(entry->tac_sym);
+        entry->tac_sym = NULL;
         free(entry);
     }
 }
@@ -180,6 +188,9 @@ void print_table() {
         }
         if (entry->spec_var == ARRAY) {
             print_values(&entry->ar_val, entry->dec_type);
+        }
+        if (entry->spec_var == SIMPLE && entry->id_type == VARIABLE) {
+            printf("%s\n", utstring_body(entry->tac_sym));
         }
         printf("\n");
     }

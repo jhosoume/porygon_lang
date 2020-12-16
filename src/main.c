@@ -23,6 +23,7 @@ scope_stack *sp_stack = NULL;
 scope_stack *temp_stack = NULL;
 int cur_scope = 0;
 int count_scope = 0;
+int symbol_count = 0;
 
 extern int synt_errors;
 
@@ -60,7 +61,6 @@ int main(int argc, char** argv) {
         printf("Found identifier %s in line %d\n", entry->identifier, entry->line);
         reset_pcolor();
     }
-    entry->line = 999;
     HASH_FIND_STR(symbol_table, "an_identifier", entry);
     if (entry) {
         red_print();

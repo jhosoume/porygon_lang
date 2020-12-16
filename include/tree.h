@@ -8,6 +8,7 @@
 #include "node_type.h"
 #include "type.h"
 #include "values.h"
+#include "tac_code.h"
 
 
 struct tree_node {
@@ -19,13 +20,12 @@ struct tree_node {
     char *name;                 // Store name of the node
     enum ttype type;            // Language type
     bool need_casting;          // Indicates if casting is needed
-    union Values value;
-    bool is_const;
-
+    union Values value;         // If constant, stores the value of the node
+    bool is_const;              // Indicates if it is a constant
+    tac_code *code;             // Stores tree node code
 };
 
 /* Creation of node list based on hint by Diogo */
-
 struct node_list {
     struct tree_node **nodes;   // List to store all nodes
     int size;                   // Number of nodes in the list
