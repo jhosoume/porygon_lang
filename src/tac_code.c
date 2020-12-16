@@ -16,8 +16,9 @@ void prepend_code_line(tac_code **tac, const char *code) {
 }
 
 void append_code_line(tac_code **tac, const char *code) {
+    if (code == NULL || strlen(code) == 0) return;
     tac_code *new_cline = NULL;
-    UT_string *line = NULL;
+    UT_string *line;
     utstring_new(line);
     utstring_printf(line, "%s", code);
     if ( (new_cline = (tac_code *) malloc(sizeof *new_cline)) == NULL ) {

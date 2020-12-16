@@ -603,6 +603,7 @@ mutable
                                                         check_type($$);
                                                         check_var($$);
                                                         /* check_defined($$->name); */
+                                                        genCode($$);
                                                     }
     | IDENTIFIER LBRACKET expression RBRACKET       {
                                                         struct tree_node *node = create_node(ast_tree_list, MUTABLE_ONE, "mutable[]", 2);
