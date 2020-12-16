@@ -83,6 +83,7 @@ int main() {
     unite_code(&tac, &tac2);
     append_code_line(&tac, "SUB $1, $2");
     prepend_code_line(&tac, "L1:");
+    append_code_line(&tac, utstring_body(tac2->code));
     print_code(&tac);
     printf("_________________________\n");
     print_code(&tac2);

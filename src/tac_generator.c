@@ -28,12 +28,11 @@ void genCode(struct tree_node *node) {
                 }
             } else {
                 defineSymbol(&node->addr);
-                printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
-                // const char *inst = binary_instr("add", utstring_body(node->addr), node->leaf[0], node->leaf[1]);
-                // printf("[HERE] %s\n", inst);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("add", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
                 // append_code_line(&node->code, inst);
             }
-            // print_code(&node->code);
+            print_code(&node->code);
             return;
         default: return;
     }
@@ -50,50 +49,45 @@ void copySymbol(UT_string **addr, UT_string **copy) {
     return;
 }
 
-const char *binary_instr(const char *inst, const char *dest, struct tree_node *node1, struct tree_node *node2) {
+void binary_instr(const char *inst, const char *dest, struct tree_node *node1, struct tree_node *node2, tac_code **code) {
     if (node1->is_const && !node2->is_const) {
         if (node1->type == INT_) {
-            return binary_instr_int(inst, dest, utstring_body(node2->addr), node1->value.int_n);
+            binary_instr_int(inst, dest, utstring_body(node2->addr), node1->value.int_n, code);
+            return;
         } else if (node1->type == FLOAT_) {
-            return binary_instr_float(inst, dest, utstring_body(node2->addr), node1->value.float_n);
+            binary_instr_float(inst, dest, utstring_body(node2->addr), node1->value.float_n, code);
+            return;
         }
     } else if (!node1->is_const && node2->is_const) {
         if (node2->type == INT_) {
-            return binary_instr_int(inst, dest, utstring_body(node1->addr), node2->value.int_n);
+            binary_instr_int(inst, dest, utstring_body(node1->addr), node2->value.int_n, code);
+            return;
         } else if (node1->type == FLOAT_) {
-            return binary_instr_float(inst, dest, utstring_body(node1->addr), node2->value.float_n);
+            binary_instr_float(inst, dest, utstring_body(node1->addr), node2->value.float_n, code);
+            return;
         }
     // } else if (!node1->is_const && !node2->is_const) {
     }
-    return binary_instr_syms(inst, dest, utstring_body(node1->addr), utstring_body(node2->addr));
-
+    binary_instr_syms(inst, dest, utstring_body(node1->addr), utstring_body(node2->addr), code);
+    return;
 }
 
-const char *binary_instr_syms(const char *inst, const char *dest, const char *symb1, const char *symb2) {
-    UT_string *tmp = NULL;
-    utstring_new(tmp);
-    utstring_printf(tmp, "%s %s, %s, %s\n", inst, dest, symb1, symb2);
-    const char *instruction = utstring_body(tmp);
-    utstring_free(tmp);
-    return instruction;
+void binary_instr_syms(const char *inst, const char *dest, const char *symb1, const char *symb2, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %s, %s\n", inst, dest, symb1, symb2);
+    append_code_line(code, instruction);
 }
 
-const char *binary_instr_int(const char *inst, const char *dest, const char *symb1, int val) {
-    UT_string *tmp = NULL;
-    utstring_new(tmp);
-    utstring_printf(tmp, "%s %s, %s, %d\n", inst, dest, symb1, val);
-    const char *instruction = utstring_body(tmp);
-    utstring_free(tmp);
-    return instruction;
+void binary_instr_int(const char *inst, const char *dest, const char *symb1, int val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %s, %d\n", inst, dest, symb1, val);
+    append_code_line(code, instruction);
 }
 
-const char *binary_instr_float(const char *inst, const char *dest, const char *symb1, float val) {
-    UT_string *tmp = NULL;
-    utstring_new(tmp);
-    utstring_printf(tmp, "%s %s, %s, %f\n", inst, dest, symb1, val);
-    const char *instruction = utstring_body(tmp);
-    utstring_free(tmp);
-    return instruction;
+void binary_instr_float(const char *inst, const char *dest, const char *symb1, float val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %s, %f\n", inst, dest, symb1, val);
+    append_code_line(code, instruction);
 }
 
 bool check_both_const(struct tree_node *node1, struct tree_node *node2) {
