@@ -82,7 +82,7 @@ void genCode(struct tree_node *node) {
             } else if (node->num_leaves == 3) {
                 unite_code(&node->code, &node->leaf[2]->code);
             }
-            printf("FUNCT -> ");
+            // printf("FUNCT -> ");
             // print_code(&node->code);
             return;
 
@@ -99,7 +99,7 @@ void genCode(struct tree_node *node) {
         case(STATEMENT_LIST):
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
-            printf("SL -> ");
+            // printf("SL -> ");
             // print_code(&node->code);
             return;
 

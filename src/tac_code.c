@@ -76,6 +76,22 @@ void unite_code(tac_code **tac1, tac_code **tac2) {
     }
 }
 
+void save_file(tac_code **tac, const char *file_name) {
+    FILE *fptr;
+    fptr = fopen(file_name, "w");
+    if (fptr == NULL) {
+        printf("[ERR] Could not create TAC file!\n");
+        return;
+    }
+    tac_code *line = NULL;
+    fprintf(fptr, ".table\n");
+    fprintf(fptr, ".code\n");
+    DL_FOREACH(*tac, line) {
+        fprintf(fptr, "%s", utstring_body(line->code));
+    }
+    fclose(fptr);
+}
+
 #if test_code
 int main() {
     tac_code *tac = NULL;

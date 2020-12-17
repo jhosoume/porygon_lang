@@ -4,6 +4,7 @@
 #include "tree.h"
 #include "scope.h"
 #include "semantic_analysis.h"
+#include "tac_code.h"
 
 /* Helper to test the symbol table*/
 #define test_st 0
@@ -118,6 +119,19 @@ int main(int argc, char** argv) {
         printf("Not printing AST, found errors!\n");
     }
     print_stack();
+
+    if (synt_errors <= 0 && errors <= 0) {
+        if (ast_root != NULL) {
+            if (argc == 2) {
+                char buffer[150];
+                const char *name = argv[1];
+                sprintf(buffer, "%s.tac", name);
+                save_file(&ast_root->code, buffer);
+            } else {
+                save_file(&ast_root->code, "program.tac");
+            }
+        }
+    }
 
     free_st();
     free_list(ast_tree_list);

@@ -23,5 +23,6 @@ int num_lines(tac_code **tac);
 void free_tac(tac_code **tac);
 tac_code *tac_in(tac_code **tac, int indx);
 void print_code(tac_code **tac);
+void save_file(tac_code **tac, const char *file_name);
 
 #endif
