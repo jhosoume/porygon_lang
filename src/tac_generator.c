@@ -120,8 +120,25 @@ void genCode(struct tree_node *node) {
             return;
 
         case(WRITE_STMT):
-            sprintf(instruction, "println %s\n", utstring_body(node->leaf[0]->addr));
-            append_code_line(&node->code, instruction);
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->type == FLOAT_) {
+                    sprintf(instruction, "println %f\n", node->leaf[0]->value.float_n);
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == INT_) {
+                    sprintf(instruction, "println %d\n", node->leaf[0]->value.int_n);
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == BOOL_) {
+                    // TODO
+                    sprintf(instruction, "println %i\n", node->leaf[0]->value.boolean);
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == CHAR_) {
+                    sprintf(instruction, "println %c\n", node->leaf[0]->value.character);
+                    append_code_line(&node->code, instruction);
+                }
+            } else {
+                sprintf(instruction, "println %s\n", utstring_body(node->leaf[0]->addr));
+                append_code_line(&node->code, instruction);
+            }
             return;
 
         case(WHILE):
@@ -136,7 +153,7 @@ void genCode(struct tree_node *node) {
             sprintf(instruction, "_label%d:\n", label1);
             append_code_line(&node->code, instruction);                             // Label1:
             unite_code(&node->code, &node->leaf[0]->code);                          // condition
-            sprintf(instruction, "brz _label%d, %s:\n", label2, utstring_body(node->addr));       // brz Label2, condition (caso falso)
+            sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->addr));       // brz Label2, condition (caso falso)
             append_code_line(&node->code, instruction);
             unite_code(&node->code, &node->leaf[1]->code);                          // Statements
             sprintf(instruction, "jump _label%d:\n", label1);                       // jump Label1
@@ -159,7 +176,7 @@ void genCode(struct tree_node *node) {
                 return;
             }
             unite_code(&node->code, &node->leaf[0]->code);                                       // condition
-            sprintf(instruction, "brz _label%d, %s:\n", label1, utstring_body(node->addr));      // brz Label1, condition (caso falso)
+            sprintf(instruction, "brz _label%d, %s\n", label1, utstring_body(node->addr));      // brz Label1, condition (caso falso)
             append_code_line(&node->code, instruction);
             unite_code(&node->code, &node->leaf[1]->code);                          // Statements
             return;
@@ -184,6 +201,49 @@ void genCode(struct tree_node *node) {
                 sprintf(instruction, "_label%d:\n", label1);
                 append_code_line(&node->code, instruction);                             // Label1:
             }
+            return;
+
+        case(RETURN):
+            if (node->num_leaves == 0) {
+                sprintf(instruction, "return\n");
+                append_code_line(&node->code, instruction);
+            } else if (node->num_leaves == 1) {
+                if (node->leaf[0]->is_const) {
+                    if (node->leaf[0]->type == FLOAT_) {
+                        sprintf(instruction, "return %f\n", node->leaf[0]->value.float_n);
+                        append_code_line(&node->code, instruction);
+                    } else if (node->leaf[0]->type == INT_) {
+                        sprintf(instruction, "return %i\n", node->leaf[0]->value.int_n);
+                        append_code_line(&node->code, instruction);
+                    } else if (node->leaf[0]->type == BOOL_) {
+                        sprintf(instruction, "return %i\n", node->leaf[0]->value.boolean);
+                        append_code_line(&node->code, instruction);
+                    } else if (node->leaf[0]->type == CHAR_) {
+                        sprintf(instruction, "return %c\n", node->leaf[0]->value.character);
+                        append_code_line(&node->code, instruction);
+                    }
+                } else {
+                    sprintf(instruction, "return %s\n", utstring_body(node->leaf[0]->addr));
+                    append_code_line(&node->code, instruction);
+                }
+            }
+            return;
+
+        case(ASSIGN):
+            // if (node->leaf[1]->is_const) {
+            //     if (node->leaf[0]->type == FLOAT_) {
+            //         sprintf(instruction, "return %f\n", node->leaf[0]->value.float_n);
+            //         append_code_line(&node->code, instruction);
+            //     } else if (node->leaf[0]->type == INT_) {
+            //         sprintf(instruction, "return %i\n", node->leaf[0]->value.int_n);
+            //         append_code_line(&node->code, instruction);
+            //     } else if (node->leaf[0]->type == BOOL_) {
+            //         sprintf(instruction, "return %i\n", node->leaf[0]->value.boolean);
+            //         append_code_line(&node->code, instruction);
+            //     } else if (node->leaf[0]->type == CHAR_) {
+            //         sprintf(instruction, "return %c\n", node->leaf[0]->value.character);
+            //         append_code_line(&node->code, instruction);
+            //     }
             return;
 
         case(SUM):

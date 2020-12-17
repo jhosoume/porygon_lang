@@ -480,6 +480,7 @@ returnStmt
                                                         add_leaf(node, $2, 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -494,6 +495,7 @@ expression
                                                             set_defined(node->leaf[0]->name);
                                                         }
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -505,6 +507,7 @@ logicalOrExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -516,6 +519,7 @@ logicalAndExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -527,6 +531,7 @@ equalityExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | equalityExp NOTEQUAL_OP relationExp           {
                                                         struct tree_node *node = create_node(ast_tree_list, DIFFS, "!=", 2);
@@ -534,6 +539,7 @@ equalityExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -545,6 +551,7 @@ relationExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | relationExp LESSTHAN_OP sumExp                {
                                                         struct tree_node *node = create_node(ast_tree_list, LESSER, "<", 2);
@@ -552,6 +559,7 @@ relationExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | relationExp GREATEREQUAl_OP sumExp            {
                                                         struct tree_node *node = create_node(ast_tree_list, BIGGER_E, ">=", 2);
@@ -559,6 +567,7 @@ relationExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | relationExp LESSEQUAL_OP sumExp               {
                                                         struct tree_node *node = create_node(ast_tree_list, LESSER_E, "<=", 2);
@@ -566,6 +575,7 @@ relationExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -585,6 +595,7 @@ sumExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -596,6 +607,7 @@ multExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | multExp DIV_OP unaryExp                       {
                                                         struct tree_node *node = create_node(ast_tree_list, DIV, "/", 2);
@@ -603,6 +615,7 @@ multExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | multExp REM_OP unaryExp                       {
                                                         struct tree_node *node = create_node(ast_tree_list, REM, "%", 2);
@@ -610,6 +623,7 @@ multExp
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -620,6 +634,7 @@ unaryExp
                                                         add_leaf(node, $2, 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -646,6 +661,7 @@ mutable
                                                         check_type(node);
                                                         check_defined(node->leaf[0]->name);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
                                                                     struct tree_node *node = create_node(ast_tree_list, MUTABLE_TWO, "mutable[;]", 3);
@@ -655,6 +671,7 @@ mutable
                                                                     check_type(node);
                                                                     check_defined(node->leaf[0]->name);
                                                                     $$ = node;
+                                                                    genCode($$);
                                                                 }
     | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
                                                                                     struct tree_node *node = create_node(ast_tree_list, MUTABLE_THREE, "mutable[;;]", 4);
@@ -665,6 +682,7 @@ mutable
                                                                                     check_type(node);
                                                                                     check_defined(node->leaf[0]->name);
                                                                                     $$ = node;
+                                                                                    genCode($$);
                                                                                 }
     ;
 
@@ -676,6 +694,7 @@ functCall
                                                         check_type(node);
                                                         $$ = node;
                                                         verify_args($$);
+                                                        genCode($$);
                                                     }
     ;
 
@@ -701,6 +720,7 @@ argList
                                                         add_leaf(node, $1, 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
