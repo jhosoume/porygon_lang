@@ -9,7 +9,7 @@
 #include "type.h"
 #include "values.h"
 #include "tac_code.h"
-
+#include "symbol_table.h"
 
 struct tree_node {
     struct tree_node *root;     // Store tree_node root
@@ -23,6 +23,7 @@ struct tree_node {
     union Values value;         // If constant, stores the value of the node
     bool is_const;              // Indicates if it is a constant
     tac_code *code;             // Stores tree node code
+    struct st_entry *st_link;   // Stores the symbol table entry
     UT_string *addr;            // Store address for the TAC;
 };
 
@@ -51,5 +52,6 @@ int set_int_v(struct tree_node *node, int value);
 float set_float_v(struct tree_node *node, float value);
 bool set_bool_v(struct tree_node *node, bool value);
 char set_char_v(struct tree_node *node, char value);
+void set_stentry(struct tree_node *node, struct st_entry *entry);
 
 #endif

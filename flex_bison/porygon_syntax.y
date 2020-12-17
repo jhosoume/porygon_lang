@@ -145,6 +145,7 @@ declarationList
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -167,6 +168,7 @@ varDeclaration
                                                                 set_defined($1->leaf[1]->name);
                                                             }
                                                         }
+                                                        genCode($$);
                                                     }
     | arrayDeclaration                              {$$ = $1;}
     | arrayDeclaration DEF_EQ arrayDefinition       {
@@ -181,6 +183,7 @@ varDeclaration
                                                             }
                                                         }
                                                         arr_values($$);
+                                                        genCode($$);
                                                     }
     | tableDeclaration                              {$$ = $1;}
     | tableDeclaration DEF_EQ tableDefinition       {
@@ -195,6 +198,7 @@ varDeclaration
                                                             }
                                                         }
                                                         table_declaration_cols($$);
+                                                        genCode($$);
                                                     }
     ;
 
@@ -207,6 +211,7 @@ varSimpleDeclaration
                                                         check_type(node);
                                                         $$ = node;
                                                         add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, SIMPLE, 0);
+                                                        genCode($$);
                                                     }
     ;
 
@@ -218,6 +223,7 @@ arrayDeclaration
                                                         check_type(node);
                                                         $$ = node;
                                                         add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, ARRAY, 0);
+                                                        genCode($$);
                                                     }
     ;
 
@@ -292,6 +298,7 @@ functDeclaration
                                                                                         add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
                                                                                         func_declaration_params($$);
                                                                                         set_defined($2->name);
+                                                                                        genCode($$);
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
@@ -302,6 +309,7 @@ functDeclaration
                                                                             $$ = node;
                                                                             add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
                                                                             set_defined($2->name);
+                                                                            genCode($$);
                                                                       }
     ;
 

@@ -61,17 +61,19 @@ void print_code(tac_code **tac) {
     tac_code *line = NULL;
     printf("\n TAC (count = %d)\n", num_lines(tac));
     DL_FOREACH(*tac, line) {
-        printf("%s\n", utstring_body(line->code));
+        printf("%s", utstring_body(line->code));
     }
     printf("\n");
 }
 
 void unite_code(tac_code **tac1, tac_code **tac2) {
     tac_code *line = NULL;
+    if (tac2 == NULL || *tac2 == NULL) return;
     DL_FOREACH(*tac2, line) {
-        append_code_line(tac1, utstring_body(line->code));
+        if (utstring_len(line->code) > 0) {
+            append_code_line(tac1, utstring_body(line->code));
+        }
     }
-
 }
 
 #if test_code

@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "tree.h"
 #include "symbol_table.h"
+#include "tac_generator.h"
 
 extern struct st_entry *symbol_table;
 

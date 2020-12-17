@@ -59,6 +59,7 @@ struct tree_node *create_node(struct node_list *list, enum node_type nd_type, co
     node->value.int_n = 0;
     node->is_const = false;
     node->code = NULL;
+    node->st_link = NULL;
     utstring_new(node->addr);
     push_list(list, node);
     return node;
@@ -154,6 +155,7 @@ void free_node(struct tree_node *node) {
     free(node->name); node->name = NULL;
     free_tac(&node->code); node->code = NULL;
     utstring_free(node->addr); node->addr = NULL;
+    node->st_link = NULL;
     free(node);
 }
 
@@ -195,4 +197,8 @@ char set_char_v(struct tree_node *node, char value) {
     node->value.character = value;
     node->is_const = true;
     return value;
+}
+
+void set_stentry(struct tree_node *node, struct st_entry *entry) {
+    node->st_link = entry;
 }

@@ -5,11 +5,81 @@ void genCode(struct tree_node *node) {
         return;
     }
     struct st_entry *entry = NULL;
+    char instruction[500];
     switch(node->node_type) {
         case(ID):
             entry = find_id_rec(node->name);
             if (entry == NULL) return;
             copySymbol(&node->addr, &entry->tac_sym);
+            return;
+
+        case(DECLARATION_LIST):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            print_code(&node->code);
+            return;
+
+        case(VAR_DECLARATION):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if (node->leaf[1]->is_const) {
+                if (node->leaf[1]->type == FLOAT_) {
+                    unary_instr_float("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.float_n, &node->code);
+                } else if (node->leaf[1]->type == INT_) {
+                    unary_instr_int("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.int_n, &node->code);
+                } else if (node->leaf[1]->type == BOOL_) {
+                    unary_instr_bool("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.boolean, &node->code);
+                } else if (node->leaf[1]->type == CHAR_) {
+                    unary_instr_char("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.character, &node->code);
+                }
+            } else {
+                unary_instr_syms("mov", utstring_body(node->leaf[0]->addr), utstring_body(node->leaf[1]->addr), &node->code);
+            }
+            print_code(&node->code);
+            return;
+
+        case(ARRAY_DECLARATION_DEFINITION):
+            return;
+
+        case(TABLE_DECLARATION_DEFINITION):
+            return;
+
+        case(VAR_SIMPLE_DECLARATION):
+            entry = find_id_rec(node->leaf[1]->name);
+            if (entry == NULL) return;
+            copySymbol(&node->addr, &entry->tac_sym);
+            return;
+
+        case(ARRAY_DECLARATION):
+            entry = find_id_rec(node->leaf[1]->name);
+            if (entry == NULL) return;
+            copySymbol(&node->addr, &entry->tac_sym);
+            return;
+
+        case(TABLE_DECLARATION):
+            return;
+
+        case(TABLE_DEFINITION):
+            return;
+
+        case(CONST_LIST):
+            return;
+
+        case(STRING_LIST):
+            return;
+
+        case(COLUMN_CONTENT):
+            return;
+
+        case(FUNCT_DECLARATION):
+            sprintf(instruction, "%s:\n", node->leaf[1]->name);
+            append_code_line(&node->code, instruction);
+            if (node->num_leaves == 4) {
+                unite_code(&node->code, &node->leaf[3]->code);
+            } else if (node->num_leaves == 3) {
+                unite_code(&node->code, &node->leaf[2]->code);
+            }
+            print_code(&node->code);
             return;
 
         case(SUM):
@@ -34,13 +104,20 @@ void genCode(struct tree_node *node) {
             }
             print_code(&node->code);
             return;
-        default: return;
+
+        default:
+            return;
     }
 }
 
 void defineSymbol(UT_string **addr) {
     utstring_printf(*addr, "$%d", symbol_count);
     ++symbol_count;
+    return;
+}
+
+void defineSymbolParam(UT_string **addr, int num) {
+    utstring_printf(*addr, "#%d", num);
     return;
 }
 
@@ -87,6 +164,36 @@ void binary_instr_int(const char *inst, const char *dest, const char *symb1, int
 void binary_instr_float(const char *inst, const char *dest, const char *symb1, float val, tac_code **code) {
     char instruction[500];
     sprintf(instruction, "%s %s, %s, %f\n", inst, dest, symb1, val);
+    append_code_line(code, instruction);
+}
+
+void unary_instr_syms(const char *inst, const char *dest, const char *symb1, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %s\n", inst, dest, symb1);
+    append_code_line(code, instruction);
+}
+
+void unary_instr_int(const char *inst, const char *dest, int val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %d\n", inst, dest, val);
+    append_code_line(code, instruction);
+}
+
+void unary_instr_float(const char *inst, const char *dest, float val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %f\n", inst, dest, val);
+    append_code_line(code, instruction);
+}
+
+void unary_instr_char(const char *inst, const char *dest, char val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, '%c'\n", inst, dest, val);
+    append_code_line(code, instruction);
+}
+
+void unary_instr_bool(const char *inst, const char *dest, bool val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %d\n", inst, dest, val);
     append_code_line(code, instruction);
 }
 

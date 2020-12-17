@@ -189,7 +189,7 @@ void print_table() {
         if (entry->spec_var == ARRAY) {
             print_values(&entry->ar_val, entry->dec_type);
         }
-        if (entry->spec_var == SIMPLE && entry->id_type == VARIABLE) {
+        if (entry->spec_var == SIMPLE && (entry->id_type == VARIABLE || entry->id_type == PARAM)) {
             printf("%s\n", utstring_body(entry->tac_sym));
         }
         printf("\n");
