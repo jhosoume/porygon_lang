@@ -210,7 +210,8 @@ varSimpleDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, SIMPLE, 0);
+                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, SIMPLE, 0);
+                                                        set_stentry($$, entry);
                                                         genCode($$);
                                                     }
     ;
@@ -222,7 +223,8 @@ arrayDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, ARRAY, 0);
+                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, VARIABLE, cur_scope, ARRAY, 0);
+                                                        set_stentry($$, entry);
                                                         genCode($$);
                                                     }
     ;
@@ -238,7 +240,9 @@ tableDeclaration
                                                                 add_leaf(node, $3, 1);
                                                                 check_type(node);
                                                                 $$ = node;
-                                                                add_entry($3->name, $2->type, $2->name, VARIABLE, cur_scope, TABLE, 0);
+                                                                struct st_entry *entry = add_entry($3->name, $2->type, $2->name, VARIABLE, cur_scope, TABLE, 0);
+                                                                set_stentry($$, entry);
+                                                                genCode($$);
                                                             }
     ;
 
@@ -249,6 +253,7 @@ tableDefinition
                                                                             add_leaf(node, $6, 1);
                                                                             check_type(node);
                                                                             $$ = node;
+                                                                            genCode($$);
                                                                          }
     ;
 
@@ -260,6 +265,7 @@ constList
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
 
                                                     }
     ;
@@ -272,6 +278,7 @@ stringList
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -283,6 +290,7 @@ columnContent
                                                                 add_leaf(node, $4, 1);
                                                                 check_type(node);
                                                                 $$ = node;
+                                                                genCode($$);
                                                               }
     ;
 
@@ -295,7 +303,8 @@ functDeclaration
                                                                                         add_leaf(node, $6, 3);
                                                                                         check_type(node);
                                                                                         $$ = node;
-                                                                                        add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                                        set_stentry($$, entry);
                                                                                         func_declaration_params($$);
                                                                                         set_defined($2->name);
                                                                                         genCode($$);
@@ -307,7 +316,8 @@ functDeclaration
                                                                             add_leaf(node, $5, 2);
                                                                             check_type(node);
                                                                             $$ = node;
-                                                                            add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                            struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                            set_stentry($$, entry);
                                                                             set_defined($2->name);
                                                                             genCode($$);
                                                                       }
@@ -321,6 +331,7 @@ parameterList
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -331,7 +342,9 @@ parameterDeclaration
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
-                                                        add_entry($2->name, $1->type, $1->name, PARAM, count_scope + 1, SIMPLE, 0);
+                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, PARAM, count_scope + 1, SIMPLE, 0);
+                                                        set_stentry($$, entry);
+                                                        genCode($$);
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
     ;
@@ -341,6 +354,7 @@ compoundStmt
                                                         struct tree_node *node = create_node(ast_tree_list, EMPTY_COMPOUND_STATEMENT, "emptyCompoundStatement", 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | LBRACE statementList RBRACE                   {$$ = $2;}
     ;
@@ -353,6 +367,7 @@ statementList
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -367,13 +382,15 @@ statement
                                                                  add_leaf(node, $3, 0);
                                                                  check_type(node);
                                                                  $$ = node;
-                                                                set_defined($3->name);
+                                                                 set_defined($3->name);
+                                                                 genCode($$);
                                                              }
     | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {
                                                                  struct tree_node *node = create_node(ast_tree_list, WRITE_STMT, "writeStmt", 1);
                                                                  add_leaf(node, $3, 0);
                                                                  check_type(node);
                                                                  $$ = node;
+                                                                 genCode($$);
                                                              }
     | error                                                  {++synt_errors;}
     ;
@@ -385,6 +402,7 @@ iterationStmt
                                                                      add_leaf(node, $5, 1);
                                                                      check_type(node);
                                                                      $$ = node;
+                                                                     genCode($$);
                                                                  }
     | FOR_KW LPARENTHESES forDec RPARENTHESES IN_KW IDENTIFIER compoundStmt {
                                                                                                  struct tree_node *node = create_node(ast_tree_list, FOR_LOOP, "for_loop", 3);
@@ -394,18 +412,21 @@ iterationStmt
                                                                                                  check_type(node);
                                                                                                  check_defined(node->leaf[1]->name);
                                                                                                  $$ = node;
+                                                                                                 genCode($$);
                                                                                              }
 
     ;
 
 forDec
     : typeSpecifier IDENTIFIER {
-                                     add_entry($2->name, $1->type, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0);
+                                     struct st_entry *entry = add_entry($2->name, $1->type, $1->name, VARIABLE, count_scope + 1, SIMPLE, 0);
                                      struct tree_node *node = create_node(ast_tree_list, FOR_DEC, "for_dec", 2);
+                                     set_stentry(node, entry);
                                      add_leaf(node, $1, 0);
                                      add_leaf(node, $2, 1);
                                      check_type(node);
                                      $$ = node;
+                                     genCode($$);
                                 }
     ;
 
@@ -416,6 +437,7 @@ conditionalStmt
                                                         add_leaf(node, $2, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -426,6 +448,7 @@ ifStmt
                                                                     add_leaf(node, $5, 1);
                                                                     check_type(node);
                                                                     $$ = node;
+                                                                    genCode($$);
                                                                 }
     ;
 
@@ -435,6 +458,7 @@ elseStmt
                                                         add_leaf(node, $2, 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | %empty                                        {
                                                         struct tree_node *node = create_node(ast_tree_list, EMPTY_ELSE, "emptyElse", 0);

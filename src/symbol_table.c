@@ -1,11 +1,11 @@
 #include "symbol_table.h"
 
 
-/* All code in here is based in the uthash by Hanson and O'Dwyer, 2018.
+/* Code in here is based in the uthash by Hanson and O'Dwyer, 2018.
    Availabe in GitHub https://troydhanson.github.io/uthash/userguide.html#_a_hash_in_c
 */
 
-void force_add_entry(
+struct st_entry *force_add_entry(
                       const char *name,
                       enum ttype dec_type,
                       const char *type,
@@ -37,9 +37,10 @@ void force_add_entry(
         utstring_printf(sample->tac_sym, "EMPTY");
     }
     HASH_ADD_STR(symbol_table, identifier, sample);
+    return sample;
 }
 
-void add_entry(
+struct st_entry *add_entry(
                 const char *name,
                 enum ttype dec_type,
                 const char *type,
@@ -50,7 +51,8 @@ void add_entry(
     struct st_entry *entry = NULL;
     entry = find_id(name, scope);
     if (entry == NULL) {
-        force_add_entry(name, dec_type, type, id_type, scope, spec_var, size);
+        entry = force_add_entry(name, dec_type, type, id_type, scope, spec_var, size);
+        return entry;
     } else {
         if (entry->id_type == VARIABLE) {
             yyerror("Semantic Error! Re-declaration of variable.");
@@ -61,6 +63,7 @@ void add_entry(
         } else  {
             yyerror("Semantic Error! Redefinition.");
         }
+        return entry;
     }
 }
 

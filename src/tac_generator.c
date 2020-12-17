@@ -20,6 +20,7 @@ void genCode(struct tree_node *node) {
             return;
 
         case(VAR_DECLARATION):
+        // TODO: what if the variable is a string?
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
             if (node->leaf[1]->is_const) {
@@ -79,7 +80,38 @@ void genCode(struct tree_node *node) {
             } else if (node->num_leaves == 3) {
                 unite_code(&node->code, &node->leaf[2]->code);
             }
+            printf("FUNCT -> ");
             print_code(&node->code);
+            return;
+
+        case(PARAMETER_LIST):
+            return;
+
+        case(PARAMETER_DECLARATION):
+            return;
+
+        case(EMPTY_COMPOUND_STATEMENT):
+            append_code_line(&node->code, "return\n");
+            return;
+
+        case(STATEMENT_LIST):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            printf("SL -> ");
+            print_code(&node->code);
+            return;
+
+        case(READ_STMT):
+            if (node->leaf[0]->type == FLOAT_) {
+
+            } else if (node->leaf[0]->type == INT_) {
+
+            } else if (node->leaf[0]->type == BOOL_) {
+
+            } else if (node->leaf[0]->type == CHAR_) {
+
+            }
+
             return;
 
         case(SUM):
@@ -111,12 +143,14 @@ void genCode(struct tree_node *node) {
 }
 
 void defineSymbol(UT_string **addr) {
+    utstring_clear(*addr);
     utstring_printf(*addr, "$%d", symbol_count);
     ++symbol_count;
     return;
 }
 
 void defineSymbolParam(UT_string **addr, int num) {
+    utstring_clear(*addr);
     utstring_printf(*addr, "#%d", num);
     return;
 }

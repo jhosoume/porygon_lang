@@ -57,7 +57,7 @@ struct st_entry {
 };
 
 char const *ttos(enum id_type type);
-void force_add_entry(
+struct st_entry *force_add_entry(
                      const char *name,
                      enum ttype dec_type,
                      const char *type,
@@ -66,7 +66,7 @@ void force_add_entry(
                      enum special_var spec_var,
                      int size);
 
-void add_entry(
+struct st_entry *add_entry(
                const char *name,
                enum ttype dec_type,
                const char *type,
