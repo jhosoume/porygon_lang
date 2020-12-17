@@ -25,6 +25,7 @@ int cur_scope = 0;
 int count_scope = 0;
 int symbol_count = 0;
 int errors = 0;
+int label_num = 0;
 
 extern int synt_errors;
 

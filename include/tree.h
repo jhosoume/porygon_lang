@@ -24,6 +24,7 @@ struct tree_node {
     bool is_const;              // Indicates if it is a constant
     tac_code *code;             // Stores tree node code
     struct st_entry *st_link;   // Stores the symbol table entry
+    int next_label;             // Helper to generate TAC
     UT_string *addr;            // Store address for the TAC;
 };
 

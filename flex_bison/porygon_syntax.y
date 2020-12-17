@@ -464,6 +464,7 @@ elseStmt
                                                         struct tree_node *node = create_node(ast_tree_list, EMPTY_ELSE, "emptyElse", 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -472,6 +473,7 @@ returnStmt
                                                         struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | RETURN_KW expression                          {
                                                         struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 1);

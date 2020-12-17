@@ -60,6 +60,7 @@ struct tree_node *create_node(struct node_list *list, enum node_type nd_type, co
     node->is_const = false;
     node->code = NULL;
     node->st_link = NULL;
+    node->next_label = 0;
     utstring_new(node->addr);
     push_list(list, node);
     return node;

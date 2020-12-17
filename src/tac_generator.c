@@ -6,6 +6,8 @@ void genCode(struct tree_node *node) {
     }
     struct st_entry *entry = NULL;
     char instruction[500];
+    int label1;
+    int label2;
     switch(node->node_type) {
         case(ID):
             entry = find_id_rec(node->name);
@@ -103,15 +105,85 @@ void genCode(struct tree_node *node) {
 
         case(READ_STMT):
             if (node->leaf[0]->type == FLOAT_) {
-
+                sprintf(instruction, "scanf %s\n", utstring_body(node->leaf[0]->addr));
+                append_code_line(&node->code, instruction);
             } else if (node->leaf[0]->type == INT_) {
-
+                sprintf(instruction, "scani %s\n", utstring_body(node->leaf[0]->addr));
+                append_code_line(&node->code, instruction);
             } else if (node->leaf[0]->type == BOOL_) {
-
+                sprintf(instruction, "scani %s\n", utstring_body(node->leaf[0]->addr));
+                append_code_line(&node->code, instruction);
             } else if (node->leaf[0]->type == CHAR_) {
-
+                sprintf(instruction, "scanc %s\n", utstring_body(node->leaf[0]->addr));
+                append_code_line(&node->code, instruction);
             }
+            return;
 
+        case(WRITE_STMT):
+            sprintf(instruction, "println %s\n", utstring_body(node->leaf[0]->addr));
+            append_code_line(&node->code, instruction);
+            return;
+
+        case(WHILE):
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->value.boolean) {
+                    unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                }
+                return;
+            }
+            label1 = get_next_label();
+            label2 = get_next_label();
+            sprintf(instruction, "_label%d:\n", label1);
+            append_code_line(&node->code, instruction);                             // Label1:
+            unite_code(&node->code, &node->leaf[0]->code);                          // condition
+            sprintf(instruction, "brz _label%d, %s:\n", label2, utstring_body(node->addr));       // brz Label2, condition (caso falso)
+            append_code_line(&node->code, instruction);
+            unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+            sprintf(instruction, "jump _label%d:\n", label1);                       // jump Label1
+            append_code_line(&node->code, instruction);
+            sprintf(instruction, "_label%d:\n", label2);
+            append_code_line(&node->code, instruction);                             // Label2:
+            return;
+
+        case(FOR_LOOP):
+            // TODO
+            return;
+
+        case(IF_STMT):
+            label1 = get_next_label();
+            node->next_label = label1;
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->value.boolean) {
+                    unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                }
+                return;
+            }
+            unite_code(&node->code, &node->leaf[0]->code);                                       // condition
+            sprintf(instruction, "brz _label%d, %s:\n", label1, utstring_body(node->addr));      // brz Label1, condition (caso falso)
+            append_code_line(&node->code, instruction);
+            unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+            return;
+
+        case(ELSE_STMT):
+            unite_code(&node->code, &node->leaf[0]->code);
+            return;
+
+        case(CONDITIONAL_STMT):
+            label1 = node->leaf[0]->next_label;
+            unite_code(&node->code, &node->leaf[0]->code);
+            if (node->leaf[1]->node_type == ELSE_STMT) {
+                label2 = get_next_label();
+                sprintf(instruction, "jump _label%d:\n", label2);                       // jump Label2
+                append_code_line(&node->code, instruction);
+                sprintf(instruction, "_label%d:\n", label1);
+                append_code_line(&node->code, instruction);                             // Label1:
+                unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                sprintf(instruction, "_label%d:\n", label2);
+                append_code_line(&node->code, instruction);                             // Label2:
+            } else if (node->leaf[1]->node_type == EMPTY_ELSE) {
+                sprintf(instruction, "_label%d:\n", label1);
+                append_code_line(&node->code, instruction);                             // Label1:
+            }
             return;
 
         case(SUM):
@@ -233,4 +305,8 @@ void unary_instr_bool(const char *inst, const char *dest, bool val, tac_code **c
 
 bool check_both_const(struct tree_node *node1, struct tree_node *node2) {
     return node1->is_const && node2->is_const;
+}
+
+int get_next_label() {
+    return label_num++;
 }
