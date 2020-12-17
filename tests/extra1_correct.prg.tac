@@ -13,6 +13,7 @@ mov $15,
 mov $16, 
 call StartMsg:
 println 
+scani $0
 div $17, $0, 100
 mov $6, $17
 mul $18, $6, 100

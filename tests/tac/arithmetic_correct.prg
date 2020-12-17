@@ -1,8 +1,9 @@
 int b = 4 + 4;
 void main() {
-    4 + 4 + 6;
+    4 + 4 - 6;
     93.0 + 5;
     3 + 5.0;
+    float k = 7.0 * 90;
     'a';
     'b';
     true;
@@ -11,8 +12,24 @@ void main() {
     a = a + 7;
     b = b + 42 + 8;
     write(b);
-    write(5);
+    write(a);
+    write('-');
     bool c = true && false;
     bool d = true && c;
-
+    float num = a + b;
+    write(num);
+    write('-');
+    write(1);
+    write(2.0);
+    write(true);
+    write('-');
+    int i1;
+    read(i1);
+    write(i1);
+    float f1;
+    read(f1);
+    write(f1);
+    char c1;
+    read(c1);
+    write(c1);
 }

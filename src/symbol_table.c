@@ -33,8 +33,6 @@ struct st_entry *force_add_entry(
     utstring_new(sample->tac_sym);
     if (sample->spec_var == SIMPLE && sample->id_type == VARIABLE) {
         defineSymbol(&sample->tac_sym);
-    } else {
-        utstring_printf(sample->tac_sym, "EMPTY");
     }
     HASH_ADD_STR(symbol_table, identifier, sample);
     return sample;

@@ -25,6 +25,7 @@ void genCode(struct tree_node *node) {
         // TODO: what if the variable is a string?
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
+            doConversion(node->leaf[1], &node->code);
             if (node->leaf[1]->is_const) {
                 if (node->leaf[1]->type == FLOAT_) {
                     unary_instr_float("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.float_n, &node->code);
@@ -104,16 +105,16 @@ void genCode(struct tree_node *node) {
             return;
 
         case(READ_STMT):
-            if (node->leaf[0]->type == FLOAT_) {
+            if (node->type == FLOAT_) {
                 sprintf(instruction, "scanf %s\n", utstring_body(node->leaf[0]->addr));
                 append_code_line(&node->code, instruction);
-            } else if (node->leaf[0]->type == INT_) {
+            } else if (node->type == INT_) {
                 sprintf(instruction, "scani %s\n", utstring_body(node->leaf[0]->addr));
                 append_code_line(&node->code, instruction);
-            } else if (node->leaf[0]->type == BOOL_) {
+            } else if (node->type == BOOL_) {
                 sprintf(instruction, "scani %s\n", utstring_body(node->leaf[0]->addr));
                 append_code_line(&node->code, instruction);
-            } else if (node->leaf[0]->type == CHAR_) {
+            } else if (node->type == CHAR_) {
                 sprintf(instruction, "scanc %s\n", utstring_body(node->leaf[0]->addr));
                 append_code_line(&node->code, instruction);
             }
@@ -128,11 +129,15 @@ void genCode(struct tree_node *node) {
                     sprintf(instruction, "println %d\n", node->leaf[0]->value.int_n);
                     append_code_line(&node->code, instruction);
                 } else if (node->leaf[0]->type == BOOL_) {
-                    // TODO
-                    sprintf(instruction, "println %i\n", node->leaf[0]->value.boolean);
-                    append_code_line(&node->code, instruction);
+                    if (!node->leaf[0]->value.boolean) {
+                        sprintf(instruction, "print 'f'\nprint 'a'\nprint 'l'\nprint 's'\nprintln 'e'\n");
+                        append_code_line(&node->code, instruction);
+                    } else {
+                        sprintf(instruction, "print 't'\nprint 'r'\nprint 'u'\nprintln 'e'\n");
+                        append_code_line(&node->code, instruction);
+                    }
                 } else if (node->leaf[0]->type == CHAR_) {
-                    sprintf(instruction, "println %c\n", node->leaf[0]->value.character);
+                    sprintf(instruction, "println '%c'\n", node->leaf[0]->value.character);
                     append_code_line(&node->code, instruction);
                 }
             } else {
@@ -210,6 +215,7 @@ void genCode(struct tree_node *node) {
                 append_code_line(&node->code, instruction);
             } else if (node->num_leaves == 1) {
                 if (node->leaf[0]->is_const) {
+                    doConversion(node->leaf[0], &node->code);
                     if (node->leaf[0]->type == FLOAT_) {
                         sprintf(instruction, "return %f\n", node->leaf[0]->value.float_n);
                         append_code_line(&node->code, instruction);
@@ -225,6 +231,7 @@ void genCode(struct tree_node *node) {
                     }
                 } else {
                     unite_code(&node->code, &node->leaf[0]->code);
+                    doConversion(node->leaf[0], &node->code);
                     sprintf(instruction, "return %s\n", utstring_body(node->leaf[0]->addr));
                     append_code_line(&node->code, instruction);
                 }
@@ -233,6 +240,7 @@ void genCode(struct tree_node *node) {
 
         case(ASSIGN):
             if (node->leaf[1]->is_const) {
+                doConversion(node->leaf[1], &node->code);
                 if (node->leaf[1]->type == FLOAT_) {
                     unary_instr_float("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.float_n, &node->code);
                 } else if (node->leaf[1]->type == INT_) {
@@ -244,6 +252,7 @@ void genCode(struct tree_node *node) {
                 }
             } else {
                 unite_code(&node->code, &node->leaf[1]->code);
+                doConversion(node->leaf[1], &node->code);
                 unary_instr_syms("mov", utstring_body(node->leaf[0]->addr), utstring_body(node->leaf[1]->addr), &node->code);
             }
             return;
@@ -381,7 +390,12 @@ void genCode(struct tree_node *node) {
                 }
             } else {
                 defineSymbol(&node->addr);
-                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                // printf("%s %s %s %s\n", node->leaf[0]->name, node->leaf[0]->need_casting ? "true" : "false" , node->leaf[1]->name, node->leaf[1]->need_casting ? "true" : "false");
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                } else if (node->leaf[1]->need_casting) {
+                    doConversion(node->leaf[1], &node->code);
+                }
                 binary_instr("add", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
             }
             // print_code(&node->code);
@@ -404,6 +418,11 @@ void genCode(struct tree_node *node) {
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                } else if (node->leaf[1]->need_casting) {
+                    doConversion(node->leaf[1], &node->code);
+                }
                 binary_instr("sub", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
             }
             // print_code(&node->code);
@@ -427,6 +446,11 @@ void genCode(struct tree_node *node) {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
                 binary_instr("mul", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                } else if (node->leaf[1]->need_casting) {
+                    doConversion(node->leaf[1], &node->code);
+                }
             }
             // print_code(&node->code);
             return;
@@ -448,6 +472,11 @@ void genCode(struct tree_node *node) {
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                } else if (node->leaf[1]->need_casting) {
+                    doConversion(node->leaf[1], &node->code);
+                }
                 binary_instr("div", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
             }
             // print_code(&node->code);
@@ -522,6 +551,9 @@ void genCode(struct tree_node *node) {
             } else {
                 unite_code(&node->code, &node->leaf[0]->code);
                 defineSymbol(&node->addr);
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                }
                 unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
                 sprintf(instruction, "param %s:\n", utstring_body(node->addr));                       // param
                 append_code_line(&node->code, instruction);
@@ -547,6 +579,9 @@ void genCode(struct tree_node *node) {
             } else {
                 unite_code(&node->code, &node->leaf[0]->code);
                 defineSymbol(&node->addr);
+                if (node->leaf[0]->need_casting) {
+                    doConversion(node->leaf[0], &node->code);
+                }
                 unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
                 sprintf(instruction, "param %s:\n", utstring_body(node->addr));                       // param
                 append_code_line(&node->code, instruction);
@@ -677,7 +712,7 @@ void doConversion(struct tree_node *node, tac_code **code) {
             node->value.float_n = old_num;
         } else {
             // TODO! Check if needed
-            if (node->addr == NULL) {
+            if (utstring_len(node->addr) <= 0) {
                 defineSymbol(&node->addr);
             }
             unary_instr_syms("inttofl", utstring_body(node->addr), utstring_body(node->addr), code);

@@ -383,6 +383,8 @@ statement
                                                                  check_type(node);
                                                                  $$ = node;
                                                                  set_defined($3->name);
+                                                                 check_type(node->leaf[0]);
+                                                                 genCode(node->leaf[0]);
                                                                  genCode($$);
                                                              }
     | WRITE_KW LPARENTHESES baseValue RPARENTHESES SEMICOLON {

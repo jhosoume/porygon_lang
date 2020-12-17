@@ -7,7 +7,7 @@ mov $2, 'a'
 add $3, $0, 165
 return $3
 another_function:
-rem $4, EMPTY, EMPTY
+rem $4, , 
 return $4
 third_func:
 mov $5, 0
@@ -28,10 +28,12 @@ mov $13,
 mov $14, 1
 println 
 brz _label0, 
+inttofl $6, $6
 sub $15, $8, $6
 mov $9, $15
 jump _label1:
 _label0:
+inttofl $6, $6
 add $16, $6, $8
 mov $9, $16
 _label1:
