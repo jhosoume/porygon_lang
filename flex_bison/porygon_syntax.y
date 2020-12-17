@@ -664,7 +664,7 @@ mutable
                                                         genCode($$);
                                                     }
     | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
-                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_TWO, "mutable[;]", 3);
+                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_TWO, "mutable[:]", 3);
                                                                     add_leaf(node, $1, 0);
                                                                     add_leaf(node, $3, 1);
                                                                     add_leaf(node, $5, 2);
@@ -674,7 +674,7 @@ mutable
                                                                     genCode($$);
                                                                 }
     | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
-                                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_THREE, "mutable[;;]", 4);
+                                                                                    struct tree_node *node = create_node(ast_tree_list, MUTABLE_THREE, "mutable[::]", 4);
                                                                                     add_leaf(node, $1, 0);
                                                                                     add_leaf(node, $3, 1);
                                                                                     add_leaf(node, $5, 2);
@@ -704,6 +704,7 @@ args
                                                         struct tree_node *node = create_node(ast_tree_list, EMPTY_ARGS, "emptyArgs", 0);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     ;
 
@@ -714,6 +715,7 @@ argList
                                                         add_leaf(node, $3, 1);
                                                         check_type(node);
                                                         $$ = node;
+                                                        genCode($$);
                                                     }
     | expression                                    {
                                                         struct tree_node *node = create_node(ast_tree_list, ARG_LIST_S, "argListS", 1);

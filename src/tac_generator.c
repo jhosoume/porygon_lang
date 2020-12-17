@@ -18,7 +18,7 @@ void genCode(struct tree_node *node) {
         case(DECLARATION_LIST):
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
-            print_code(&node->code);
+            // print_code(&node->code);
             return;
 
         case(VAR_DECLARATION):
@@ -38,7 +38,7 @@ void genCode(struct tree_node *node) {
             } else {
                 unary_instr_syms("mov", utstring_body(node->leaf[0]->addr), utstring_body(node->leaf[1]->addr), &node->code);
             }
-            print_code(&node->code);
+            // print_code(&node->code);
             return;
 
         case(ARRAY_DECLARATION_DEFINITION):
@@ -83,7 +83,7 @@ void genCode(struct tree_node *node) {
                 unite_code(&node->code, &node->leaf[2]->code);
             }
             printf("FUNCT -> ");
-            print_code(&node->code);
+            // print_code(&node->code);
             return;
 
         case(PARAMETER_LIST):
@@ -100,7 +100,7 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
             printf("SL -> ");
-            print_code(&node->code);
+            // print_code(&node->code);
             return;
 
         case(READ_STMT):
@@ -136,6 +136,7 @@ void genCode(struct tree_node *node) {
                     append_code_line(&node->code, instruction);
                 }
             } else {
+                unite_code(&node->code, &node->leaf[0]->code);
                 sprintf(instruction, "println %s\n", utstring_body(node->leaf[0]->addr));
                 append_code_line(&node->code, instruction);
             }
@@ -223,6 +224,7 @@ void genCode(struct tree_node *node) {
                         append_code_line(&node->code, instruction);
                     }
                 } else {
+                    unite_code(&node->code, &node->leaf[0]->code);
                     sprintf(instruction, "return %s\n", utstring_body(node->leaf[0]->addr));
                     append_code_line(&node->code, instruction);
                 }
@@ -230,21 +232,138 @@ void genCode(struct tree_node *node) {
             return;
 
         case(ASSIGN):
-            // if (node->leaf[1]->is_const) {
-            //     if (node->leaf[0]->type == FLOAT_) {
-            //         sprintf(instruction, "return %f\n", node->leaf[0]->value.float_n);
-            //         append_code_line(&node->code, instruction);
-            //     } else if (node->leaf[0]->type == INT_) {
-            //         sprintf(instruction, "return %i\n", node->leaf[0]->value.int_n);
-            //         append_code_line(&node->code, instruction);
-            //     } else if (node->leaf[0]->type == BOOL_) {
-            //         sprintf(instruction, "return %i\n", node->leaf[0]->value.boolean);
-            //         append_code_line(&node->code, instruction);
-            //     } else if (node->leaf[0]->type == CHAR_) {
-            //         sprintf(instruction, "return %c\n", node->leaf[0]->value.character);
-            //         append_code_line(&node->code, instruction);
-            //     }
+            if (node->leaf[1]->is_const) {
+                if (node->leaf[1]->type == FLOAT_) {
+                    unary_instr_float("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.float_n, &node->code);
+                } else if (node->leaf[1]->type == INT_) {
+                    unary_instr_int("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.int_n, &node->code);
+                } else if (node->leaf[1]->type == BOOL_) {
+                    unary_instr_bool("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.boolean, &node->code);
+                } else if (node->leaf[1]->type == CHAR_) {
+                    unary_instr_char("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.character, &node->code);
+                }
+            } else {
+                unite_code(&node->code, &node->leaf[1]->code);
+                unary_instr_syms("mov", utstring_body(node->leaf[0]->addr), utstring_body(node->leaf[1]->addr), &node->code);
+            }
             return;
+
+        case(OR):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.boolean || node->leaf[1]->value.boolean;
+            } else {
+                defineSymbol(&node->addr);
+                binary_instr_boolean("or", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            return;
+
+        case(AND):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.boolean && node->leaf[1]->value.boolean;
+            } else {
+                defineSymbol(&node->addr);
+                binary_instr_boolean("and", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            return;
+
+        case(EQUALS):
+        // TODO!
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n == node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("sub", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+                if (node->leaf[0]->type == FLOAT_ || node->leaf[1]->type == FLOAT_) {
+                    binary_instr_float("sleq", utstring_body(node->addr), utstring_body(node->addr), 0.0, &node->code);
+                } else {
+                    binary_instr_int("sleq", utstring_body(node->addr), utstring_body(node->addr), 0, &node->code);
+                }
+                // append_code_line(&node->code, inst);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(DIFFS):
+        // TODO!
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n != node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("sub", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(BIGGER):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n > node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("slt", utstring_body(node->addr), node->leaf[1], node->leaf[0], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(LESSER):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n < node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("slt", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(BIGGER_E):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n >= node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("sleq", utstring_body(node->addr), node->leaf[1], node->leaf[0], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(LESSER_E):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                node->value.boolean = node->leaf[0]->value.int_n <= node->leaf[1]->value.int_n;
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("sleq", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
 
         case(SUM):
             unite_code(&node->code, &node->leaf[0]->code);
@@ -264,9 +383,174 @@ void genCode(struct tree_node *node) {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
                 binary_instr("add", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
-                // append_code_line(&node->code, inst);
             }
-            print_code(&node->code);
+            // print_code(&node->code);
+            return;
+
+        case(MINUS):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n - node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n - node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.int_n - node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.int_n = node->leaf[0]->value.int_n - node->leaf[1]->value.int_n;
+                }
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("sub", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(MULT):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n * node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n * node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.int_n * node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.int_n = node->leaf[0]->value.int_n * node->leaf[1]->value.int_n;
+                }
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("mul", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(DIV):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n / node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.float_n = node->leaf[0]->value.float_n / node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.float_n = node->leaf[0]->value.int_n / node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.int_n = node->leaf[0]->value.int_n / node->leaf[1]->value.int_n;
+                }
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("div", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(REM):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
+            if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
+                node->is_const = true;
+                // if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                //     node->value.float_n = node->leaf[0]->value.float_n % node->leaf[1]->value.float_n;
+                // } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                //     node->value.float_n = node->leaf[0]->value.float_n % node->leaf[1]->value.int_n;
+                // } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                //     node->value.float_n = node->leaf[0]->value.int_n % node->leaf[1]->value.float_n;
+                // } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.int_n = node->leaf[0]->value.int_n % node->leaf[1]->value.int_n;
+                }
+            } else {
+                defineSymbol(&node->addr);
+                // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
+                binary_instr("rem", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+            }
+            // print_code(&node->code);
+            return;
+
+        case(NOT):
+            unite_code(&node->code, &node->leaf[0]->code);
+            if (node->leaf[0]->is_const) {
+                node->is_const = true;
+                node->value.boolean = !node->leaf[0]->value.boolean;
+            } else {
+                defineSymbol(&node->addr);
+                unary_instr_syms("not", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
+            }
+            return;
+
+        case(MUTABLE_ONE):
+            return;
+
+        case(MUTABLE_TWO):
+            return;
+
+        case(MUTABLE_THREE):
+            return;
+
+        case(FUNCT_CALL):
+            if (node->leaf[1]->node_type == ARG_LIST) {
+                unite_code(&node->code, &node->leaf[1]->code);
+            }
+            sprintf(instruction, "call %s:\n", node->leaf[0]->name);                       // call function
+            append_code_line(&node->code, instruction);
+            return;
+
+        case(ARG_LIST):
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->type == INT_) {
+                    sprintf(instruction, "param %i:\n", node->leaf[0]->value.int_n);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == FLOAT_) {
+                    sprintf(instruction, "param %f:\n", node->leaf[0]->value.float_n);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == BOOL_) {
+                    sprintf(instruction, "param %i:\n", node->leaf[0]->value.boolean);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == CHAR_) {
+                    sprintf(instruction, "param %c:\n", node->leaf[0]->value.character);                       // param
+                    append_code_line(&node->code, instruction);
+                }
+            } else {
+                unite_code(&node->code, &node->leaf[0]->code);
+                defineSymbol(&node->addr);
+                unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
+                sprintf(instruction, "param %s:\n", utstring_body(node->addr));                       // param
+                append_code_line(&node->code, instruction);
+            }
+            unite_code(&node->code, &node->leaf[1]->code);
+            return;
+
+        case(ARG_LIST_S):
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->type == INT_) {
+                    sprintf(instruction, "param %i:\n", node->leaf[0]->value.int_n);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == FLOAT_) {
+                    sprintf(instruction, "param %f:\n", node->leaf[0]->value.float_n);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == BOOL_) {
+                    sprintf(instruction, "param %i:\n", node->leaf[0]->value.boolean);                       // param
+                    append_code_line(&node->code, instruction);
+                } else if (node->leaf[0]->type == CHAR_) {
+                    sprintf(instruction, "param %c:\n", node->leaf[0]->value.character);                       // param
+                    append_code_line(&node->code, instruction);
+                }
+            } else {
+                unite_code(&node->code, &node->leaf[0]->code);
+                defineSymbol(&node->addr);
+                unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
+                sprintf(instruction, "param %s:\n", utstring_body(node->addr));                       // param
+                append_code_line(&node->code, instruction);
+            }
             return;
 
         default:
@@ -315,6 +599,18 @@ void binary_instr(const char *inst, const char *dest, struct tree_node *node1, s
     return;
 }
 
+void binary_instr_boolean(const char *inst, const char *dest, struct tree_node *node1, struct tree_node *node2, tac_code **code) {
+    if (node1->is_const && !node2->is_const) {
+            binary_instr_b(inst, dest, utstring_body(node2->addr), node1->value.boolean, code);
+            return;
+    } else if (!node1->is_const && node2->is_const) {
+            binary_instr_b(inst, dest, utstring_body(node1->addr), node2->value.boolean, code);
+            return;
+    }
+    binary_instr_syms(inst, dest, utstring_body(node1->addr), utstring_body(node2->addr), code);
+    return;
+}
+
 void binary_instr_syms(const char *inst, const char *dest, const char *symb1, const char *symb2, tac_code **code) {
     char instruction[500];
     sprintf(instruction, "%s %s, %s, %s\n", inst, dest, symb1, symb2);
@@ -330,6 +626,12 @@ void binary_instr_int(const char *inst, const char *dest, const char *symb1, int
 void binary_instr_float(const char *inst, const char *dest, const char *symb1, float val, tac_code **code) {
     char instruction[500];
     sprintf(instruction, "%s %s, %s, %f\n", inst, dest, symb1, val);
+    append_code_line(code, instruction);
+}
+
+void binary_instr_b(const char *inst, const char *dest, const char *symb1, bool val, tac_code **code) {
+    char instruction[500];
+    sprintf(instruction, "%s %s, %s, %d\n", inst, dest, symb1, val);
     append_code_line(code, instruction);
 }
 
@@ -365,6 +667,23 @@ void unary_instr_bool(const char *inst, const char *dest, bool val, tac_code **c
 
 bool check_both_const(struct tree_node *node1, struct tree_node *node2) {
     return node1->is_const && node2->is_const;
+}
+
+void doConversion(struct tree_node *node, tac_code **code) {
+    if (node->need_casting) {
+        if (node->is_const) {
+            node->type = FLOAT_;
+            int old_num = node->value.int_n;
+            node->value.float_n = old_num;
+        } else {
+            // TODO! Check if needed
+            if (node->addr == NULL) {
+                defineSymbol(&node->addr);
+            }
+            unary_instr_syms("inttofl", utstring_body(node->addr), utstring_body(node->addr), code);
+        }
+    }
+
 }
 
 int get_next_label() {

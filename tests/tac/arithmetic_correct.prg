@@ -10,6 +10,9 @@ void main() {
     int b = a + 4;
     a = a + 7;
     b = b + 42 + 8;
-
+    write(b);
+    write(5);
+    bool c = true && false;
+    bool d = true && c;
 
 }
