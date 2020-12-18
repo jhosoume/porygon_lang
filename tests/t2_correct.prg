@@ -1,6 +1,6 @@
 /* This is a sample correct (lexically) input Porygon File */
 
-int main(void) {
+void main(void) {
     /* Do some computations */
     int indx = 0;
     indx = 2;
@@ -18,5 +18,4 @@ int main(void) {
 
     string valid = "A valid string can have multiple chars";
 
-    return 0;
 }

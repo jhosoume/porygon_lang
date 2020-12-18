@@ -26,6 +26,14 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[0]->code);
             unite_code(&node->code, &node->leaf[1]->code);
             doConversion(node->leaf[1], &node->code);
+            if (node->leaf[1]->type == STRING_ && node->leaf[1]->node_type == STRING_CONST) {
+                sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), (int) strlen(node->leaf[1]->name) + 4);
+                append_code_line(&node->code, instruction);
+                for (int indx = 0; indx < (int) strlen(node->leaf[1]->name); ++indx) {
+                    unary_instr_char("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->name[indx], &node->code);
+                }
+                return;
+            }
             if (node->leaf[1]->is_const) {
                 if (node->leaf[1]->type == FLOAT_) {
                     unary_instr_float("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->value.float_n, &node->code);
@@ -43,6 +51,8 @@ void genCode(struct tree_node *node) {
             return;
 
         case(ARRAY_DECLARATION_DEFINITION):
+            // sprintf(instruction, "mema %s, %d\n", node->leaf[1]->name);
+            // append_code_line(&node->code, instruction);
             return;
 
         case(TABLE_DECLARATION_DEFINITION):
@@ -129,6 +139,15 @@ void genCode(struct tree_node *node) {
             return;
 
         case(WRITE_STMT):
+            if (node->leaf[0]->type == STRING_ && node->leaf[0]->node_type == STRING_CONST) {
+                for (int indx = 0; indx < (int) strlen(node->leaf[0]->name); ++indx) {
+                    sprintf(instruction, "print '%c'\n", node->leaf[0]->name[indx]);
+                    append_code_line(&node->code, instruction);
+                }
+                sprintf(instruction, "println\n");
+                append_code_line(&node->code, instruction);
+                return;
+            }
             if (node->leaf[0]->is_const) {
                 if (node->leaf[0]->type == FLOAT_) {
                     sprintf(instruction, "println %f\n", node->leaf[0]->value.float_n);
@@ -219,6 +238,8 @@ void genCode(struct tree_node *node) {
                 unite_code(&node->code, &node->leaf[1]->code);                          // Statements
                 sprintf(instruction, "_label%d:\n", label2);
                 append_code_line(&node->code, instruction);                             // Label2:
+                sprintf(instruction, "print ''\n");
+                append_code_line(&node->code, instruction);                             // NOP
             } else if (node->leaf[1]->node_type == EMPTY_ELSE) {
                         // && (num_lines(&node->leaf[1]->code) > 0) ) {
                 sprintf(instruction, "_label%d:\n", label1);
@@ -245,7 +266,7 @@ void genCode(struct tree_node *node) {
                         sprintf(instruction, "return %i\n", node->leaf[0]->value.boolean);
                         append_code_line(&node->code, instruction);
                     } else if (node->leaf[0]->type == CHAR_) {
-                        sprintf(instruction, "return %c\n", node->leaf[0]->value.character);
+                        sprintf(instruction, "return '%c'\n", node->leaf[0]->value.character);
                         append_code_line(&node->code, instruction);
                     }
                 } else {
@@ -519,7 +540,7 @@ void genCode(struct tree_node *node) {
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
-                binary_instr("rem", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
+                binary_instr("mod", utstring_body(node->addr), node->leaf[0], node->leaf[1], &node->code);
             }
             // print_code(&node->code);
             return;
@@ -572,7 +593,7 @@ void genCode(struct tree_node *node) {
                     sprintf(instruction, "param %i\n", node->leaf[0]->value.boolean);                       // param
                     append_code_line(&node->code, instruction);
                 } else if (node->leaf[0]->type == CHAR_) {
-                    sprintf(instruction, "param %c\n", node->leaf[0]->value.character);                       // param
+                    sprintf(instruction, "param '%c'\n", node->leaf[0]->value.character);                       // param
                     append_code_line(&node->code, instruction);
                 }
             } else {
@@ -600,7 +621,7 @@ void genCode(struct tree_node *node) {
                     sprintf(instruction, "param %i\n", node->leaf[0]->value.boolean);                       // param
                     append_code_line(&node->code, instruction);
                 } else if (node->leaf[0]->type == CHAR_) {
-                    sprintf(instruction, "param %c\n", node->leaf[0]->value.character);                       // param
+                    sprintf(instruction, "param '%c'\n", node->leaf[0]->value.character);                       // param
                     append_code_line(&node->code, instruction);
                 }
             } else {

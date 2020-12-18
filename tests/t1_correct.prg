@@ -1,13 +1,11 @@
 /* This is a sample correct (lexically) input Porygon File */
 
-int k_out = 42;
-
 int sample_function() {
     /* Checking behavior of string and char */
     string my_phrase = "a";
     char my_letter = 'a';
 
-    return 93 + 72 + k_out;
+    return 93 + 72;
 }
 
 float another_function(float p1, float p2, char c1 /* comment */) {
@@ -19,7 +17,7 @@ bool third_func(bool b) {
     return  9 <= 10  || !false;
 }
 
-int main(int argc) {
+void main() {
     /* Do some computations */
     (5 - 4) * 10;
     int one_var = 3;
@@ -52,7 +50,6 @@ int main(int argc) {
     }
 
 
-    return 1;
 }
 /*
     All this block is considered as a comment.

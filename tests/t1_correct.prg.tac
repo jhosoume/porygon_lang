@@ -1,49 +1,87 @@
 .table
 .code
-mov $0, 42
 sample_function:
-mov $1, 
-mov $2, 'a'
-add $3, 165, $0
-return $3
+mema $0, 5
+mov $0, 'a'
+mov $1, 'a'
+return 165
 another_function:
-mov $4, #0
-mov $5, #1
-mov $6, #2
-rem $7, $4, $5
-return $7
+mov $2, #0
+mov $3, #1
+mov $4, #2
+mod $5, $2, $3
+return $5
 third_func:
-mov $8, #0
-mov $9, 0
+mov $6, #0
+mov $7, 0
 return 1
 main:
-mov $10, #0
-mov $11, 3
-mov $12, 1
-mov $13, 7.980000
-mov $16, 83
+mov $8, 3
+mov $9, 1
+mov $10, 7.980000
+mov $13, 83
 param 1
 call third_func, 1
-pop $18
-mov $17, $18
+pop $15
+mov $14, $15
 param 1.500000
 param 6.000000
-param a
+param 'a'
 call another_function, 3
-pop $19
-mov $13, $19
-mov $20, 
-mov $21, 1
-println 
-mov $23, $21
-brz _label0, $23
-inttofl $11, $11
-sub $22, $13, $11
-mov $14, $22
+pop $16
+mov $10, $16
+mema $17, 16
+mov $17, 'I'
+mov $17, 'm'
+mov $17, ' '
+mov $17, 'a'
+mov $17, ' '
+mov $17, 's'
+mov $17, 't'
+mov $17, 'r'
+mov $17, 'i'
+mov $17, 'n'
+mov $17, 'g'
+mov $17, '!'
+mov $18, 1
+print 'R'
+print 'u'
+print 'n'
+print 'n'
+print 'i'
+print 'n'
+print 'g'
+print ' '
+print 'i'
+print 'm'
+print 'p'
+print 'l'
+print 'i'
+print 'c'
+print 'i'
+print 't'
+print ' '
+print 'c'
+print 'o'
+print 'n'
+print 'v'
+print 'e'
+print 'r'
+print 's'
+print 'i'
+print 'o'
+print 'n'
+print '.'
+println
+mov $20, $18
+brz _label0, $20
+inttofl $8, $8
+sub $19, $10, $8
+mov $11, $19
 jump _label1
 _label0:
-inttofl $11, $11
-add $24, $11, $13
-mov $14, $24
+inttofl $8, $8
+add $21, $8, $10
+mov $11, $21
 _label1:
-return 1
+print ''
