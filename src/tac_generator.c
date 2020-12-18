@@ -546,14 +546,14 @@ void genCode(struct tree_node *node) {
 
         case(FUNCT_CALL):
             defineSymbol(&node->addr);
-            if (node->leaf[1]->node_type == ARG_LIST) {
+            if (node->leaf[1]->node_type == ARG_LIST || node->leaf[1]->node_type == ARG_LIST_S) {
                 unite_code(&node->code, &node->leaf[1]->code);
             }
             struct st_entry *entry = find_id_rec(node->leaf[0]->name);
             if (entry != NULL) {
                 sprintf(instruction, "call %s, %d\n", node->leaf[0]->name, entry->size);                       // call function
             } else {
-                sprintf(instruction, "call %s\n", node->leaf[0]->name);                       // call function
+                sprintf(instruction, "call %s, %d\n", node->leaf[0]->name, node->num_args);                       // call function
             }
             append_code_line(&node->code, instruction);
             sprintf(instruction, "pop %s\n", utstring_body(node->addr));                       // call function

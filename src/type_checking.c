@@ -31,7 +31,7 @@ void check_type(struct tree_node *node) {
             entry = find_id_rec(node->leaf[0]->name);
             if (entry == NULL) {
                 // TODO Create interpolation sprintf
-                yyerror("Semantic Error! Function not defined!" );
+                // yyerror("Semantic Error! Function not defined!" );
             } else {
                 if (entry->id_type != FUNCTION) {
                     yyerror("Semantic Error! Identifier is not a function, thus cannot be called!" );
@@ -141,7 +141,7 @@ void check_type(struct tree_node *node) {
             if (node->leaf[0]->type != node->leaf[1]->type) {
                 if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
                     node->leaf[1]->need_casting = true;
-                } else {
+                } else if (node->leaf[1]->node_type != FUNCT_CALL){
                     yyerror("Semantic Error! Variable value does not match defined type.");
                 }
             }
@@ -320,7 +320,7 @@ void check_type(struct tree_node *node) {
                 if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
                     node->leaf[1]->need_casting = true;
                     node->type = node->leaf[0]->type;
-                } else {
+                } else if (node->leaf[1]->node_type != FUNCT_CALL){
                     yyerror("Semantic Error! Variable value does not match defined type.");
                 }
             }

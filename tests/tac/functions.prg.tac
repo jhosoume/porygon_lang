@@ -26,3 +26,4 @@ call test, 2
 pop $11
 mov $10, $11
 println $10
+return 1

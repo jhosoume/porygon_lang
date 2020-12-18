@@ -22,6 +22,7 @@ mov $11, 3
 mov $12, 1
 mov $13, 7.980000
 mov $16, 83
+param 1
 call third_func, 1
 pop $18
 mov $17, $18

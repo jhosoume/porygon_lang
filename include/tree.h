@@ -25,6 +25,7 @@ struct tree_node {
     tac_code *code;             // Stores tree node code
     struct st_entry *st_link;   // Stores the symbol table entry
     int next_label;             // Helper to generate TAC
+    int num_args;
     UT_string *addr;            // Store address for the TAC;
 };
 

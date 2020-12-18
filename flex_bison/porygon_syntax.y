@@ -43,6 +43,7 @@ int synt_errors = 0;
 bool has_return = false;
 int param_indx = 0;
 int column_indx = 0;
+int arg_indx = 0;
 extern int errors;
 %}
 
@@ -717,8 +718,10 @@ functCall
                                                         check_type(node);
                                                         $$ = node;
                                                         verify_args($$);
+                                                        $$->num_args = arg_indx;
                                                         genCode($1);
                                                         genCode($$);
+                                                        arg_indx = 0;
                                                     }
     ;
 
@@ -747,6 +750,7 @@ argList
                                                         check_type(node);
                                                         $$ = node;
                                                         genCode($$);
+                                                        ++arg_indx;
                                                     }
     ;
 
