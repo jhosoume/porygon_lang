@@ -4,4 +4,5 @@ void main() {
     for (int k) in arr {
         write(k);
     }
+    int l = 2 + 2;
 }

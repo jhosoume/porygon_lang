@@ -34,7 +34,7 @@ void genCode(struct tree_node *node) {
                 sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), (int) strlen(node->leaf[1]->name) + 4);
                 append_code_line(&node->code, instruction);
                 for (int indx = 0; indx < (int) strlen(node->leaf[1]->name); ++indx) {
-                    sprintf(instruction, "%s %s[%d], %d\n", "mov", utstring_body(node->leaf[0]->addr), indx, node->leaf[1]->name[indx]);
+                    sprintf(instruction, "%s %s[%d], '%c'\n", "mov", utstring_body(node->leaf[0]->addr), indx, node->leaf[1]->name[indx]);
                     append_code_line(&node->code, instruction);
                 }
                 return;
@@ -242,11 +242,11 @@ void genCode(struct tree_node *node) {
             if (entry->spec_var == ARRAY) {
                 num_el = num_values(&entry->ar_val);
                 binary_instr_int("slt", utstring_body(node->aux_addr), utstring_body(node->addr), num_el, &node->code);
-                sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->addr));      // brz Label1, condition (caso falso)
+                sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->aux_addr));      // brz Label1, condition (caso falso)
                 append_code_line(&node->code, instruction);
                 sprintf(instruction, "mov %s, %s[%s]\n", utstring_body(node->leaf[0]->addr), utstring_body(entry->tac_sym), utstring_body(node->addr));                       // jump Label1
                 append_code_line(&node->code, instruction);
-                unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                unite_code(&node->code, &node->leaf[2]->code);                          // Statements
                 binary_instr_int("add", utstring_body(node->addr), utstring_body(node->addr), 1, &node->code);
                 sprintf(instruction, "jump _label%d\n", label1);                       // jump Label1
                 append_code_line(&node->code, instruction);
@@ -259,6 +259,9 @@ void genCode(struct tree_node *node) {
 
         case(FOR_DEC):
             entry = find_id_rec(node->leaf[1]->name);
+            if (entry == NULL) {
+                entry = node->st_link;
+            }
             if (entry == NULL) return;
             copySymbol(&node->addr, &entry->tac_sym);
             return;

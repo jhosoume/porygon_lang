@@ -2,7 +2,7 @@
 .code
 sample_function:
 mema $0, 5
-mov $0[0], 97
+mov $0[0], 'a'
 mov $1, 'a'
 return 165
 another_function:
@@ -36,18 +36,18 @@ call another_function, 3
 pop $17
 mov $10, $17
 mema $18, 16
-mov $18[0], 73
-mov $18[1], 109
-mov $18[2], 32
-mov $18[3], 97
-mov $18[4], 32
-mov $18[5], 115
-mov $18[6], 116
-mov $18[7], 114
-mov $18[8], 105
-mov $18[9], 110
-mov $18[10], 103
-mov $18[11], 33
+mov $18[0], 'I'
+mov $18[1], 'm'
+mov $18[2], ' '
+mov $18[3], 'a'
+mov $18[4], ' '
+mov $18[5], 's'
+mov $18[6], 't'
+mov $18[7], 'r'
+mov $18[8], 'i'
+mov $18[9], 'n'
+mov $18[10], 'g'
+mov $18[11], '!'
 mov $22, 1
 print 'R'
 print 'u'
