@@ -77,6 +77,11 @@ void genCode(struct tree_node *node) {
             return;
 
         case(TABLE_DECLARATION_DEFINITION):
+            // num_el = num_col(&node->leaf[0]->st_link->columns);
+            // for (int indx = 0; indx < num_el; ++indx) {
+            //     sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), num_el);
+            //     append_code_line(&node->code, instruction);
+            // }
             return;
 
         case(VAR_SIMPLE_DECLARATION):
@@ -225,7 +230,37 @@ void genCode(struct tree_node *node) {
             return;
 
         case(FOR_LOOP):
-            // TODO
+            entry = find_id_rec(node->leaf[1]->name);
+            defineSymbol(&node->addr);
+            if (entry == NULL) return;
+            defineSymbol(&node->aux_addr);
+            label1 = get_next_label();
+            label2 = get_next_label();
+            unary_instr_int("mov", utstring_body(node->addr), 0, &node->code);
+            sprintf(instruction, "_label%d:\n", label1);
+            append_code_line(&node->code, instruction);                             // Label1:
+            if (entry->spec_var == ARRAY) {
+                num_el = num_values(&entry->ar_val);
+                binary_instr_int("slt", utstring_body(node->aux_addr), utstring_body(node->addr), num_el, &node->code);
+                sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->addr));      // brz Label1, condition (caso falso)
+                append_code_line(&node->code, instruction);
+                sprintf(instruction, "mov %s, %s[%s]\n", utstring_body(node->leaf[0]->addr), utstring_body(entry->tac_sym), utstring_body(node->addr));                       // jump Label1
+                append_code_line(&node->code, instruction);
+                unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                binary_instr_int("add", utstring_body(node->addr), utstring_body(node->addr), 1, &node->code);
+                sprintf(instruction, "jump _label%d\n", label1);                       // jump Label1
+                append_code_line(&node->code, instruction);
+                sprintf(instruction, "_label%d:\n", label2);
+                append_code_line(&node->code, instruction);                             // Label2:
+                sprintf(instruction, "print ''\n");
+                append_code_line(&node->code, instruction);                             // NOP
+            }
+            return;
+
+        case(FOR_DEC):
+            entry = find_id_rec(node->leaf[1]->name);
+            if (entry == NULL) return;
+            copySymbol(&node->addr, &entry->tac_sym);
             return;
 
         case(IF_STMT):

@@ -8,6 +8,7 @@
 #include "parser.h"
 #include "arrays.h"
 #include "utstring.h"
+#include "tac_generator.h"
 
 
 struct column_entry {

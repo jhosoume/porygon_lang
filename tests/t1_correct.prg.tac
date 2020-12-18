@@ -48,7 +48,7 @@ mov $18[8], 105
 mov $18[9], 110
 mov $18[10], 103
 mov $18[11], 33
-mov $19, 1
+mov $22, 1
 print 'R'
 print 'u'
 print 'n'
@@ -78,15 +78,15 @@ print 'o'
 print 'n'
 print '.'
 println
-mov $21, $19
-brz _label0, $21
+mov $24, $22
+brz _label0, $24
 inttofl $8, $8
-sub $20, $10, $8
-mov $11, $20
+sub $23, $10, $8
+mov $11, $23
 jump _label1
 _label0:
 inttofl $8, $8
-add $22, $8, $10
-mov $11, $22
+add $25, $8, $10
+mov $11, $25
 _label1:
 print ''

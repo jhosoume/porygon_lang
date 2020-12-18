@@ -62,6 +62,7 @@ struct tree_node *create_node(struct node_list *list, enum node_type nd_type, co
     node->st_link = NULL;
     node->next_label = 0;
     utstring_new(node->addr);
+    utstring_new(node->aux_addr);
     push_list(list, node);
     return node;
 }
@@ -156,6 +157,7 @@ void free_node(struct tree_node *node) {
     free(node->name); node->name = NULL;
     free_tac(&node->code); node->code = NULL;
     utstring_free(node->addr); node->addr = NULL;
+    utstring_free(node->aux_addr); node->aux_addr = NULL;
     node->st_link = NULL;
     free(node);
 }

@@ -258,6 +258,7 @@ tableDefinition
                                                                             check_type(node);
                                                                             $$ = node;
                                                                             genCode($$);
+                                                                            column_indx = 0;
                                                                          }
     ;
 
@@ -287,13 +288,14 @@ stringList
     ;
 
 columnContent
-    : LPARENTHESES constList RPARENTHESES           {$$ = $2;}
+    : LPARENTHESES constList RPARENTHESES           {$$ = $2; ++column_indx;}
     | columnContent COMMA LPARENTHESES constList RPARENTHESES {
                                                                 struct tree_node *node = create_node(ast_tree_list, COLUMN_CONTENT, "columnContent", 2);
                                                                 add_leaf(node, $1, 0);
                                                                 add_leaf(node, $4, 1);
                                                                 check_type(node);
                                                                 $$ = node;
+                                                                ++column_indx;
                                                                 genCode($$);
                                                               }
     ;

@@ -40,6 +40,7 @@ void force_add_col(struct column_entry **table_cols,
     entry->dec_type = dec_type;
     entry->column_indx = column_indx;
     utstring_new(entry->tac_sym);
+    defineSymbol(&entry->tac_sym);
     HASH_ADD_INT(*table_cols, column_indx, entry);
 }
 
@@ -71,7 +72,8 @@ void print_col(struct column_entry *table_cols) {
     for (entry = table_cols; entry != NULL; entry = entry->hh.next) {
         printf("     |-> (Indx: %d, ", entry->column_indx);
         printf("Type: %10s, ", type_string(entry->dec_type));
-        printf("Name: %32s) ", entry->name);
+        printf("Name: %32s, ", entry->name);
+        printf("%s )", utstring_body(entry->tac_sym));
         printf("\n");
     }
 }
