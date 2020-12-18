@@ -36,14 +36,20 @@ void force_add_col(struct column_entry **table_cols,
               ) {
     struct column_entry *entry = (struct column_entry *) malloc(sizeof *entry);
     strcpy(entry->name, name);
+    entry->ar_val = NULL;
     entry->dec_type = dec_type;
     entry->column_indx = column_indx;
+    utstring_new(entry->tac_sym);
     HASH_ADD_INT(*table_cols, column_indx, entry);
 }
 
 void free_col(struct column_entry **table_cols) {
     struct column_entry *entry, *tmp = NULL;
     HASH_ITER(hh, *table_cols, entry, tmp) {
+        free_values(&entry->ar_val);
+        entry->ar_val = NULL;
+        utstring_free(entry->tac_sym);
+        entry->tac_sym = NULL;
         HASH_DEL(*table_cols, entry);
         // free(entry->name);
         // free(entry->identifier);

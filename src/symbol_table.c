@@ -32,7 +32,7 @@ struct st_entry *force_add_entry(
     sample->ar_val = NULL;
     utstring_new(sample->tac_sym);
     utstring_new(sample->tac_sym_aux);
-    if (sample->spec_var == SIMPLE && sample->id_type == VARIABLE) {
+    if ((sample->spec_var == SIMPLE || sample->spec_var == ARRAY) && sample->id_type == VARIABLE) {
         defineSymbol(&sample->tac_sym);
     }
     HASH_ADD_STR(symbol_table, identifier, sample);
@@ -181,7 +181,7 @@ void print_table() {
         printf("ID: %10s | ", ttos(entry->id_type));
         printf("Scope: %3d | ", entry->scope);
         printf("Var Type: %6s | ", vtos(entry->spec_var));
-        printf("Defined: %5s | ", entry->defined ? "true" : "false");
+        printf("Size: %3d | ", entry->size);
         // printf("Line: %4d | ", entry->line);
         // printf("Column: %4d | ", entry->col);
         if (entry->id_type == FUNCTION) {

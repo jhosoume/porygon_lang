@@ -29,34 +29,34 @@ return
 main:
 mov $7, 0
 mema $10, 15
-mov $10, '\'
-mov $10, 'n'
-mov $10, 'B'
-mov $10, 'i'
-mov $10, 'l'
-mov $10, 'l'
-mov $10, 's'
-mov $10, ' '
-mov $10, 'o'
-mov $10, 'f'
-mov $10, ' '
+mov $10[0], 92
+mov $10[1], 110
+mov $10[2], 66
+mov $10[3], 105
+mov $10[4], 108
+mov $10[5], 108
+mov $10[6], 115
+mov $10[7], 32
+mov $10[8], 111
+mov $10[9], 102
+mov $10[10], 32
 mema $11, 7
-mov $11, '1'
-mov $11, '0'
-mov $11, '0'
+mov $11[0], 49
+mov $11[1], 48
+mov $11[2], 48
 mema $12, 6
-mov $12, '5'
-mov $12, '0'
+mov $12[0], 53
+mov $12[1], 48
 mema $13, 6
-mov $13, '2'
-mov $13, '5'
+mov $13[0], 50
+mov $13[1], 53
 mema $14, 6
-mov $14, '1'
-mov $14, '0'
+mov $14[0], 49
+mov $14[1], 48
 mema $15, 5
-mov $15, '5'
+mov $15[0], 53
 mema $16, 5
-mov $16, '1'
+mov $16[0], 49
 call StartMsg, 0
 pop $17
 print '\'

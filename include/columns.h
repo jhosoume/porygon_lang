@@ -6,12 +6,16 @@
 #include "uthash.h"
 #include "type.h"
 #include "parser.h"
+#include "arrays.h"
+#include "utstring.h"
 
 
 struct column_entry {
     int column_indx;
     enum ttype dec_type;
+    ar_values *ar_val;               /* Stores multiple values */
     char name[150];
+    UT_string *tac_sym;              /* Symbol to use in tac */
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };

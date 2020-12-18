@@ -8,6 +8,7 @@ void genCode(struct tree_node *node) {
     char instruction[500];
     int label1;
     int label2;
+    int num_el;
     switch(node->node_type) {
         case(ID):
             entry = find_id_rec(node->name);
@@ -27,10 +28,14 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             doConversion(node->leaf[1], &node->code);
             if (node->leaf[1]->type == STRING_ && node->leaf[1]->node_type == STRING_CONST) {
+                if (node->leaf[0]->st_link != 0) {
+                    node->leaf[0]->st_link->size = (int) strlen(node->leaf[1]->name);
+                }
                 sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), (int) strlen(node->leaf[1]->name) + 4);
                 append_code_line(&node->code, instruction);
                 for (int indx = 0; indx < (int) strlen(node->leaf[1]->name); ++indx) {
-                    unary_instr_char("mov", utstring_body(node->leaf[0]->addr), node->leaf[1]->name[indx], &node->code);
+                    sprintf(instruction, "%s %s[%d], %d\n", "mov", utstring_body(node->leaf[0]->addr), indx, node->leaf[1]->name[indx]);
+                    append_code_line(&node->code, instruction);
                 }
                 return;
             }
@@ -51,8 +56,24 @@ void genCode(struct tree_node *node) {
             return;
 
         case(ARRAY_DECLARATION_DEFINITION):
-            // sprintf(instruction, "mema %s, %d\n", node->leaf[1]->name);
-            // append_code_line(&node->code, instruction);
+            num_el = num_values(&node->leaf[0]->st_link->ar_val);
+            sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), num_el);
+            append_code_line(&node->code, instruction);
+            for (int indx = 0; indx < num_el; ++indx) {
+                if (node->type == INT_) {
+                    sprintf(instruction, "%s %s[%d], %d\n", "mov", utstring_body(node->leaf[0]->addr), indx, get_in(&node->leaf[0]->st_link->ar_val, indx)->val.int_n);
+                    append_code_line(&node->code, instruction);
+                } else if (node->type == FLOAT_) {
+                    sprintf(instruction, "%s %s[%d], %f\n", "mov", utstring_body(node->leaf[0]->addr), indx, get_in(&node->leaf[0]->st_link->ar_val, indx)->val.float_n);
+                    append_code_line(&node->code, instruction);
+                } else if (node->type == CHAR_) {
+                    sprintf(instruction, "%s %s[%d], '%c'\n", "mov", utstring_body(node->leaf[0]->addr), indx, get_in(&node->leaf[0]->st_link->ar_val, indx)->val.character);
+                    append_code_line(&node->code, instruction);
+                } else if (node->type == BOOL_) {
+                    sprintf(instruction, "%s %s[%d], %i\n", "mov", utstring_body(node->leaf[0]->addr), indx, get_in(&node->leaf[0]->st_link->ar_val, indx)->val.boolean);
+                    append_code_line(&node->code, instruction);
+                }
+            }
             return;
 
         case(TABLE_DECLARATION_DEFINITION):
@@ -139,14 +160,16 @@ void genCode(struct tree_node *node) {
             return;
 
         case(WRITE_STMT):
-            if (node->leaf[0]->type == STRING_ && node->leaf[0]->node_type == STRING_CONST) {
-                for (int indx = 0; indx < (int) strlen(node->leaf[0]->name); ++indx) {
-                    sprintf(instruction, "print '%c'\n", node->leaf[0]->name[indx]);
+            if (node->leaf[0]->type == STRING_) {
+                if(node->leaf[0]->node_type == STRING_CONST) {
+                    for (int indx = 0; indx < (int) strlen(node->leaf[0]->name); ++indx) {
+                        sprintf(instruction, "print '%c'\n", node->leaf[0]->name[indx]);
+                        append_code_line(&node->code, instruction);
+                    }
+                    sprintf(instruction, "println\n");
                     append_code_line(&node->code, instruction);
+                    return;
                 }
-                sprintf(instruction, "println\n");
-                append_code_line(&node->code, instruction);
-                return;
             }
             if (node->leaf[0]->is_const) {
                 if (node->leaf[0]->type == FLOAT_) {

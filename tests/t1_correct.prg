@@ -39,8 +39,6 @@ void main() {
 
     bool ttrue = !false;
 
-    read(input);
-
     write("Running implicit conversion.");
 
     if (ttrue) {

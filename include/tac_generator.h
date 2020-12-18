@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "tree.h"
 #include "symbol_table.h"
+#include "arrays.h"
 
 extern int errors;
 extern int label_num;
