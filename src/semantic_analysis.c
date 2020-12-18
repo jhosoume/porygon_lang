@@ -29,7 +29,7 @@ void add_param_rec(struct tree_node *node, struct params_entry **func_params, bo
     if (node == NULL) {
         return;
     } else if (node->node_type == PARAMETER_DECLARATION) {
-        if (node->st_link != NULL) defineSymbolParam(&node->st_link->tac_sym, indx);
+        // if (node->st_link != NULL) defineSymbolParam(&node->st_link->tac_sym, indx);
         add_param(func_params, indx++, node->leaf[0]->type, node->leaf[1]->name);
         return;
     }
@@ -190,8 +190,8 @@ void check_defined(const char *name) {
     struct st_entry *entry =  NULL;
     entry = find_id_rec(name);
     if (entry != NULL) {
-        if (entry->id_type!= PARAM && !entry->defined) {
-            yyerror("Semantic Error! Identifier is not defined.");
+        if (entry->id_type != PARAM && !entry->defined) {
+            printf("Semantic Warning! Identifier is not defined.");
         }
     }
 }

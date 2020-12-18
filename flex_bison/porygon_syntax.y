@@ -41,6 +41,8 @@ extern scope_stack *sp_stack;
 extern int lex_errors;
 int synt_errors = 0;
 bool has_return = false;
+int param_indx = 0;
+int column_indx = 0;
 extern int errors;
 %}
 
@@ -304,13 +306,14 @@ functDeclaration
                                                                                         add_leaf(node, $6, 3);
                                                                                         check_type(node);
                                                                                         $$ = node;
-                                                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                                        struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, param_indx);
                                                                                         set_stentry($$, entry);
                                                                                         func_declaration_params($$);
                                                                                         set_defined($2->name);
                                                                                         genCode($2);
                                                                                         genCode($$);
                                                                                         has_return = false;
+                                                                                        param_indx = 0;
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
@@ -319,12 +322,13 @@ functDeclaration
                                                                             add_leaf(node, $5, 2);
                                                                             check_type(node);
                                                                             $$ = node;
-                                                                            struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
+                                                                            struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, param_indx);
                                                                             set_stentry($$, entry);
                                                                             set_defined($2->name);
                                                                             genCode($2);
                                                                             genCode($$);
                                                                             has_return = false;
+                                                                            param_indx = 0;
                                                                       }
     ;
 
@@ -349,6 +353,10 @@ parameterDeclaration
                                                         $$ = node;
                                                         struct st_entry *entry = add_entry($2->name, $1->type, $1->name, PARAM, count_scope + 1, SIMPLE, 0);
                                                         set_stentry($$, entry);
+                                                        if (entry != NULL) {
+                                                            defineSymbolParam(&entry->tac_sym_aux, param_indx++);
+                                                            defineSymbol(&entry->tac_sym);
+                                                        }
                                                         genCode($2);
                                                         genCode($$);
                                                     }

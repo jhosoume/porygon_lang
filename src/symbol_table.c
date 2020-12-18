@@ -31,6 +31,7 @@ struct st_entry *force_add_entry(
     sample->value.int_n = 0;
     sample->ar_val = NULL;
     utstring_new(sample->tac_sym);
+    utstring_new(sample->tac_sym_aux);
     if (sample->spec_var == SIMPLE && sample->id_type == VARIABLE) {
         defineSymbol(&sample->tac_sym);
     }
@@ -79,6 +80,8 @@ void free_st() {
         entry->ar_val = NULL;
         utstring_free(entry->tac_sym);
         entry->tac_sym = NULL;
+        utstring_free(entry->tac_sym_aux);
+        entry->tac_sym_aux = NULL;
         free(entry);
     }
 }

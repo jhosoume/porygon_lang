@@ -50,8 +50,7 @@ struct st_entry {
     struct params_entry *params;     /* Hold parameter values */
     struct column_entry *columns;    /* Hold column values */
     UT_string *tac_sym;              /* Symbol to use in tac */
-
-
+    UT_string *tac_sym_aux;                  /* Symbol to use in tac */
 
     UT_hash_handle hh; /* Makes the strucutre Hashable */
 };

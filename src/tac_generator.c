@@ -79,6 +79,7 @@ void genCode(struct tree_node *node) {
             sprintf(instruction, "%s:\n", node->leaf[1]->name);
             append_code_line(&node->code, instruction);
             if (node->num_leaves == 4) {
+                unite_code(&node->code, &node->leaf[2]->code);
                 unite_code(&node->code, &node->leaf[3]->code);
             } else if (node->num_leaves == 3) {
                 unite_code(&node->code, &node->leaf[2]->code);
@@ -92,9 +93,12 @@ void genCode(struct tree_node *node) {
             return;
 
         case(PARAMETER_LIST):
+            unite_code(&node->code, &node->leaf[0]->code);
+            unite_code(&node->code, &node->leaf[1]->code);
             return;
 
         case(PARAMETER_DECLARATION):
+            unary_instr_syms("mov", utstring_body(node->st_link->tac_sym), utstring_body(node->st_link->tac_sym_aux), &node->code);
             return;
 
         case(EMPTY_COMPOUND_STATEMENT):
@@ -152,17 +156,21 @@ void genCode(struct tree_node *node) {
             return;
 
         case(WHILE):
-            if (node->leaf[0]->is_const) {
-                if (node->leaf[0]->value.boolean) {
-                    unite_code(&node->code, &node->leaf[1]->code);                          // Statements
-                }
-                return;
-            }
+            defineSymbol(&node->addr);
             label1 = get_next_label();
-            label2 = get_next_label();
             sprintf(instruction, "_label%d:\n", label1);
             append_code_line(&node->code, instruction);                             // Label1:
+            if (node->leaf[0]->is_const) {
+                if (node->leaf[0]->value.boolean) {
+                    printf("Semantic Warning! Infinite Loop.");
+                    unite_code(&node->code, &node->leaf[1]->code);                          // Statements
+                    sprintf(instruction, "jump _label%d\n", label1);                       // jump Label1
+                    append_code_line(&node->code, instruction);
+                }
+            }
+            label2 = get_next_label();
             unite_code(&node->code, &node->leaf[0]->code);                          // condition
+            unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
             sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->addr));       // brz Label2, condition (caso falso)
             append_code_line(&node->code, instruction);
             unite_code(&node->code, &node->leaf[1]->code);                          // Statements
@@ -170,6 +178,8 @@ void genCode(struct tree_node *node) {
             append_code_line(&node->code, instruction);
             sprintf(instruction, "_label%d:\n", label2);
             append_code_line(&node->code, instruction);                             // Label2:
+            sprintf(instruction, "print ''\n");
+            append_code_line(&node->code, instruction);                             // NOP
             return;
 
         case(FOR_LOOP):
@@ -179,6 +189,7 @@ void genCode(struct tree_node *node) {
         case(IF_STMT):
             label1 = get_next_label();
             node->next_label = label1;
+            defineSymbol(&node->addr);
             if (node->leaf[0]->is_const) {
                 if (node->leaf[0]->value.boolean) {
                     unite_code(&node->code, &node->leaf[1]->code);                          // Statements
@@ -186,6 +197,7 @@ void genCode(struct tree_node *node) {
                 return;
             }
             unite_code(&node->code, &node->leaf[0]->code);                                       // condition
+            unary_instr_syms("mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), &node->code);
             sprintf(instruction, "brz _label%d, %s\n", label1, utstring_body(node->addr));      // brz Label1, condition (caso falso)
             append_code_line(&node->code, instruction);
             unite_code(&node->code, &node->leaf[1]->code);                          // Statements
@@ -208,8 +220,11 @@ void genCode(struct tree_node *node) {
                 sprintf(instruction, "_label%d:\n", label2);
                 append_code_line(&node->code, instruction);                             // Label2:
             } else if (node->leaf[1]->node_type == EMPTY_ELSE) {
+                        // && (num_lines(&node->leaf[1]->code) > 0) ) {
                 sprintf(instruction, "_label%d:\n", label1);
                 append_code_line(&node->code, instruction);                             // Label1:
+                sprintf(instruction, "print ''\n");
+                append_code_line(&node->code, instruction);                             // NOP
             }
             return;
 
@@ -530,11 +545,16 @@ void genCode(struct tree_node *node) {
             return;
 
         case(FUNCT_CALL):
-            node->is_const = true;
+            defineSymbol(&node->addr);
             if (node->leaf[1]->node_type == ARG_LIST) {
                 unite_code(&node->code, &node->leaf[1]->code);
             }
-            sprintf(instruction, "call %s\n", node->leaf[0]->name);                       // call function
+            struct st_entry *entry = find_id_rec(node->leaf[0]->name);
+            if (entry != NULL) {
+                sprintf(instruction, "call %s, %d\n", node->leaf[0]->name, entry->size);                       // call function
+            } else {
+                sprintf(instruction, "call %s\n", node->leaf[0]->name);                       // call function
+            }
             append_code_line(&node->code, instruction);
             sprintf(instruction, "pop %s\n", utstring_body(node->addr));                       // call function
             append_code_line(&node->code, instruction);

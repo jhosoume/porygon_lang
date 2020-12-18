@@ -7,31 +7,42 @@ mov $2, 'a'
 add $3, 165, $0
 return $3
 another_function:
-rem $4, , 
-return $4
+mov $4, #0
+mov $5, #1
+mov $6, #2
+rem $7, $4, $5
+return $7
 third_func:
-mov $5, 0
+mov $8, #0
+mov $9, 0
 return 1
 main:
-mov $6, 3
-mov $7, 1
-mov $8, 7.980000
-mov $11, 83
-call third_func
-pop 
-mov $12, 0
-mov $8, 0.000000
-mov $13, 
-mov $14, 1
+mov $10, #0
+mov $11, 3
+mov $12, 1
+mov $13, 7.980000
+mov $16, 83
+call third_func, 1
+pop $18
+mov $17, $18
+param 1.500000
+param 6.000000
+param a
+call another_function, 3
+pop $19
+mov $13, $19
+mov $20, 
+mov $21, 1
 println 
-brz _label0, 
-inttofl $6, $6
-sub $15, $8, $6
-mov $9, $15
+mov $23, $21
+brz _label0, $23
+inttofl $11, $11
+sub $22, $13, $11
+mov $14, $22
 jump _label1
 _label0:
-inttofl $6, $6
-add $16, $6, $8
-mov $9, $16
+inttofl $11, $11
+add $24, $11, $13
+mov $14, $24
 _label1:
 return 1
