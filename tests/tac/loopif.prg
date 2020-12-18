@@ -14,7 +14,7 @@ void main() {
     } else {
         write(70);
     }
-
+    write('-');
     int num = 5;
     while (num > 0) {
         write(num);

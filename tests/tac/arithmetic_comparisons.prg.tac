@@ -1,7 +1,7 @@
 .table
 .code
-mov $0, 8
 main:
+mov $0, 8
 println $0
 slt $2, 9, $0
 mov $1, $2

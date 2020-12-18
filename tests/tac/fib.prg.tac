@@ -31,7 +31,9 @@ mov $3, $13
 add $14, $2, $3
 return $14
 _label2:
+print ''
 _label3:
+print ''
 return 0
 main:
 mov $15, 0

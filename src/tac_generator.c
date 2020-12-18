@@ -77,11 +77,11 @@ void genCode(struct tree_node *node) {
             return;
 
         case(TABLE_DECLARATION_DEFINITION):
-            // num_el = num_col(&node->leaf[0]->st_link->columns);
-            // for (int indx = 0; indx < num_el; ++indx) {
-            //     sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), num_el);
-            //     append_code_line(&node->code, instruction);
-            // }
+            num_el = num_col(&node->leaf[0]->st_link->columns);
+            for (int indx = 0; indx < num_el; ++indx) {
+                sprintf(instruction, "mema %s, %d\n", utstring_body(node->leaf[0]->addr), num_el);
+                append_code_line(&node->code, instruction);
+            }
             return;
 
         case(VAR_SIMPLE_DECLARATION):
@@ -388,7 +388,21 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n == node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n == node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n == node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n == node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n == node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == CHAR_ && node->leaf[1]->type == CHAR_) {
+                    node->value.boolean = node->leaf[0]->value.character == node->leaf[1]->value.character;
+                } else if (node->leaf[0]->type == BOOL_ && node->leaf[1]->type == BOOL_) {
+                    node->value.boolean = node->leaf[0]->value.boolean == node->leaf[1]->value.boolean;
+                } else {
+                    node->value.boolean = false;
+                }
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -409,7 +423,22 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n != node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n != node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n != node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n != node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n != node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == CHAR_ && node->leaf[1]->type == CHAR_) {
+                    node->value.boolean = node->leaf[0]->value.character != node->leaf[1]->value.character;
+                } else if (node->leaf[0]->type == BOOL_ && node->leaf[1]->type == BOOL_) {
+                    node->value.boolean = node->leaf[0]->value.boolean != node->leaf[1]->value.boolean;
+                } else {
+                    node->value.boolean = false;
+                }
+
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -423,7 +452,15 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n > node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n > node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n > node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n > node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n > node->leaf[1]->value.int_n;
+                }
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -437,7 +474,15 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n < node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n < node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n < node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n < node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n < node->leaf[1]->value.int_n;
+                }
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -451,7 +496,15 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n >= node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n >= node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n >= node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n >= node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n >= node->leaf[1]->value.int_n;
+                }
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -465,7 +518,15 @@ void genCode(struct tree_node *node) {
             unite_code(&node->code, &node->leaf[1]->code);
             if ( check_both_const(node->leaf[0], node->leaf[1]) ) {
                 node->is_const = true;
-                node->value.boolean = node->leaf[0]->value.int_n <= node->leaf[1]->value.int_n;
+                if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n <= node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == FLOAT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.float_n <= node->leaf[1]->value.int_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == FLOAT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n <= node->leaf[1]->value.float_n;
+                } else if (node->leaf[0]->type == INT_ && node->leaf[1]->type == INT_) {
+                    node->value.boolean = node->leaf[0]->value.int_n <= node->leaf[1]->value.int_n;
+                }
             } else {
                 defineSymbol(&node->addr);
                 // printf("%s %s %s\n", node->leaf[0]->name, node_type_string(node->leaf[0]->node_type), node->leaf[1]->name);
@@ -618,12 +679,102 @@ void genCode(struct tree_node *node) {
             return;
 
         case(MUTABLE_ONE):
+            defineSymbol(&node->addr);
+            if (node->leaf[1]->is_const) {
+                if (node->leaf[1]->type == INT_) {
+                    sprintf(instruction, "%s %s, %s[%d]\n", "mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), node->leaf[1]->value.int_n);
+                    append_code_line(&node->code, instruction);
+                }
+            } else {
+                unite_code(&node->code, &node->leaf[1]->code);
+                sprintf(instruction, "%s %s, %s[%s]\n", "mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), utstring_body(node->leaf[1]->addr));
+                append_code_line(&node->code, instruction);
+            }
             return;
 
         case(MUTABLE_TWO):
+            defineSymbol(&node->addr);
+            defineSymbol(&node->aux_addr);
+            if (check_both_const(node->leaf[1], node->leaf[2])) {
+                num_el = node->leaf[2]->value.int_n - node->leaf[1]->value.int_n ;
+                sprintf(instruction, "mema %s, %d\n", utstring_body(node->addr), num_el);
+                append_code_line(&node->code, instruction);
+                for (int indx = node->leaf[1]->value.int_n; indx < node->leaf[2]->value.int_n; ++indx) {
+                    sprintf(instruction, "%s %s, %s[%d]\n", "mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), node->leaf[1]->value.int_n);
+                    append_code_line(&node->code, instruction);
+                }
+            }
+            defineSymbol(&node->addr);
+            defineSymbol(&node->aux_addr);
+            defineSymbol(&node->a1);
+            defineSymbol(&node->a2);
+            label1 = get_next_label();
+            label2 = get_next_label();
+            unite_code(&node->code, &node->leaf[1]->code);
+            unite_code(&node->code, &node->leaf[2]->code);
+            binary_instr_syms("sub", utstring_body(node->aux_addr), utstring_body(node->leaf[2]->addr), utstring_body(node->leaf[1]->addr), &node->code);
+            sprintf(instruction, "mema %s, %s\n", utstring_body(node->addr), utstring_body(node->aux_addr));
+            append_code_line(&node->code, instruction);
+            unary_instr_int("mov", utstring_body(node->a1), 0, &node->code);
+            unary_instr_syms("mov", utstring_body(node->a1), utstring_body(node->leaf[2]->addr), &node->code);
+            sprintf(instruction, "_label%d:\n", label1);
+            append_code_line(&node->code, instruction);
+            binary_instr_int("slt", utstring_body(node->aux_addr), utstring_body(node->a1), 0, &node->code);
+            sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->aux_addr));       // brz Label2, condition (caso falso)
+            append_code_line(&node->code, instruction);
+            sprintf(instruction, "%s %s[%s], %s[%s]\n", "mov", utstring_body(node->addr), utstring_body(node->a1), utstring_body(node->leaf[0]->addr), utstring_body(node->a2));
+            append_code_line(&node->code, instruction);
+            binary_instr_int("add", utstring_body(node->a1), utstring_body(node->a1), 1, &node->code);
+            binary_instr_int("add", utstring_body(node->a2), utstring_body(node->a2), 1, &node->code);
+            sprintf(instruction, "jump _label%d\n", label1);                       // jump Label1
+            append_code_line(&node->code, instruction);
+            sprintf(instruction, "_label%d:\n", label2);
+            append_code_line(&node->code, instruction);                             // Label2:
+            sprintf(instruction, "print ''\n");
+            append_code_line(&node->code, instruction);                             // NOP
             return;
 
         case(MUTABLE_THREE):
+            defineSymbol(&node->addr);
+            defineSymbol(&node->aux_addr);
+            if (check_both_const(node->leaf[1], node->leaf[2]) && node->leaf[3]->is_const) {
+                num_el = node->leaf[2]->value.int_n - node->leaf[1]->value.int_n ;
+                sprintf(instruction, "mema %s, %d\n", utstring_body(node->addr), num_el);
+                append_code_line(&node->code, instruction);
+                for (int indx = node->leaf[1]->value.int_n; indx < node->leaf[2]->value.int_n; indx += node->leaf[3]->value.int_n) {
+                    sprintf(instruction, "%s %s, %s[%d]\n", "mov", utstring_body(node->addr), utstring_body(node->leaf[0]->addr), node->leaf[1]->value.int_n);
+                    append_code_line(&node->code, instruction);
+                }
+            }
+            defineSymbol(&node->addr);
+            defineSymbol(&node->aux_addr);
+            defineSymbol(&node->a1);
+            defineSymbol(&node->a2);
+            label1 = get_next_label();
+            label2 = get_next_label();
+            unite_code(&node->code, &node->leaf[1]->code);
+            unite_code(&node->code, &node->leaf[2]->code);
+            binary_instr_syms("sub", utstring_body(node->aux_addr), utstring_body(node->leaf[2]->addr), utstring_body(node->leaf[1]->addr), &node->code);
+            sprintf(instruction, "mema %s, %s\n", utstring_body(node->addr), utstring_body(node->aux_addr));
+            append_code_line(&node->code, instruction);
+            unary_instr_int("mov", utstring_body(node->a1), 0, &node->code);
+            unary_instr_syms("mov", utstring_body(node->a1), utstring_body(node->leaf[2]->addr), &node->code);
+            sprintf(instruction, "_label%d:\n", label1);
+            append_code_line(&node->code, instruction);
+            binary_instr_int("slt", utstring_body(node->aux_addr), utstring_body(node->a1), 0, &node->code);
+            sprintf(instruction, "brz _label%d, %s\n", label2, utstring_body(node->aux_addr));       // brz Label2, condition (caso falso)
+            append_code_line(&node->code, instruction);
+            sprintf(instruction, "%s %s[%s], %s[%s]\n", "mov", utstring_body(node->addr), utstring_body(node->a1), utstring_body(node->leaf[0]->addr), utstring_body(node->a2));
+            append_code_line(&node->code, instruction);
+            binary_instr_syms("add", utstring_body(node->a1), utstring_body(node->a1), utstring_body(node->leaf[3]->addr), &node->code);
+            binary_instr_syms("add", utstring_body(node->a2), utstring_body(node->a2), utstring_body(node->leaf[3]->addr), &node->code);
+            sprintf(instruction, "jump _label%d\n", label1);                       // jump Label1
+            append_code_line(&node->code, instruction);
+            sprintf(instruction, "_label%d:\n", label2);
+            append_code_line(&node->code, instruction);                             // Label2:
+            sprintf(instruction, "print ''\n");
+            append_code_line(&node->code, instruction);                             // NOP
+            return;
             return;
 
         case(FUNCT_CALL):

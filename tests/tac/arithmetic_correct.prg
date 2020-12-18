@@ -1,6 +1,6 @@
 int b = 4 + 4;
 void main() {
-    b + 3; 
+    b + 3;
     4 + 4 - 6;
     93.0 + 5;
     3 + 5.0;
@@ -30,11 +30,14 @@ void main() {
     write(true);
     write('-');
     int i1;
+    write("Enter integer:");
     read(i1);
     write(i1);
+    write("Enter float:");
     float f1;
     read(f1);
     write(f1);
+    write("Enter char:");
     char c1;
     read(c1);
     write(c1);

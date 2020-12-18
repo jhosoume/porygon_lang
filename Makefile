@@ -79,5 +79,20 @@ testing:
 	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/extra2_incorrect.out" ./bin/porygon tests/extra2_incorrect.prg
 	@echo " \n\n\n "
 
+tac:
+	@echo " Running Tac Tests..."
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/arithmetic_comparisons.out" ./bin/porygon tests/tac/arithmetic_comparisons.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/arithmetic_correct.out" ./bin/porygon tests/tac/arithmetic_correct.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/arr.out" ./bin/porygon tests/tac/arr.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/fib.out" ./bin/porygon tests/tac/fib.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/functions.out" ./bin/porygon tests/tac/functions.prg
+	@echo " \n\n\n "
+	valgrind -v --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file="valgrind_output/tac/loopif.out" ./bin/porygon tests/tac/loopif.prg
+	@echo " \n\n\n "
 
-.PHONY: clean_all flex
+
+.PHONY: clean_all flex bison testing tac

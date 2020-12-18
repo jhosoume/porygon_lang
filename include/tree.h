@@ -28,6 +28,8 @@ struct tree_node {
     int num_args;
     UT_string *addr;            // Store address for the TAC;
     UT_string *aux_addr;            // Store address for the TAC;
+    UT_string *a1;            // Store address for the TAC;
+    UT_string *a2;            // Store address for the TAC;
 };
 
 /* Creation of node list based on hint by Diogo */

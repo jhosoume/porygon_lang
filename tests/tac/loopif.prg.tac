@@ -14,6 +14,7 @@ jump _label2
 _label1:
 println 2
 _label2:
+print ''
 slt $5, $1, $0
 mov $6, $5
 brz _label3, $6
@@ -22,6 +23,8 @@ jump _label4
 _label3:
 println 70
 _label4:
+print ''
+println '-'
 mov $7, 5
 _label5:
 slt $8, 0, $7

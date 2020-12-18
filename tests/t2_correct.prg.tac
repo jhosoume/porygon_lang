@@ -11,8 +11,9 @@ mov $1[3], 4
 mov $3, 0
 _label0:
 slt $4, $3, 4
-brz _label1, $3
-mov , $1[$3]
+brz _label1, $4
+mov $2, $1[$3]
+println $2
 add $3, $3, 1
 jump _label0
 _label1:
@@ -27,42 +28,61 @@ mov $5[5], 1
 mov $5[6], 0
 mov $5[7], 0
 mov $5[8], 0
-mema $9, 42
-mov $9[0], 'A'
-mov $9[1], ' '
-mov $9[2], 'v'
-mov $9[3], 'a'
-mov $9[4], 'l'
-mov $9[5], 'i'
-mov $9[6], 'd'
-mov $9[7], ' '
-mov $9[8], 's'
-mov $9[9], 't'
-mov $9[10], 'r'
-mov $9[11], 'i'
-mov $9[12], 'n'
-mov $9[13], 'g'
-mov $9[14], ' '
-mov $9[15], 'c'
-mov $9[16], 'a'
-mov $9[17], 'n'
-mov $9[18], ' '
-mov $9[19], 'h'
-mov $9[20], 'a'
-mov $9[21], 'v'
-mov $9[22], 'e'
-mov $9[23], ' '
-mov $9[24], 'm'
-mov $9[25], 'u'
-mov $9[26], 'l'
-mov $9[27], 't'
-mov $9[28], 'i'
-mov $9[29], 'p'
-mov $9[30], 'l'
-mov $9[31], 'e'
-mov $9[32], ' '
-mov $9[33], 'c'
-mov $9[34], 'h'
-mov $9[35], 'a'
-mov $9[36], 'r'
-mov $9[37], 's'
+mema $6, 4
+mov $6, $5[3]
+mov $6, $5[3]
+sub $9, , 
+mema $8, $9
+mov $10, 0
+mov $10, 
+_label2:
+slt $9, $10, 0
+brz _label3, $9
+mov $8[$10], $5[$11]
+add $10, $10, 
+add $11, $11, 
+jump _label2
+_label3:
+print ''
+mema , 3
+mema , 3
+mema , 3
+mema $15, 42
+mov $15[0], 'A'
+mov $15[1], ' '
+mov $15[2], 'v'
+mov $15[3], 'a'
+mov $15[4], 'l'
+mov $15[5], 'i'
+mov $15[6], 'd'
+mov $15[7], ' '
+mov $15[8], 's'
+mov $15[9], 't'
+mov $15[10], 'r'
+mov $15[11], 'i'
+mov $15[12], 'n'
+mov $15[13], 'g'
+mov $15[14], ' '
+mov $15[15], 'c'
+mov $15[16], 'a'
+mov $15[17], 'n'
+mov $15[18], ' '
+mov $15[19], 'h'
+mov $15[20], 'a'
+mov $15[21], 'v'
+mov $15[22], 'e'
+mov $15[23], ' '
+mov $15[24], 'm'
+mov $15[25], 'u'
+mov $15[26], 'l'
+mov $15[27], 't'
+mov $15[28], 'i'
+mov $15[29], 'p'
+mov $15[30], 'l'
+mov $15[31], 'e'
+mov $15[32], ' '
+mov $15[33], 'c'
+mov $15[34], 'h'
+mov $15[35], 'a'
+mov $15[36], 'r'
+mov $15[37], 's'

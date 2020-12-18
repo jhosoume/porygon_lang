@@ -5,4 +5,10 @@ void main() {
         write(k);
     }
     int l = 2 + 2;
+    write(arr[0]);
+    write(arr[l - 3]);
+    for (float k2) in arr2 {
+        write(k2);
+    }
+    2 == 4;
 }

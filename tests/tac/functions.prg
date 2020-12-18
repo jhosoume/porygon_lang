@@ -12,6 +12,8 @@ float test(float a1, int a2) {
 void main() {
     int k = sum(1, 3);
     write(k);
+    int j = sum(1 + 1, 2 - 2);
+    write(j);
     float num = test(0.1, 2);
     write(num);
 }

@@ -22,3 +22,18 @@ jump _label0
 _label1:
 print ''
 mov $5, 4
+mov $6, $0[0]
+println $6
+sub $7, $5, 3
+mov $8, $0[$7]
+println $8
+mov $10, 0
+_label2:
+slt $11, $10, 4
+brz _label3, $11
+mov $9, $1[$10]
+println $9
+add $10, $10, 1
+jump _label2
+_label3:
+print ''

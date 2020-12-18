@@ -7,12 +7,10 @@
 struct token {
     enum yytokentype tok_type;
     const char * att_value;
-    int line;
-    int column;
 };
 
 /* Returns a token from the information provided. */
-struct token create_token(enum yytokentype tok_type, const char * value, int line, int col);
+struct token create_token(enum yytokentype tok_type, const char * value);
 
 /* Prints a token. */
 void print_token(struct token tok);

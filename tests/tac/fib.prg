@@ -25,4 +25,5 @@ void main() {
         num = fib(i);
         write(num);
     }
+
 }

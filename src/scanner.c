@@ -11,7 +11,7 @@ void run_scanner(void) {
     struct token tok;
     /* yylex function makes the tokenazation, 0 is returned when <EOF> */
     while((ntoken = yylex())) {
-        tok = create_token(ntoken, yytext, line_num, column_num - yyleng);
+        tok = create_token(ntoken, yytext);
       /* Each token will be passed to BISON parser */
         if (ntoken < 0) {
             red_print();
