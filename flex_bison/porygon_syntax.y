@@ -40,6 +40,7 @@ extern scope_stack *sp_stack;
 
 extern int lex_errors;
 int synt_errors = 0;
+bool has_return = false;
 extern int errors;
 %}
 
@@ -307,7 +308,9 @@ functDeclaration
                                                                                         set_stentry($$, entry);
                                                                                         func_declaration_params($$);
                                                                                         set_defined($2->name);
+                                                                                        genCode($2);
                                                                                         genCode($$);
+                                                                                        has_return = false;
                                                                                     }
     | typeSpecifier IDENTIFIER LPARENTHESES RPARENTHESES compoundStmt {
                                                                             struct tree_node *node = create_node(ast_tree_list, FUNCT_DECLARATION, "functDeclaration", 3);
@@ -319,7 +322,9 @@ functDeclaration
                                                                             struct st_entry *entry = add_entry($2->name, $1->type, $1->name, FUNCTION, cur_scope, SIMPLE, 0);
                                                                             set_stentry($$, entry);
                                                                             set_defined($2->name);
+                                                                            genCode($2);
                                                                             genCode($$);
+                                                                            has_return = false;
                                                                       }
     ;
 
@@ -344,6 +349,7 @@ parameterDeclaration
                                                         $$ = node;
                                                         struct st_entry *entry = add_entry($2->name, $1->type, $1->name, PARAM, count_scope + 1, SIMPLE, 0);
                                                         set_stentry($$, entry);
+                                                        genCode($2);
                                                         genCode($$);
                                                     }
     | VOID_TYPE                                     {$$ = $1;}
@@ -414,6 +420,7 @@ iterationStmt
                                                                                                  check_type(node);
                                                                                                  check_defined(node->leaf[1]->name);
                                                                                                  $$ = node;
+                                                                                                 genCode($6);
                                                                                                  genCode($$);
                                                                                              }
 
@@ -428,6 +435,7 @@ forDec
                                      add_leaf(node, $2, 1);
                                      check_type(node);
                                      $$ = node;
+                                     genCode($2);
                                      genCode($$);
                                 }
     ;
@@ -472,12 +480,14 @@ elseStmt
 
 returnStmt
     : RETURN_KW                                     {
+                                                        has_return = true;
                                                         struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 0);
                                                         check_type(node);
                                                         $$ = node;
                                                         genCode($$);
                                                     }
     | RETURN_KW expression                          {
+                                                        has_return = true;
                                                         struct tree_node *node = create_node(ast_tree_list, RETURN, "return", 1);
                                                         add_leaf(node, $2, 0);
                                                         check_type(node);
@@ -663,6 +673,7 @@ mutable
                                                         check_type(node);
                                                         check_defined(node->leaf[0]->name);
                                                         $$ = node;
+                                                        genCode($1);
                                                         genCode($$);
                                                     }
     | IDENTIFIER LBRACKET expression COLON expression RBRACKET  {
@@ -673,6 +684,7 @@ mutable
                                                                     check_type(node);
                                                                     check_defined(node->leaf[0]->name);
                                                                     $$ = node;
+                                                                    genCode($1);
                                                                     genCode($$);
                                                                 }
     | IDENTIFIER LBRACKET expression COLON expression COLON expression RBRACKET {
@@ -684,6 +696,7 @@ mutable
                                                                                     check_type(node);
                                                                                     check_defined(node->leaf[0]->name);
                                                                                     $$ = node;
+                                                                                    genCode($1);
                                                                                     genCode($$);
                                                                                 }
     ;
@@ -696,6 +709,7 @@ functCall
                                                         check_type(node);
                                                         $$ = node;
                                                         verify_args($$);
+                                                        genCode($1);
                                                         genCode($$);
                                                     }
     ;

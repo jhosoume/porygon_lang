@@ -11,7 +11,8 @@ mov $13,
 mov $14, 
 mov $15, 
 mov $16, 
-call StartMsg:
+call StartMsg
+pop 
 println 
 scani $0
 div $17, $0, 100

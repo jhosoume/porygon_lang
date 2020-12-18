@@ -2,25 +2,32 @@
 .code
 mov $0, 8
 main:
-mov $1, 630.000000
-mov $2, 1
-add $4, $2, 4
-mov $3, $4
-add $5, $2, 7
-mov $2, $5
-add $6, $3, 42
-add $7, $6, 8
-mov $3, $7
-println $3
+add $1, $0, 3
+mov $2, 40.000000
 println $2
 println '-'
-mov $8, 0
-and $10, $8, 1
-mov $9, $10
-add $12, $2, $3
-inttofl $12, $12
+div $3, $2, 10.000000
+mov $2, $3
+println $2
+println '-'
+mov $4, 1
+add $6, $4, 4
+mov $5, $6
+add $7, $4, 7
+mov $4, $7
+add $8, $5, 42
+add $9, $8, 8
+mov $5, $9
+println $5
+println $4
+println '-'
+mov $10, 0
+and $12, $10, 1
 mov $11, $12
-println $11
+add $14, $4, $5
+inttofl $14, $14
+mov $13, $14
+println $13
 println '-'
 println 1
 println 2.000000
@@ -29,12 +36,9 @@ print 'r'
 print 'u'
 println 'e'
 println '-'
-scani $13
-println $13
-scanf $14
-println $14
-scanc $15
+scani $15
 println $15
-mov $16, 0
-scani $16
+scanf $16
 println $16
+scanc $17
+println $17

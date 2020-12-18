@@ -1,9 +1,15 @@
 int b = 4 + 4;
 void main() {
+    b + 3; 
     4 + 4 - 6;
     93.0 + 5;
     3 + 5.0;
-    float k = 7.0 * 90;
+    float k = 2.0 * 20;
+    write(k);
+    write('-');
+    k = k / 10;
+    write(k);
+    write('-');
     'a';
     'b';
     true;

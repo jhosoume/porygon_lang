@@ -105,7 +105,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 47 "flex_bison/porygon_syntax.y"
+#line 48 "flex_bison/porygon_syntax.y"
 
     int integer_val;
     float float_val;
@@ -126,7 +126,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 /* "%code provides" blocks.  */
-#line 124 "flex_bison/porygon_syntax.y"
+#line 125 "flex_bison/porygon_syntax.y"
 
     void yyerror(char const *msg);
 
