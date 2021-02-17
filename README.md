@@ -1,5 +1,4 @@
 # Porygon Language
-Juliana Hosoume
 
 Prototype language to Compilers Class 2020.1
 prof. Cláudia Nalon
